@@ -18,68 +18,63 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.hamcrest.Matchers.allOf
 
 abstract class AbstractPage(
-    private val ids: PageIds
+    private val ids: PageIds,
+    private val mainDateTitle: String,
 ) {
 
     private fun recyclerViewMatcher() = RecyclerViewMatcher(recyclerViewId = ids.recyclerViewId)
 
-    private fun monthView() = onView(
-        allOf(
-            isAssignableFrom(TextView::class.java),
-            withParent(isAssignableFrom(ConstraintLayout::class.java)),
-            withText( ids.transactionText),
-            withId( ids.titleMonthTextView),
-            withParent(withId( ids.rootId))
-        )
-    )
+    private fun monthView() {
+        onView(
+            allOf(
+                isAssignableFrom(TextView::class.java),
+                withParent(isAssignableFrom(ConstraintLayout::class.java)),
+                withText(mainDateTitle),
+                withId(ids.titleMonthTextView),
+                withParent(withId(ids.rootId))
+            )
+        ).check(matches(isDisplayed()))
+    }
 
     private fun leftArrow() = onView(
         allOf(
             isAssignableFrom(ImageButton::class.java),
             withParent(isAssignableFrom(ConstraintLayout::class.java)),
-            withId( ids.leftImageButtonId),
-            withParent(withId( ids.rootId))
+            withId(ids.leftImageButtonId),
+            withParent(withId(ids.rootId))
         )
-    )
+    ).perform(click())
 
     private fun rightArrow() = onView(
         allOf(
             isAssignableFrom(ImageButton::class.java),
             withParent(isAssignableFrom(ConstraintLayout::class.java)),
-            withId( ids.rightImageButtonId),
-            withParent(withId( ids.rootId))
+            withId(ids.rightImageButtonId),
+            withParent(withId(ids.rootId))
         )
-    )
+    ).perform(click())
 
-    private fun checkVisibleNow() {
-        val listViews = listOf(
-            rightArrow(),
-            leftArrow(),
-            monthView(),
-        )
-        listViews.forEach {
-            it.check(matches(isDisplayed()))
-        }
-    }
 
     private fun checkNotVisibleNow() {
-        val listViews = listOf(
-            rightArrow(),
-            leftArrow(),
-            monthView(),
-        )
-        listViews.forEach {
-            it.check(doesNotExist())
-        }
-    }
-
-    private fun checkDate(position: Int, date: String) {
         onView(
             allOf(
                 isAssignableFrom(TextView::class.java),
-                recyclerViewMatcher().atPosition(position,  ids.dateTextViewId),
+                withParent(isAssignableFrom(ConstraintLayout::class.java)),
+                withText(mainDateTitle),
+                withId(ids.titleMonthTextView),
+                withParent(withId(ids.rootId))
+            )
+        ).check(doesNotExist())
+    }
+
+
+    private fun checkDateTitle(position: Int, date: String) {
+        onView(
+            allOf(
+                isAssignableFrom(TextView::class.java),
+                recyclerViewMatcher().atPosition(position, ids.dateTextViewId),
                 withParent(isAssignableFrom(LinearLayout::class.java)),
-                withParent(withId( ids.dateLayoutId))
+                withParent(withId(ids.dateLayoutId))
             )
         ).check(matches(withText(date)))
     }
@@ -90,25 +85,26 @@ abstract class AbstractPage(
                 isAssignableFrom(Button::class.java),
                 recyclerViewMatcher().atPosition(position, ids.dateButtonId),
                 withParent(isAssignableFrom(LinearLayout::class.java)),
-                withParent(withId( ids.dateLayoutId)),
+                withParent(withId(ids.dateLayoutId)),
             )
         ).check(matches(isDisplayed())).perform(click())
     }
+
     private fun checkExpenseTitle() = onView(
         allOf(
             isAssignableFrom(TextView::class.java),
             withParent(isAssignableFrom(LinearLayout::class.java)),
-            withId( ids.expenseNameTextView),
+            withId(ids.expenseNameTextView),
         )
     )
 
-    private fun checkExpense(title: String,sum: String,position: Int) {
+    private fun checkExpenseItem(title: String, sum: String, position: Int) {
         checkExpenseTitle().check(matches(withText(title)))
         onView(
             allOf(
                 isAssignableFrom(TextView::class.java),
-                withParent(withId( ids.expenseListRootLayout)),
-                recyclerViewMatcher().atPosition(position,  ids.expenseSumTextView),
+                withParent(withId(ids.expenseListRootLayout)),
+                recyclerViewMatcher().atPosition(position, ids.expenseSumTextView),
             )
         ).check(matches(withText(sum)))
     }
@@ -117,9 +113,9 @@ abstract class AbstractPage(
         onView(
             allOf(
                 isAssignableFrom(FloatingActionButton::class.java),
-                withId( ids.floatingButtonId),
+                withId(ids.floatingButtonId),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId( ids.rootId)),
+                withParent(withId(ids.rootId)),
             )
         ).perform(click())
     }

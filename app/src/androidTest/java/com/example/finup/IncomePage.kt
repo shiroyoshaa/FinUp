@@ -1,10 +1,8 @@
 package com.example.finup
 
-class ExpensePage(private val mainDateTitle: String): AbstractPage(expenseIds,mainDateTitle)
+class IncomePage(private val mainDateTitle: String): AbstractPage(incomeIds,mainDateTitle)
 
-
-
-private val expenseIds = PageIds(
+private val incomeIds = PageIds(
     rootId = R.id.rootId,
     titleMonthTextView = R.id.titleMonthTextView,
     floatingButtonId = R.id.floatingButtonId,
