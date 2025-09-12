@@ -15,3 +15,7 @@
 local.properties
 .idea/deploymentTargetSelector.xml
 .idea/runConfigurations.xml
+/.idea/codeStyles/Project.xml
+/.idea/migrations.xml
+/.idea/compiler.xml
+/.idea/codeStyles/codeStyleConfig.xml
