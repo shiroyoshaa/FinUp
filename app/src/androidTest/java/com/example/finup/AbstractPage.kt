@@ -24,19 +24,26 @@ abstract class AbstractPage(
 
     private fun recyclerViewMatcher() = RecyclerViewMatcher(recyclerViewId = ids.recyclerViewId)
 
-    private fun monthView() {
-        onView(
-            allOf(
-                isAssignableFrom(TextView::class.java),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withText(mainDateTitle),
-                withId(ids.titleMonthTextView),
-                withParent(withId(ids.rootId))
-            )
-        ).check(matches(isDisplayed()))
+    private fun title() = onView(
+        allOf(
+            isAssignableFrom(TextView::class.java),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+            withText(mainDateTitle),
+            withId(ids.titleMonthTextView),
+            withParent(withId(ids.rootId))
+        )
+    )
+
+
+    fun checkVisibleNow() {
+        title().check(matches(isDisplayed()))
     }
 
-    private fun leftArrow() = onView(
+    fun checkNotVisibleNow() {
+        title().check(doesNotExist())
+    }
+
+    fun leftArrow() = onView(
         allOf(
             isAssignableFrom(ImageButton::class.java),
             withParent(isAssignableFrom(ConstraintLayout::class.java)),
@@ -45,7 +52,7 @@ abstract class AbstractPage(
         )
     ).perform(click())
 
-    private fun rightArrow() = onView(
+    fun rightArrow() = onView(
         allOf(
             isAssignableFrom(ImageButton::class.java),
             withParent(isAssignableFrom(ConstraintLayout::class.java)),
@@ -55,61 +62,60 @@ abstract class AbstractPage(
     ).perform(click())
 
 
-    private fun checkNotVisibleNow() {
-        onView(
+    private fun dateTitle(position: Int) = onView(
             allOf(
                 isAssignableFrom(TextView::class.java),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withText(mainDateTitle),
-                withId(ids.titleMonthTextView),
-                withParent(withId(ids.rootId))
-            )
-        ).check(doesNotExist())
-    }
-
-
-    private fun checkDateTitle(position: Int, date: String) {
-        onView(
-            allOf(
-                isAssignableFrom(TextView::class.java),
-                recyclerViewMatcher().atPosition(position, ids.dateTextViewId),
+                recyclerViewMatcher().atPosition(position, ids.itemDateTextView),
                 withParent(isAssignableFrom(LinearLayout::class.java)),
-                withParent(withId(ids.dateLayoutId))
+                withParent(withId(ids.expenseItemLayout))
             )
-        ).check(matches(withText(date)))
+        )
+
+    fun checkDateTitleVisible(date: String, position: Int) {
+        dateTitle(position).check(matches(withText(date)))
     }
 
-    private fun clickRecyclerButton(position: Int) {
+    fun checkDateTitleNoteVisible(date: String, position: Int) {
+        dateTitle(position).check(doesNotExist())
+    }
+    fun clickRecyclerButton(position: Int) {
         onView(
             allOf(
                 isAssignableFrom(Button::class.java),
-                recyclerViewMatcher().atPosition(position, ids.dateButtonId),
+                recyclerViewMatcher().atPosition(position, ids.expenseItemButton),
                 withParent(isAssignableFrom(LinearLayout::class.java)),
-                withParent(withId(ids.dateLayoutId)),
+                withParent(withId(ids.expenseItemLayout)),
             )
         ).check(matches(isDisplayed())).perform(click())
     }
 
-    private fun checkExpenseTitle() = onView(
+    private fun expenseTitle(position: Int) = onView(
         allOf(
             isAssignableFrom(TextView::class.java),
             withParent(isAssignableFrom(LinearLayout::class.java)),
-            withId(ids.expenseNameTextView),
+            recyclerViewMatcher().atPosition(position, ids.expenseNameTextView),
         )
     )
 
-    private fun checkExpenseItem(title: String, sum: String, position: Int) {
-        checkExpenseTitle().check(matches(withText(title)))
-        onView(
-            allOf(
-                isAssignableFrom(TextView::class.java),
-                withParent(withId(ids.expenseListRootLayout)),
-                recyclerViewMatcher().atPosition(position, ids.expenseSumTextView),
-            )
-        ).check(matches(withText(sum)))
+    private fun expenseItem(position: Int) = onView(
+        allOf(
+            isAssignableFrom(TextView::class.java),
+            withParent(withId(ids.expenseListRootLayout)),
+            recyclerViewMatcher().atPosition(position, ids.expenseSumTextView),
+        )
+    )
+
+    fun checkExpenseItemVisible(title: String, sum: String, position: Int) {
+        expenseTitle(position).check(matches(withText(title)))
+        expenseItem(position).check(matches(withText(sum)))
     }
 
-    private fun clickAddButton() {
+    fun checkExpenseItemNotVisible(title: String, sum: String, position: Int) {
+        expenseTitle(position).check(doesNotExist())
+        expenseItem(position).check(doesNotExist())
+    }
+
+    fun clickCreateButton() {
         onView(
             allOf(
                 isAssignableFrom(FloatingActionButton::class.java),
@@ -120,5 +126,8 @@ abstract class AbstractPage(
         ).perform(click())
     }
 
+    fun clickExpenseAt(position: Int) {
+        onView(recyclerViewMatcher().atPosition(0, ids.expenseNameTextView)).perform(click())
+    }
 }
 

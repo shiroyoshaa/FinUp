@@ -1,6 +1,8 @@
 package com.example.finup
 
-class ExpensePage(private val mainDateTitle: String): AbstractPage(expenseIds,mainDateTitle)
+class ExpensePage(private val mainDateTitle: String): AbstractPage(expenseIds,mainDateTitle){
+
+}
 
 
 
@@ -11,10 +13,9 @@ private val expenseIds = PageIds(
     leftImageButtonId =R.id.leftImageButtonId,
     rightImageButtonId = R.id.rightImageButtonId,
     recyclerViewId = R.id.recyclerViewId,
-    transactionText = R.id.transactionText,
-    dateLayoutId =  R.id.dateLayoutId,
-    dateTextViewId =  R.id.dateTextViewId,
-    dateButtonId = R.id.dateButtonId,
+    expenseItemLayout =  R.id.dateLayoutId,
+    itemDateTextView =  R.id.dateTextViewId,
+    expenseItemButton = R.id.dateButtonId,
     expenseListRootLayout = R.id.expenseListRootLayout,
     expenseSumTextView = R.id.expenseSumTextView,
     expenseNameTextView = R.id.expenseNameTextView,

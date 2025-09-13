@@ -1,8 +1,7 @@
 package com.example.finup
 
-import android.R.attr.button
-import android.R.attr.text
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -11,41 +10,55 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.PickerActions
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
-import kotlin.jvm.java
 
 class CreateAndEditExpensePage(private val title: String) {
 
-    private fun checkVisibleNow() {
-        onView(
-            allOf(
-                isAssignableFrom(TextView::class.java),
-                withId(R.id.editCreateExpenseTv),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(R.id.createEditExpenseRl)),
-                withText(title)
-            )
-        ).check(matches(isDisplayed()))
-        onView(
-            allOf(
-                withId(R.id.ExpenseAmountLabelTv),
-                withText("total:"),
-                isAssignableFrom(TextView::class.java),
-                withParent(isAssignableFrom(ConstraintLayout::class.java))
-            )
-        ).check(matches(isDisplayed()))
+    private fun title() = onView(
+        allOf(
+            isAssignableFrom(TextView::class.java),
+            withId(R.id.editCreateExpenseTv),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+            withParent(withId(R.id.createEditExpenseRl)),
+            withText(title)
+        )
+    )
+
+
+    private fun amountLabel() = onView(
+        allOf(
+            withId(R.id.ExpenseAmountLabelTv),
+            withText("total:"),
+            isAssignableFrom(TextView::class.java),
+            withParent(isAssignableFrom(ConstraintLayout::class.java))
+        )
+    )
+
+    fun checkVisibleNow() {
+        title().check(matches(isDisplayed()))
+        amountLabel().check(matches(isDisplayed()))
     }
 
-    private fun clickBackButton(title: String) {
+    fun checkNoteVisibleNow() {
+        title().check(doesNotExist())
+        amountLabel().check(doesNotExist())
+    }
+
+    fun clickBackButton() {
         onView(
             allOf(
                 isAssignableFrom(ImageButton::class.java),
@@ -57,7 +70,7 @@ class CreateAndEditExpensePage(private val title: String) {
     }
 
 
-    private fun inputExpenseSum(sum: String) {
+    fun inputExpenseSum(sum: String) {
         onView(
             allOf(
                 isAssignableFrom(TextInputEditText::class.java),
@@ -68,7 +81,7 @@ class CreateAndEditExpensePage(private val title: String) {
         ).perform(typeText(sum), closeSoftKeyboard())
     }
 
-    private fun clickUtilitiesButton() {
+    fun clickUtilitiesButton() {
         onView(
             allOf(
                 isAssignableFrom(LinearLayout::class.java),
@@ -80,7 +93,7 @@ class CreateAndEditExpensePage(private val title: String) {
         ).check(matches(isDisplayed())).perform(click())
     }
 
-    private fun clickTransfersButton() {
+    fun clickTransfersButton() {
         onView(
             allOf(
                 isAssignableFrom(LinearLayout::class.java),
@@ -92,7 +105,7 @@ class CreateAndEditExpensePage(private val title: String) {
         ).check(matches(isDisplayed())).perform(click())
     }
 
-    private fun clickGroceriesButton() {
+    fun clickGroceriesButton() {
         onView(
             allOf(
                 isAssignableFrom(LinearLayout::class.java),
@@ -104,7 +117,7 @@ class CreateAndEditExpensePage(private val title: String) {
         ).check(matches(isDisplayed())).perform(click())
     }
 
-    private fun clickOtherButton() {
+    fun clickOtherButton() {
         onView(
             allOf(
                 isAssignableFrom(LinearLayout::class.java),
@@ -116,7 +129,7 @@ class CreateAndEditExpensePage(private val title: String) {
         ).check(matches(isDisplayed())).perform(click())
     }
 
-    private fun openDatePickerAndCLickButton(day: String){
+    fun openDatePickerAndCLickButton(day: String) {
         onView(
             allOf(
                 isAssignableFrom(MaterialButton::class.java),
@@ -124,12 +137,15 @@ class CreateAndEditExpensePage(private val title: String) {
                 withParent(withId(R.id.createEditExpenseRl)),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
             )
-        ).check(matches(isDisplayed()))
-        onView(withText(day)).perform(click())
+        ).check(matches(isDisplayed())).perform(click())
+        onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
+            .perform(PickerActions.setDate(2025, 9, 13))
         onView(withText("OK"))
+            .inRoot(isDialog())
+            .perform(click())
     }
 
-    private fun checkDateVisibleNow(date: String) {
+    fun checkDateVisibleNow(date: String) {
         onView(
             allOf(
                 isAssignableFrom(TextView::class.java),
@@ -140,7 +156,7 @@ class CreateAndEditExpensePage(private val title: String) {
         ).check(matches(isDisplayed()))
     }
 
-    private fun clickSaveButton() {
+    fun clickSaveButton() {
         onView(
             allOf(
                 isAssignableFrom(Button::class.java),
@@ -152,7 +168,7 @@ class CreateAndEditExpensePage(private val title: String) {
         ).check(matches(isDisplayed())).perform(click())
     }
 
-    private fun clickDeleteButton() {
+    fun clickDeleteButton() {
         onView(
             allOf(
                 isAssignableFrom(Button::class.java),
@@ -164,4 +180,5 @@ class CreateAndEditExpensePage(private val title: String) {
                 )
         ).check(matches(isDisplayed())).perform(click())
     }
+
 }

@@ -2,6 +2,7 @@ package com.example.finup
 
 import android.R.attr.text
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -10,13 +11,17 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.PickerActions
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 
 class CreateAndEditIncomePage(title: String) {
@@ -91,9 +96,12 @@ class CreateAndEditIncomePage(title: String) {
                 withParent(withId(R.id.createEditIncomeRL)),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
             )
-        ).check(matches(isDisplayed()))
-        onView(withText(day)).perform(click())
+        ).check(matches(isDisplayed())).perform(click())
+        onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
+            .perform(PickerActions.setDate(2025,9,13))
         onView(withText("OK"))
+            .inRoot(isDialog())
+            .perform(click())
     }
     private fun clickSaveButton() {
         onView(
