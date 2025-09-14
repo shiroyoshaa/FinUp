@@ -149,7 +149,9 @@ class ExpenseAndIncomePage(
             )
         ).perform(click())
     }
-
+    fun clickBottomIncomeIcon() {
+        onView(withId(ids.navSecond)).perform(click())
+    }
 }
 
 private val pageIds = MainPageIds(
@@ -165,4 +167,7 @@ private val pageIds = MainPageIds(
     itemRootLayout = R.id.itemListRootLayout,
     itemSumTextView = R.id.itemSumTextView,
     itemNameTextView = R.id.itemNameTextView,
+    bottomNavMenu = R.id.bottomNavManu,
+    navOne = R.id.navFirstItem,
+    navSecond = R.id.navSecondItem,
 )

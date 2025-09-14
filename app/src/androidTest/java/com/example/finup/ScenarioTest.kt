@@ -139,8 +139,8 @@ class ScenarioTest {
 
     @Test
     fun create_income() {
-
         val incomeListPage = ExpenseAndIncomePage()
+        incomeListPage.clickBottomIncomeIcon()
         incomeListPage.setDate(2025, 9)
         incomeListPage.checkVisibleNow()
         incomeListPage.clickCreateButton()
@@ -188,6 +188,7 @@ class ScenarioTest {
     @Test
     fun create_income_month_ago() {
         val incomeListPage = ExpenseAndIncomePage()
+        incomeListPage.clickBottomIncomeIcon()
         incomeListPage.setDate(2025, 9)
         incomeListPage.checkVisibleNow()
 
