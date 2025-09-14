@@ -1,4 +1,4 @@
-package com.example.finup
+package com.example.finup.main
 
 import android.widget.Button
 import android.widget.ImageButton
@@ -14,31 +14,17 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.example.finup.R
+import com.example.finup.RecyclerViewMatcher
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.hamcrest.Matchers.allOf
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-
-private val pageIds = PageIds(
-    rootId = R.id.expenseRootLayout,
-    titleMonthTextView = R.id.titleMonthTextView,
-    floatingButtonId = R.id.FloatingBtn,
-    leftImageButtonId = R.id.LeftImageBtn,
-    rightImageButtonId = R.id.RightImageBtn,
-    recyclerViewId = R.id.itemRecyclerView,
-    itemLayout = R.id.itemDateLayout,
-    itemDateTextView = R.id.itemDateTextView,
-    itemButton = R.id.dateButtonId,
-    itemRootLayout = R.id.itemListRootLayout,
-    itemSumTextView = R.id.itemSumTextView,
-    itemNameTextView = R.id.itemNameTextView,
-)
-
 class ExpenseAndIncomePage(
 
-    private val ids: PageIds = pageIds
+    private val ids: MainPageIds = pageIds
 ) {
     private var currentYearMonth = ""
 
@@ -165,3 +151,18 @@ class ExpenseAndIncomePage(
     }
 
 }
+
+private val pageIds = MainPageIds(
+    rootId = R.id.expenseRootLayout,
+    titleMonthTextView = R.id.titleMonthTextView,
+    floatingButtonId = R.id.FloatingBtn,
+    leftImageButtonId = R.id.LeftImageBtn,
+    rightImageButtonId = R.id.RightImageBtn,
+    recyclerViewId = R.id.itemRecyclerView,
+    itemLayout = R.id.itemDateLayout,
+    itemDateTextView = R.id.itemDateTextView,
+    itemButton = R.id.dateButtonId,
+    itemRootLayout = R.id.itemListRootLayout,
+    itemSumTextView = R.id.itemSumTextView,
+    itemNameTextView = R.id.itemNameTextView,
+)

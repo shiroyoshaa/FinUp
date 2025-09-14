@@ -1,6 +1,6 @@
-package com.example.finup
+package com.example.finup.main
 
-data class PageIds(
+data class MainPageIds(
 
     val rootId: Int,
     val titleMonthTextView: Int,

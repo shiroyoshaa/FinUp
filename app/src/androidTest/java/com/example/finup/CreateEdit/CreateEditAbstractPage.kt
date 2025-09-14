@@ -1,9 +1,8 @@
-package com.example.finup
+package com.example.finup.CreateEdit
 
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.test.espresso.Espresso.onView
@@ -14,7 +13,6 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.RootMatchers.isDialog
-import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
@@ -26,22 +24,23 @@ import com.google.android.material.textfield.TextInputEditText
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 
-class CreateAndEditExpensePage(private val title: String) {
-
+abstract class CreateEditAbstractPage(
+    private val title: String,
+    private val ids: CreateEditPageIds,
+) {
     private fun title() = onView(
         allOf(
             isAssignableFrom(TextView::class.java),
-            withId(R.id.editCreateExpenseTv),
+            withId(ids.editCreateTextView),
             withParent(isAssignableFrom(ConstraintLayout::class.java)),
-            withParent(withId(R.id.createEditExpenseRl)),
+            withParent(withId(ids.editCreateRootLayout)),
             withText(title)
         )
     )
 
-
     private fun amountLabel() = onView(
         allOf(
-            withId(R.id.ExpenseAmountLabelTv),
+            withId(ids.amountLabelTextView),
             withText("total:"),
             isAssignableFrom(TextView::class.java),
             withParent(isAssignableFrom(ConstraintLayout::class.java))
@@ -62,79 +61,30 @@ class CreateAndEditExpensePage(private val title: String) {
         onView(
             allOf(
                 isAssignableFrom(ImageButton::class.java),
-                withId(R.id.backButton),
-                withParent(withId(R.id.createEditExpenseRl)),
+                withId(ids.backButton),
+                withParent(withId(ids.editCreateRootLayout)),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
             )
         ).perform(click())
     }
 
-
-    fun inputExpenseSum(sum: String) {
+    fun inputSum(sum: String) {
         onView(
             allOf(
                 isAssignableFrom(TextInputEditText::class.java),
-                withId(R.id.expenseInputEditText),
+                withId(ids.sumInputEditText),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(R.id.createEditExpenseRl))
+                withParent(withId(ids.editCreateRootLayout))
             )
         ).perform(typeText(sum), closeSoftKeyboard())
     }
 
-    fun clickUtilitiesButton() {
-        onView(
-            allOf(
-                isAssignableFrom(LinearLayout::class.java),
-                withId(R.id.UtilitiesButton),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                hasDescendant(withText("Utilities")),
-                hasDescendant(withId(R.id.utilitiesImageView))
-            )
-        ).check(matches(isDisplayed())).perform(click())
-    }
-
-    fun clickTransfersButton() {
-        onView(
-            allOf(
-                isAssignableFrom(LinearLayout::class.java),
-                withId(R.id.transfersButton),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                hasDescendant(withText("Transfers")),
-                hasDescendant(withId(R.id.transfersImageView))
-            )
-        ).check(matches(isDisplayed())).perform(click())
-    }
-
-    fun clickGroceriesButton() {
-        onView(
-            allOf(
-                isAssignableFrom(LinearLayout::class.java),
-                withId(R.id.groceriesButton),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                hasDescendant(withText("Groceries")),
-                hasDescendant(withId(R.id.groceriesImageView))
-            )
-        ).check(matches(isDisplayed())).perform(click())
-    }
-
-    fun clickOtherButton() {
-        onView(
-            allOf(
-                isAssignableFrom(LinearLayout::class.java),
-                withId(R.id.otherButton),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                hasDescendant(withText("Other")),
-                hasDescendant(withId(R.id.groceriesImageView))
-            )
-        ).check(matches(isDisplayed())).perform(click())
-    }
-
-    fun openDatePickerAndCLickButton(month: Int,day: Int) {
+    fun openDatePickerAndCLickButton(month: Int, day: Int) {
         onView(
             allOf(
                 isAssignableFrom(MaterialButton::class.java),
-                withId(R.id.dateMaterialButton),
-                withParent(withId(R.id.createEditExpenseRl)),
+                withId(ids.openDateButton),
+                withParent(withId(ids.editCreateRootLayout)),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
             )
         ).check(matches(isDisplayed())).perform(click())
@@ -149,7 +99,7 @@ class CreateAndEditExpensePage(private val title: String) {
         onView(
             allOf(
                 isAssignableFrom(TextView::class.java),
-                withId(R.id.dateTextView),
+                withId(ids.dateTextView),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
                 withText(date),
             )
@@ -160,10 +110,10 @@ class CreateAndEditExpensePage(private val title: String) {
         onView(
             allOf(
                 isAssignableFrom(Button::class.java),
-                withId(R.id.saveExpenseButton),
+                withId(ids.saveButton),
                 withText("Save"),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(R.id.createEditExpenseRl))
+                withParent(withId(ids.editCreateRootLayout))
             )
         ).check(matches(isDisplayed())).perform(click())
     }
@@ -173,12 +123,11 @@ class CreateAndEditExpensePage(private val title: String) {
             allOf(
                 isAssignableFrom(Button::class.java),
                 withText("Delete"),
-                withId(R.id.deleteExpenseButton),
-                withParent(withId(R.id.createEditExpenseRl)),
+                withId(ids.deleteButton),
+                withParent(withId(ids.editCreateRootLayout)),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
 
                 )
         ).check(matches(isDisplayed())).perform(click())
     }
-
 }
