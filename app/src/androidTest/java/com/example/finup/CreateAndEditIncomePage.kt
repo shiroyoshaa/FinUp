@@ -10,6 +10,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.RootMatchers.isDialog
@@ -24,107 +25,130 @@ import com.google.android.material.textfield.TextInputEditText
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 
-class CreateAndEditIncomePage(title: String) {
+class CreateAndEditIncomePage(private val title: String) {
 
-    private fun checkVisibleNow() {
-        onView(
-            allOf(
-                isAssignableFrom(TextView::class.java),
-                withId(R.id.editCreateIncomeTv),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(R.id.createEditIncomeRL))
-            )
-        ).check(matches(isDisplayed()))
-        onView(
-            allOf(
-                withId(R.id.IncomeAmountLabelTv),
-                withText("total:"),
-                isAssignableFrom(TextView::class.java),
-                withParent(isAssignableFrom(ConstraintLayout::class.java))
-            )
-        ).check(matches(isDisplayed()))
-    }
+    private fun title() = onView(
+        allOf(
+            isAssignableFrom(TextView::class.java),
+            withId(R.id.editCreateIncomeTv),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+            withParent(withId(R.id.createEditIncomeRL)),
+            withText(title)
+        )
+    )
 
-    private fun clickBackButton(title: String) {
-        onView(
-            allOf(
-                isAssignableFrom(ImageButton::class.java),
-                withId(R.id.editBackButton),
-                withParent(withId(R.id.createEditIncomeRL)),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-            )
-        ).perform(click())
+    private fun amountLabel() = onView(
+        allOf(
+            withId(R.id.IncomeAmountLabelTv),
+            withText("total:"),
+            isAssignableFrom(TextView::class.java),
+            withParent(isAssignableFrom(ConstraintLayout::class.java))
+        )
+    )
+
+    fun checkVisibleNow() {
+        title().check(matches(isDisplayed()))
+        amountLabel().check(matches(isDisplayed()))
     }
 
-    private fun inputIncomeSum(sum: String) {
-        onView(
-            allOf(
-                isAssignableFrom(TextInputEditText::class.java),
-                withId(R.id.IncomeInputEditText),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(R.id.createEditIncomeRL))
-            )
-        ).perform(typeText(sum), closeSoftKeyboard())
+    fun checkNoteVisibleNow() {
+        title().check(doesNotExist())
+        amountLabel().check(doesNotExist())
     }
 
-    private fun selectKaspiBank() {
-        onView(
-            allOf(
-                isAssignableFrom(ImageButton::class.java),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(R.id.createEditIncomeRL)),
-                withId(R.id.kaspiImageView)
-                )
-        ).check(matches(isDisplayed())).perform(click())
-    }
+fun clickBackButton(title: String) {
+    onView(
+        allOf(
+            isAssignableFrom(ImageButton::class.java),
+            withId(R.id.editBackButton),
+            withParent(withId(R.id.createEditIncomeRL)),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+        )
+    ).perform(click())
+}
 
-    private fun selectBccBank() {
-        onView(
-            allOf(
-                isAssignableFrom(ImageButton::class.java),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(R.id.createEditIncomeRL)),
-                withId(R.id.bccImageView)
-            )
-        ).check(matches(isDisplayed())).perform(click())
-    }
-    private fun openDatePickerAndCLickButton(day: String) {
-        onView(
-            allOf(
-                isAssignableFrom(MaterialButton::class.java),
-                withId(R.id.incomeDateMaterialBtn),
-                withParent(withId(R.id.createEditIncomeRL)),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-            )
-        ).check(matches(isDisplayed())).perform(click())
-        onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
-            .perform(PickerActions.setDate(2025,9,13))
-        onView(withText("OK"))
-            .inRoot(isDialog())
-            .perform(click())
-    }
-    private fun clickSaveButton() {
-        onView(
-            allOf(
-                isAssignableFrom(Button::class.java),
-                withId(R.id.saveIncomeButton),
-                withText("Save"),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(R.id.createEditIncomeRL))
-            )
-        ).check(matches(isDisplayed())).perform(click())
-    }
+fun inputIncomeSum(sum: String) {
+    onView(
+        allOf(
+            isAssignableFrom(TextInputEditText::class.java),
+            withId(R.id.IncomeInputEditText),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+            withParent(withId(R.id.createEditIncomeRL))
+        )
+    ).perform(typeText(sum), closeSoftKeyboard())
+}
 
-    private fun clickDeleteButton() {
-        onView(
-            allOf(
-                isAssignableFrom(Button::class.java),
-                withText("Delete"),
-                withId(R.id.deleteIncomeButton),
-                withParent(withId(R.id.createEditIncomeRL)),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
+fun selectKaspiBank() {
+    onView(
+        allOf(
+            isAssignableFrom(ImageButton::class.java),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+            withParent(withId(R.id.createEditIncomeRL)),
+            withId(R.id.kaspiImageView)
+        )
+    ).check(matches(isDisplayed())).perform(click())
+}
 
-                )
-        ).check(matches(isDisplayed())).perform(click())
-    }
+fun selectBccBank() {
+    onView(
+        allOf(
+            isAssignableFrom(ImageButton::class.java),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+            withParent(withId(R.id.createEditIncomeRL)),
+            withId(R.id.bccImageView)
+        )
+    ).check(matches(isDisplayed())).perform(click())
+}
+
+fun openDatePickerAndCLickButton(month: Int, day: Int) {
+    onView(
+        allOf(
+            isAssignableFrom(MaterialButton::class.java),
+            withId(R.id.incomeDateMaterialBtn),
+            withParent(withId(R.id.createEditIncomeRL)),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+        )
+    ).check(matches(isDisplayed())).perform(click())
+    onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
+        .perform(PickerActions.setDate(2025, month, day))
+    onView(withText("OK"))
+        .inRoot(isDialog())
+        .perform(click())
+}
+
+fun checkDateVisibleNow(date: String) {
+    onView(
+        allOf(
+            isAssignableFrom(TextView::class.java),
+            withId(R.id.dateIncomeTextView),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+            withText(date),
+        )
+    ).check(matches(isDisplayed()))
+}
+
+fun clickSaveButton() {
+    onView(
+        allOf(
+            isAssignableFrom(Button::class.java),
+            withId(R.id.saveIncomeButton),
+            withText("Save"),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+            withParent(withId(R.id.createEditIncomeRL))
+        )
+    ).check(matches(isDisplayed())).perform(click())
+}
+
+fun clickDeleteButton() {
+    onView(
+        allOf(
+            isAssignableFrom(Button::class.java),
+            withText("Delete"),
+            withId(R.id.deleteIncomeButton),
+            withParent(withId(R.id.createEditIncomeRL)),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+
+            )
+    ).check(matches(isDisplayed())).perform(click())
+}
 }

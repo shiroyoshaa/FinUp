@@ -129,7 +129,7 @@ class CreateAndEditExpensePage(private val title: String) {
         ).check(matches(isDisplayed())).perform(click())
     }
 
-    fun openDatePickerAndCLickButton(day: String) {
+    fun openDatePickerAndCLickButton(month: Int,day: Int) {
         onView(
             allOf(
                 isAssignableFrom(MaterialButton::class.java),
@@ -139,7 +139,7 @@ class CreateAndEditExpensePage(private val title: String) {
             )
         ).check(matches(isDisplayed())).perform(click())
         onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
-            .perform(PickerActions.setDate(2025, 9, 13))
+            .perform(PickerActions.setDate(2025, month, day))
         onView(withText("OK"))
             .inRoot(isDialog())
             .perform(click())
