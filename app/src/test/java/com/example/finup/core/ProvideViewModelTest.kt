@@ -1,12 +1,9 @@
 package com.example.finup.core
 
-import android.R.attr.order
 import androidx.lifecycle.ViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import kotlin.collections.mutableListOf
-import kotlin.jvm.java
 
 
 class ProvideViewModelTest {
@@ -37,11 +34,13 @@ class ProvideViewModelTest {
         factory.viewModel(OneViewModel::class.java)
         factory.viewModel(TwoViewModel::class.java)
         factory.clear(TwoViewModel::class.java)
-
+        factory.viewModel(TwoViewModel::class.java)
         provideViewModel.check(
 
             listOf(
                 OneViewModel::class.java,
+                TwoViewModel::class.java,
+                TwoViewModel::class.java,
             )
         )
     }
@@ -62,10 +61,16 @@ class ProvideViewModelTest {
         )
         factory.clear(OneViewModel::class.java)
         factory.clear(TwoViewModel::class.java)
-
+        factory.viewModel(OneViewModel::class.java)
+        factory.viewModel(TwoViewModel::class.java)
         provideViewModel.check(
             listOf(
+                OneViewModel::class.java,
+                TwoViewModel::class.java,
                 ThreeViewModel::class.java,
+                OneViewModel::class.java,
+                TwoViewModel::class.java,
+
             )
         )
     }
@@ -81,9 +86,9 @@ private interface FakeProviderViewModel : ProvideViewModel {
         private val actualList = mutableListOf<Class<out ViewModel>>()
 
         override fun <T : ViewModel> viewModel(viewModelClass: Class<T>): T {
+            actualList.add(viewModelClass)
             return viewModelClass.getDeclaredConstructor().newInstance()
         }
-
         override fun check(expected: List<Class<out ViewModel>>) {
             assertEquals(expected, actualList)
         }

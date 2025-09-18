@@ -1,11 +1,9 @@
 package com.example.finup.core
 
-import android.R.attr.order
-import android.service.autofill.Validators.or
 import androidx.lifecycle.LiveData
-import androidx.test.runner.screenshot.Screenshot
+import com.example.finup.main.Navigation
+import com.example.finup.main.Screen
 import org.junit.Assert.assertEquals
-import kotlin.jvm.Throws
 
 
 interface FakeNavigation : Navigation.Mutable {
@@ -17,7 +15,7 @@ interface FakeNavigation : Navigation.Mutable {
         private const val NAVIGATION = "navigation#update"
     }
 
-    class Base(private val order: Order) : Mutable {
+    class Base(private val order: Order) : FakeNavigation {
 
         private lateinit var actual: Screen
 

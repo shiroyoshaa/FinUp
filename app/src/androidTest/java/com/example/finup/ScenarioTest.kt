@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.finup.CreateEdit.CreateAndEditExpensePage
 import com.example.finup.CreateEdit.CreateAndEditIncomePage
 import com.example.finup.main.ExpenseAndIncomePage
+import com.example.finup.main.MainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
