@@ -14,7 +14,8 @@ data class MainPageIds(
     val itemRootLayout: Int,
     val itemSumTextView: Int,
     val itemNameTextView: Int,
-    val bottomNavMenu: Int,
-    val navOne: Int,
-    val navSecond: Int,
+    val bottomNav: Int,
+    val expenseIcon: Int,
+    val incomeIcon: Int,
+    val coordinatorLayout: Int,
 )

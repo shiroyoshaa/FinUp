@@ -17,7 +17,9 @@ class ScenarioTest {
 
     @Test
     fun create_expense_item() {
+
         val expenseListPage = ExpenseAndIncomePage()
+        expenseListPage.clickBottomIncomeIcon()
         expenseListPage.setDate(2025, 9)
         expenseListPage.checkVisibleNow()
         expenseListPage.clickCreateButton()
@@ -90,7 +92,7 @@ class ScenarioTest {
     }
 
     @Test
-    fun create_expense_item_different_days() {
+    fun create_expenses_different_days() {
         create_second_expense()
         val expenseListPage = ExpenseAndIncomePage()
         expenseListPage.setDate(2025, 9)
@@ -259,4 +261,5 @@ class ScenarioTest {
         createIncomePage.checkNoteVisibleNow()
         incomeListPage.checkVisibleNow()
     }
+
 }

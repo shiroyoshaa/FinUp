@@ -5,6 +5,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
@@ -16,6 +17,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.example.finup.R
 import com.example.finup.RecyclerViewMatcher
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.hamcrest.Matchers.allOf
 import java.time.YearMonth
@@ -39,6 +41,15 @@ class ExpenseAndIncomePage(
         )
     )
 
+    private fun bottomNav() = onView(
+        allOf(
+            isAssignableFrom(BottomNavigationView::class.java),
+            withId(ids.bottomNav),
+            withParent(isAssignableFrom(CoordinatorLayout::class.java)),
+            withParent(withId(ids.bottomNav))
+        )
+    )
+
     fun setDate(year: Int, month: Int) {
         val date = YearMonth.of(year, month)
         currentYearMonth =
@@ -47,6 +58,7 @@ class ExpenseAndIncomePage(
 
     fun checkVisibleNow() {
         title(currentYearMonth).check(matches(isDisplayed()))
+        bottomNav().check(matches(isDisplayed()))
     }
 
     fun checkNotVisibleNow() {
@@ -74,6 +86,7 @@ class ExpenseAndIncomePage(
             )
         ).perform(click())
     }
+
 
     private fun dateTitle(position: Int) = onView(
         allOf(
@@ -149,9 +162,19 @@ class ExpenseAndIncomePage(
             )
         ).perform(click())
     }
+
     fun clickBottomIncomeIcon() {
-        onView(withId(ids.navSecond)).perform(click())
+        onView(withId(ids.navSecond))
+            .check(matches(isDisplayed()))
+            .perform(click())
     }
+
+    fun clickBottomExpenseIcon() {
+        onView(withId(ids.navOne))
+            .check(matches(isDisplayed()))
+            .perform(click())
+    }
+
 }
 
 private val pageIds = MainPageIds(
@@ -167,7 +190,8 @@ private val pageIds = MainPageIds(
     itemRootLayout = R.id.itemListRootLayout,
     itemSumTextView = R.id.itemSumTextView,
     itemNameTextView = R.id.itemNameTextView,
-    bottomNavMenu = R.id.bottomNavManu,
-    navOne = R.id.navFirstItem,
-    navSecond = R.id.navSecondItem,
+    bottomNav = R.id.bottomNav,
+    expenseIcon = R.id.navExpenseItem,
+    incomeIcon = R.id.navIncomeItem,
+    coordinatorLayout = R.id.mainPageLayout,
 )
