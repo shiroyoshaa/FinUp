@@ -1,8 +1,8 @@
 package com.example.finup.CreateEdit
 
 data class CreateEditPageIds(
-    val editCreateTextView: Int,
     val editCreateRootLayout: Int,
+    val titleTextView: Int,
     val amountLabelTextView: Int,
     val backButton: Int,
     val sumInputEditText: Int,
@@ -10,4 +10,18 @@ data class CreateEditPageIds(
     val dateTextView: Int,
     val saveButton: Int,
     val deleteButton: Int,
+)
+
+data class ExpenseCategoryIds(
+    val gridRootId: Int,
+    val otherButton: Int,
+    val transfersButton: Int,
+    val groceriesButton: Int,
+    val utilitiesButton: Int,
+)
+
+data class IncomeCategoryIds(
+    val gridRootId: Int,
+    val kaspiButton: Int,
+    val bccBankButton: Int,
 )

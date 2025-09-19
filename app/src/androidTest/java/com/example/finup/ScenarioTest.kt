@@ -2,8 +2,7 @@ package com.example.finup
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.finup.CreateEdit.CreateAndEditExpensePage
-import com.example.finup.CreateEdit.CreateAndEditIncomePage
+import com.example.finup.CreateEdit.CreateEditPage
 import com.example.finup.main.ExpenseAndIncomePage
 import com.example.finup.main.MainActivity
 import org.junit.Rule
@@ -26,7 +25,7 @@ class ScenarioTest {
         expenseListPage.clickCreateButton()
         expenseListPage.checkNotVisibleNow()
 
-        val createPage = CreateAndEditExpensePage("Create expense")
+        val createPage = CreateEditPage("Create expense")
         createPage.checkVisibleNow()
         createPage.inputSum("5000")
         createPage.clickUtilitiesButton()
@@ -50,7 +49,7 @@ class ScenarioTest {
         expenseListPage.clickCreateButton()
         expenseListPage.checkNotVisibleNow()
 
-        val createExpensePage = CreateAndEditExpensePage("create expense")
+        val createExpensePage = CreateEditPage("create expense")
         createExpensePage.checkVisibleNow()
         createExpensePage.inputSum("2000")
         createExpensePage.clickGroceriesButton()
@@ -75,7 +74,7 @@ class ScenarioTest {
 
         expenseListPage.clickItemAt(0, "Utilities")
         expenseListPage.checkNotVisibleNow()
-        val expenseEditPage = CreateAndEditExpensePage("edit expense")
+        val expenseEditPage = CreateEditPage("edit expense")
         expenseEditPage.checkVisibleNow()
         expenseEditPage.clickDeleteButton()
         expenseListPage.checkVisibleNow()
@@ -84,7 +83,7 @@ class ScenarioTest {
 
         expenseListPage.clickCreateButton()
         expenseListPage.checkNotVisibleNow()
-        val createExpensePage = CreateAndEditExpensePage("create expense")
+        val createExpensePage = CreateEditPage("create expense")
         createExpensePage.checkVisibleNow()
 
         createExpensePage.clickBackButton()
@@ -102,7 +101,7 @@ class ScenarioTest {
         expenseListPage.clickCreateButton()
         expenseListPage.checkNotVisibleNow()
 
-        val createExpensePage = CreateAndEditExpensePage("create expense")
+        val createExpensePage = CreateEditPage("create expense")
         createExpensePage.checkVisibleNow()
         createExpensePage.inputSum("15000")
         createExpensePage.clickOtherButton()
@@ -125,7 +124,7 @@ class ScenarioTest {
         expenseListPage.setDate(2025, 9)
         expenseListPage.checkVisibleNow()
 
-        val createExpensePage = CreateAndEditExpensePage("create expense")
+        val createExpensePage = CreateEditPage("create expense")
         createExpensePage.inputSum("1000")
         createExpensePage.clickGroceriesButton()
         createExpensePage.openDatePickerAndCLickButton(8, 25)
@@ -149,7 +148,7 @@ class ScenarioTest {
         incomeListPage.clickCreateButton()
         incomeListPage.checkNotVisibleNow()
 
-        val createIncomePage = CreateAndEditIncomePage("Create income")
+        val createIncomePage = CreateEditPage("Create income")
         createIncomePage.checkVisibleNow()
         createIncomePage.inputSum("5000")
         createIncomePage.selectKaspiBank()
@@ -172,7 +171,7 @@ class ScenarioTest {
         incomeListPage.clickCreateButton()
         incomeListPage.checkNotVisibleNow()
 
-        val createIncomePage = CreateAndEditIncomePage("create income")
+        val createIncomePage = CreateEditPage("create income")
         createIncomePage.checkVisibleNow()
         createIncomePage.inputSum("2000")
         createIncomePage.selectBccBank()
@@ -195,7 +194,7 @@ class ScenarioTest {
         incomeListPage.setDate(2025, 9)
         incomeListPage.checkVisibleNow()
 
-        val createIncomePage = CreateAndEditIncomePage("create income")
+        val createIncomePage = CreateEditPage("create income")
         createIncomePage.inputSum("1000")
         createIncomePage.selectKaspiBank()
         createIncomePage.openDatePickerAndCLickButton(8, 25)
@@ -220,7 +219,7 @@ class ScenarioTest {
         incomeListPage.clickCreateButton()
         incomeListPage.checkNotVisibleNow()
 
-        val createIncomePage = CreateAndEditIncomePage("create income")
+        val createIncomePage = CreateEditPage("create income")
         createIncomePage.checkVisibleNow()
         createIncomePage.inputSum("15000")
         createIncomePage.selectBccBank()
@@ -246,7 +245,7 @@ class ScenarioTest {
 
         incomeListPage.clickItemAt(0, "Kaspi Bank")
         incomeListPage.checkNotVisibleNow()
-        val incomeEditListPage = CreateAndEditIncomePage("edit expense")
+        val incomeEditListPage = CreateEditPage("edit expense")
         incomeEditListPage.checkVisibleNow()
         incomeEditListPage.clickDeleteButton()
         incomeListPage.checkVisibleNow()
@@ -255,7 +254,7 @@ class ScenarioTest {
 
         incomeListPage.clickCreateButton()
         incomeListPage.checkNotVisibleNow()
-        val createIncomePage = CreateAndEditExpensePage("create income")
+        val createIncomePage = CreateEditPage("create income")
         createIncomePage.checkVisibleNow()
 
         createIncomePage.clickBackButton()

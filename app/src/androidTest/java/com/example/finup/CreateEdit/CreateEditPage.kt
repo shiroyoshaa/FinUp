@@ -5,6 +5,7 @@ import android.widget.DatePicker
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.R
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
@@ -24,23 +25,22 @@ import com.google.android.material.textfield.TextInputEditText
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 
-abstract class CreateEditAbstractPage(
+class CreateEditPage(
     private val title: String,
-    private val ids: CreateEditPageIds,
 ) {
     private fun title() = onView(
         allOf(
             isAssignableFrom(TextView::class.java),
-            withId(ids.editCreateTextView),
+            withId(mainIds.titleTextView),
             withParent(isAssignableFrom(ConstraintLayout::class.java)),
-            withParent(withId(ids.editCreateRootLayout)),
+            withParent(withId(mainIds.editCreateRootLayout)),
             withText(title)
         )
     )
 
     private fun amountLabel() = onView(
         allOf(
-            withId(ids.amountLabelTextView),
+            withId(mainIds.amountLabelTextView),
             withText("total:"),
             isAssignableFrom(TextView::class.java),
             withParent(isAssignableFrom(ConstraintLayout::class.java))
@@ -61,8 +61,8 @@ abstract class CreateEditAbstractPage(
         onView(
             allOf(
                 isAssignableFrom(ImageButton::class.java),
-                withId(ids.backButton),
-                withParent(withId(ids.editCreateRootLayout)),
+                withId(mainIds.backButton),
+                withParent(withId(mainIds.editCreateRootLayout)),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
             )
         ).perform(click())
@@ -72,9 +72,9 @@ abstract class CreateEditAbstractPage(
         onView(
             allOf(
                 isAssignableFrom(TextInputEditText::class.java),
-                withId(ids.sumInputEditText),
+                withId(mainIds.sumInputEditText),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(ids.editCreateRootLayout))
+                withParent(withId(mainIds.editCreateRootLayout))
             )
         ).perform(typeText(sum), closeSoftKeyboard())
     }
@@ -83,8 +83,8 @@ abstract class CreateEditAbstractPage(
         onView(
             allOf(
                 isAssignableFrom(MaterialButton::class.java),
-                withId(ids.openDateButton),
-                withParent(withId(ids.editCreateRootLayout)),
+                withId(mainIds.openDateButton),
+                withParent(withId(mainIds.editCreateRootLayout)),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
             )
         ).check(matches(isDisplayed())).perform(click())
@@ -99,7 +99,7 @@ abstract class CreateEditAbstractPage(
         onView(
             allOf(
                 isAssignableFrom(TextView::class.java),
-                withId(ids.dateTextView),
+                withId(mainIds.dateTextView),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
                 withText(date),
             )
@@ -110,10 +110,10 @@ abstract class CreateEditAbstractPage(
         onView(
             allOf(
                 isAssignableFrom(Button::class.java),
-                withId(ids.saveButton),
+                withId(mainIds.saveButton),
                 withText("Save"),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(ids.editCreateRootLayout))
+                withParent(withId(mainIds.editCreateRootLayout))
             )
         ).check(matches(isDisplayed())).perform(click())
     }
@@ -123,11 +123,94 @@ abstract class CreateEditAbstractPage(
             allOf(
                 isAssignableFrom(Button::class.java),
                 withText("Delete"),
-                withId(ids.deleteButton),
-                withParent(withId(ids.editCreateRootLayout)),
+                withId(mainIds.deleteButton),
+                withParent(withId(mainIds.editCreateRootLayout)),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
 
                 )
         ).check(matches(isDisplayed())).perform(click())
     }
+
+    private fun selectCategory(categoryText: String, buttonIds: Int, parentId: Int) = onView(
+        allOf(
+            isAssignableFrom(MaterialButton::class.java),
+            withId(buttonIds),
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+            withParent(withId(parentId)),
+            withText(categoryText)
+        )
+    )
+
+    fun clickUtilitiesButton() {
+        selectCategory(
+            "Utilities",
+            expenseCategoryIds.utilitiesButton,
+            expenseCategoryIds.gridRootId,
+        ).check(matches(isDisplayed())).perform(click())
+    }
+
+    fun clickTransfersButton() {
+        selectCategory(
+            "Transfers",
+            expenseCategoryIds.transfersButton,
+            expenseCategoryIds.gridRootId,
+        ).check(matches(isDisplayed())).perform(click())
+    }
+
+    fun clickGroceriesButton() {
+        selectCategory(
+            "Groceries",
+            expenseCategoryIds.groceriesButton,
+            expenseCategoryIds.gridRootId,
+        ).check(matches(isDisplayed())).perform(click())
+    }
+
+    fun clickOtherButton() {
+        selectCategory(
+            "Other",
+            expenseCategoryIds.otherButton,
+            expenseCategoryIds.gridRootId,
+        ).check(matches(isDisplayed())).perform(click())
+    }
+
+    fun selectKaspiBank() {
+        selectCategory(
+            "Kaspi Bank",
+            incomeCategoryIds.kaspiButton,
+            incomeCategoryIds.gridRootId,
+        ).check(matches(isDisplayed())).perform(click())
+    }
+
+    fun selectBccBank() {
+        selectCategory(
+            "BCC Bank",
+            incomeCategoryIds.bccBankButton,
+            incomeCategoryIds.gridRootId,
+        ).check(matches(isDisplayed())).perform(click())
+    }
 }
+
+private val mainIds = CreateEditPageIds(
+    titleTextView = R.id.titleTextView,
+    editCreateRootLayout = R.id.editCreateRootLayout,
+    amountLabelTextView = R.id.amountLabelTextView,
+    backButton = R.id.backButton,
+    sumInputEditText = R.id.suminputEditText,
+    openDateButton = R.id.openDateButton,
+    dateTextView = R.id.dateTextView,
+    saveButton = R.id.saveButton,
+    deleteButton = R.id.deleteButton,
+)
+
+private val expenseCategoryIds = ExpenseCategoryIds(
+    gridRootId = R.id.gridExpensesLayout,
+    otherButton = R.id.otherButton,
+    transfersButton = R.id.transfersButton,
+    groceriesButton = R.id.groceriesButton,
+    utilitiesButton = R.id.utilitiesButton,
+)
+private val incomeCategoryIds = IncomeCategoryIds(
+    gridRootId = R.id.gridIncomeLayout,
+    kaspiButton = R.id.kaspiButtn,
+    bccBankButton = R.id.BccButton,
+)

@@ -1,21 +1,34 @@
 package com.example.finup.main
 
 data class MainPageIds(
-
     val rootId: Int,
-    val titleMonthTextView: Int,
     val floatingButtonId: Int,
+    val recyclerViewId: Int,
+)
+
+data class ToolBar(
+    val titleMonthTextView: Int,
+    val titleSumTextView: Int,
     val leftImageButtonId: Int,
     val rightImageButtonId: Int,
-    val recyclerViewId: Int,
-    val itemLayout: Int,
-    val itemDateTextView: Int,
-    val itemButton: Int,
+
+    )
+
+data class BottomNav(
+    val coordinatorLayout: Int,
+    val bottomNavId: Int,
+    val expenseIcon: Int,
+    val incomeIcon: Int,
+)
+
+data class Header(
+    val headerRootLayout: Int,
+    val headerDateTextView: Int,
+    val headerButton: Int,
+)
+
+data class Item(
     val itemRootLayout: Int,
     val itemSumTextView: Int,
     val itemNameTextView: Int,
-    val bottomNav: Int,
-    val expenseIcon: Int,
-    val incomeIcon: Int,
-    val coordinatorLayout: Int,
 )
