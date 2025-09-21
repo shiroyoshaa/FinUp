@@ -6,9 +6,9 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.finup.core.AppDataBase
 import com.example.finup.core.DateItemCache
-import com.example.finup.core.YearMonthDao
 import com.example.finup.core.TransactionCache
 import com.example.finup.core.TransactionDao
+import com.example.finup.core.YearMonthDao
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -118,9 +118,6 @@ class RoomTest {
             TransactionCache(
                 id = 2L, sum = 5000, name = "Kaspi Bank",
                 type = "Income", day = 25, dateId = 1L
-            ), TransactionCache(
-                id = 3L, sum = 1000, name = "Kaspi Bank",
-                type = "Income", day = 15, dateId = 1L
             )
         )
         assertEquals(expected, actual)

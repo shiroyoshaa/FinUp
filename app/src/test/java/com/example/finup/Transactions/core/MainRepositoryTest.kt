@@ -1,16 +1,13 @@
 package com.example.finup.Transactions.core
 
-import android.R.attr.type
-import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import com.example.finup.core.DateItemCache
-import com.example.finup.core.YearMonthDao
 import com.example.finup.core.TransactionCache
 import com.example.finup.core.TransactionDao
+import com.example.finup.core.YearMonthDao
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.time.YearMonth
 
 
 class MainRepositoryTest {
@@ -18,7 +15,7 @@ class MainRepositoryTest {
     private lateinit var now: FakeNow
     private lateinit var yearMonthDao: FakeYearMonth
     private lateinit var transactionDao: FakeTransactionDao
-    private lateinit var repository: MainRepository
+    private lateinit var repository: MainRepository.All
 
     @Before
     fun initialize() {
@@ -26,7 +23,7 @@ class MainRepositoryTest {
         yearMonthDao = FakeYearMonth.Base()
         transactionDao = FakeTransactionDao.Base()
         repository = MainRepository.Base(
-            dateItemDao = yearMonthDao,
+            yearMonthDao = yearMonthDao,
             transactionDao = transactionDao,
             now = now,
         )
@@ -34,10 +31,10 @@ class MainRepositoryTest {
 
     @Test
     fun yearMonthTest() = runBlocking {
-        val dateId = repository.createYearMonth(month = 9, year = 2025)
-        val actualYearMonth = repository.getYearMonth(dateId)
+        repository.createYearMonth(month = 9, year = 2025)
+        val actualYearMonth = repository.getYearMonth(month = 9,year = 2025)
         val expectedYearMonth = YearMonth(
-            id = 2L,
+            dateId = 2L,
             month = 9,
             year = 2025,
         )
@@ -53,27 +50,26 @@ class MainRepositoryTest {
         repository.createTransaction(sum = 8000, name = "Transfers", type = "Expense", day = 11, dateId = 5L)
         repository.createTransaction(sum = 1000, name = "Kaspi Bank", type = "Income", day = 25, dateId = 5L)
 
-        val actualExpenseTransactionsListForPeriod = repository.getTransactions(dateId = 5L, type = "Expense")
+        val actualExpenseTransactionsListForPeriod: List<Transaction> = repository.getTransactions(dateId = 5L, type = "Expense")
         val expectedExpenseTransactionsListForPeriod: List<Transaction> = listOf(
-            Transaction(id = 3L,sum = 8000, name = "Transfers", type = "Expense", day = 16, dateId = 5L),
-            Transaction(id = 4L,sum = 3500, name = "Other", type = "Expense", day = 1, dateId = 5L),
-            Transaction(id = 5L,sum = 2000, name = "Utilities", type = "Expense", day = 25, dateId = 5L),
-            Transaction(id = 6L,sum = 8000, name = "Transfers", type = "Expense", day = 11, dateId = 5L),
+            Transaction(id = 2L,sum = 5000, name = "Groceries", type = "Expense", day = 16, dateId = 5L),
+            Transaction(id = 3L,sum = 3500, name = "Other", type = "Expense", day = 1, dateId = 5L),
+            Transaction(id = 4L,sum = 2000, name = "Utilities", type = "Expense", day = 25, dateId = 5L),
+            Transaction(id = 5L,sum = 8000, name = "Transfers", type = "Expense", day = 11, dateId = 5L),
         )
         assertEquals(expectedExpenseTransactionsListForPeriod,actualExpenseTransactionsListForPeriod)
 
         repository.editTransaction(transactionId = 4L,sum = 100000,"Transfers",type = "Expense",day = 10, dateId = 5L)
-        val expectedEditedTransaction = Transaction(id = 4L,sum = 100000, name = "Transfers", type = "Expense", day = 10, dateId = 5L),
-        val actualEditedTransaction = getOneTransaction(id = 4L,type = "Expense")
+        val expectedEditedTransaction = Transaction(id = 4L,sum = 100000, name = "Transfers", type = "Expense", day = 10, dateId = 5L)
+        val actualEditedTransaction = repository.getOneTransaction(id = 4L,type = "Expense")
         assertEquals(expectedEditedTransaction,actualEditedTransaction)
 
-
-        repository.deleteTransaction(id = 5L,type = "Expense")
+        repository.deleteTransaction(id = 5L)
         val actualFinalTransactions = repository.getTransactions(dateId = 5L,type = "Expense")
         val exptectedFinalTransactions = listOf(
-            Transaction(id = 3L,sum = 8000, name = "Transfers", type = "Expense", day = 16, dateId = 5L),
+            Transaction(id = 2L,sum = 5000, name = "Groceries", type = "Expense", day = 16, dateId = 5L),
+            Transaction(id = 3L,sum = 3500, name = "Other", type = "Expense", day = 1, dateId = 5L),
             Transaction(id = 4L,sum = 100000, name = "Transfers", type = "Expense", day = 10, dateId = 5L),
-            Transaction(id = 6L,sum = 8000, name = "Transfers", type = "Expense", day = 11, dateId = 5L),
         )
         assertEquals(exptectedFinalTransactions,actualFinalTransactions)
     }
@@ -126,7 +122,7 @@ private interface FakeTransactionDao : TransactionDao {
         }
 
         override suspend fun getTransactions(dateId: Long, type: String): List<TransactionCache> {
-            return transactionsList.filter { it.id == dateId && it.type == type }.sortedBy { it.id }
+            return transactionsList.filter { it.dateId == dateId && it.type == type }.sortedBy { it.id }
         }
 
         override suspend fun delete(id: Long) {

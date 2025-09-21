@@ -17,7 +17,7 @@ interface TransactionDao {
     suspend fun getTransactions(dateId: Long, type: String): List<TransactionCache>
 
 
-    @Query("DELETE FROM date_table WHERE id = :id")
+    @Query("DELETE FROM transaction_table WHERE id = :id")
     suspend fun delete(id: Long)
 
     @Query("SELECT * FROM transaction_table WHERE id = :id AND transaction_type = :type")
