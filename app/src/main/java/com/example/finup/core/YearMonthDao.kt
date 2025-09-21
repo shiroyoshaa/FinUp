@@ -7,7 +7,7 @@ import androidx.room.Query
 
 
 @Dao
-interface DateItemDao {
+interface YearMonthDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(dateTitleCache: DateItemCache)

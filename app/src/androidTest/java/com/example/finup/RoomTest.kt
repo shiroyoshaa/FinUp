@@ -6,7 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.finup.core.AppDataBase
 import com.example.finup.core.DateItemCache
-import com.example.finup.core.DateItemDao
+import com.example.finup.core.YearMonthDao
 import com.example.finup.core.TransactionCache
 import com.example.finup.core.TransactionDao
 import kotlinx.coroutines.runBlocking
@@ -20,7 +20,7 @@ import java.io.IOException
 @RunWith(AndroidJUnit4::class)
 class RoomTest {
 
-    private lateinit var dateItemDao: DateItemDao
+    private lateinit var yearMonthDao: YearMonthDao
     private lateinit var transactionDao: TransactionDao
     private lateinit var db: AppDataBase
 
@@ -31,7 +31,7 @@ class RoomTest {
             context,
             AppDataBase::class.java,
         ).build()
-        dateItemDao = db.dateItemDao()
+        yearMonthDao = db.dateItemDao()
         transactionDao = db.transactionDao()
     }
 
@@ -43,8 +43,8 @@ class RoomTest {
 
     @Test
     fun testDates() = runBlocking {
-        dateItemDao.insert(dateTitleCache = DateItemCache(id = 3L, month = 12, year = 2021))
-        val actual = dateItemDao.getDateItem(month = 12, year = 2021)
+        yearMonthDao.insert(dateTitleCache = DateItemCache(id = 3L, month = 12, year = 2021))
+        val actual = yearMonthDao.getDateItem(month = 12, year = 2021)
         val expected = DateItemCache(id = 3L, month = 12, year = 2021)
         assertEquals(expected, actual)
 

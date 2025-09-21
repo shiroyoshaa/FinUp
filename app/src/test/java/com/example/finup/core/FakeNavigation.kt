@@ -12,7 +12,7 @@ interface FakeNavigation : Navigation.Mutable {
     fun check(expected: Screen)
 
     companion object {
-        private const val NAVIGATION = "navigation#update"
+        const val NAVIGATION = "navigation#update"
     }
 
     class Base(private val order: Order) : FakeNavigation {

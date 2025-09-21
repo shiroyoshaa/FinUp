@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 @Database(entities = [DateItemCache::class, TransactionCache::class], version = 1)
 abstract class AppDataBase: RoomDatabase() {
 
-    abstract fun dateItemDao(): DateItemDao
+    abstract fun dateItemDao(): YearMonthDao
     abstract fun transactionDao(): TransactionDao
 
 }

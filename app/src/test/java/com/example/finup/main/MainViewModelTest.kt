@@ -18,14 +18,12 @@ class MainViewModelTest {
     @Test
     fun `init test`() {
         viewModel.init()
-        navigation.update(TransactionsListScreen(type = "Expense"))
         navigation.check(TransactionsListScreen(type = "Expense"))
     }
 
     @Test
     fun `navigate to incomeList test`() {
         viewModel.navigateToIncomes()
-        navigation.update(TransactionsListScreen(type = "Income"))
         navigation.check(TransactionsListScreen(type = "Income"))
     }
 }
