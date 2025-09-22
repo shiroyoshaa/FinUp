@@ -5,7 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.finup.core.AppDataBase
-import com.example.finup.core.DateItemCache
+import com.example.finup.core.YearMonthCache
 import com.example.finup.core.TransactionCache
 import com.example.finup.core.TransactionDao
 import com.example.finup.core.YearMonthDao
@@ -43,9 +43,9 @@ class RoomTest {
 
     @Test
     fun testDates() = runBlocking {
-        yearMonthDao.insert(dateTitleCache = DateItemCache(id = 3L, month = 12, year = 2021))
+        yearMonthDao.insert(dateTitleCache = YearMonthCache(id = 3L, month = 12, year = 2021))
         val actual = yearMonthDao.getDateItem(month = 12, year = 2021)
-        val expected = DateItemCache(id = 3L, month = 12, year = 2021)
+        val expected = YearMonthCache(id = 3L, month = 12, year = 2021)
         assertEquals(expected, actual)
 
     }

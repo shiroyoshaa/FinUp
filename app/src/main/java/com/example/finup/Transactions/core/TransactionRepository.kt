@@ -1,20 +1,11 @@
 package com.example.finup.Transactions.core
 
-import com.example.finup.core.DateItemCache
 import com.example.finup.core.TransactionCache
 import com.example.finup.core.TransactionDao
-import com.example.finup.core.YearMonthDao
 
 
-interface MainRepository {
+interface TransactionRepository {
 
-    interface CreateYearMonth {
-        suspend fun createYearMonth(month: Int, year: Int): Long
-    }
-
-    interface GetYearMonth {
-        suspend fun getYearMonth(month: Int, year: Int): YearMonth
-    }
 
     interface CreateTransaction {
         suspend fun createTransaction(
@@ -49,32 +40,16 @@ interface MainRepository {
         suspend fun getTransactions(dateId: Long, type: String): List<Transaction>
     }
 
-    interface Create : CreateYearMonth, CreateTransaction
-    interface ReadAndEdit : GetYearMonth, GetTransaction, EditTransaction, GetTransactions,
+    interface Create : CreateTransaction
+    interface ReadAndEdit : GetTransaction, EditTransaction, GetTransactions,
         DeleteTransaction
 
     interface All : Create, ReadAndEdit
+
     class Base(
-        private val yearMonthDao: YearMonthDao,
         private val transactionDao: TransactionDao,
         private val now: Now
     ) : All {
-        override suspend fun createYearMonth(month: Int, year: Int): Long {
-            val newId = now.timeInMills()
-            val newCache = DateItemCache(newId, month, year)
-            yearMonthDao.insert(newCache)
-            return newId
-        }
-
-        override suspend fun getYearMonth(month: Int, year: Int): YearMonth {
-            val foundYearMonth = yearMonthDao.getDateItem(month, year)
-            val yearMonth = YearMonth(
-                foundYearMonth.id,
-                foundYearMonth.month,
-                foundYearMonth.year
-            )
-            return yearMonth
-        }
 
         override suspend fun createTransaction(
             sum: Int,
@@ -134,5 +109,3 @@ interface MainRepository {
         }
     }
 }
-
-

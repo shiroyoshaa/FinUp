@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [DateItemCache::class, TransactionCache::class], version = 1)
+@Database(entities = [YearMonthCache::class, TransactionCache::class], version = 1)
 abstract class AppDataBase: RoomDatabase() {
 
     abstract fun dateItemDao(): YearMonthDao
