@@ -40,15 +40,16 @@ interface TransactionRepository {
         suspend fun getTransactions(dateId: Long, type: String): List<Transaction>
     }
 
-    interface ReadList : GetTransactions
+    interface Create : CreateTransaction
+    interface ReadAndEdit : GetTransaction, EditTransaction, GetTransactions,
+        DeleteTransaction
 
-    interface Edit : GetTransaction, EditTransaction, DeleteTransaction
-
+    interface All : Create, ReadAndEdit
 
     class Base(
         private val transactionDao: TransactionDao,
         private val now: Now
-    ) :  CreateTransaction, Edit, ReadList {ц
+    ) : All {
 
         override suspend fun createTransaction(
             sum: Int,
