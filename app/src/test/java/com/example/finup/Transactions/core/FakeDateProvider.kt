@@ -11,6 +11,7 @@ interface FakeDateProvider : DateProvider.All {
     fun checkFormatDateIsCalled(expectedDate: String)
     fun checkCurrentMonthCalled(expectedMonth: Int)
     fun checkCurrentYearCalled(expectedYear: Int)
+
     companion object {
         const val CURRENT_YEAR = "DateProvider#getCurrentYear"
         const val CURRENT_MONTH = "DateProvider#getCurrentMonth"
@@ -26,9 +27,6 @@ interface FakeDateProvider : DateProvider.All {
 
         private var actualYear: Int = 0
         private var actualMonth: Int = 0
-
-
-
         lateinit var actualDate: String
         override fun getCurrentYear(): Int {
             order.add(CURRENT_YEAR)
@@ -61,5 +59,6 @@ interface FakeDateProvider : DateProvider.All {
         override fun checkCurrentYearCalled(expectedYear: Int) {
             assertEquals(expectedYear,actualYear)
         }
+
     }
 }

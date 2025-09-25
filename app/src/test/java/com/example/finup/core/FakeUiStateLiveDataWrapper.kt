@@ -1,7 +1,7 @@
 package com.example.finup.core
 
-import android.R.attr.order
 import androidx.lifecycle.LiveData
+import com.example.finup.Transactions.core.UiState
 import com.example.finup.Transactions.core.UiStateLiveDataWrapper
 import junit.framework.TestCase.assertEquals
 
@@ -10,7 +10,7 @@ interface FakeUiStateLiveDataWrapper: UiStateLiveDataWrapper.All {
     fun check(expectedUiState: UiState)
 
     companion object {
-        private const val UI_STATE_UPDATE_LIVEDATA = "UiStateLiveDataWrapper#Update"
+        const val UI_STATE_UPDATE_LIVEDATA = "UiStateLiveDataWrapper#Update"
     }
 
     class Base(private val order: Order): FakeUiStateLiveDataWrapper {

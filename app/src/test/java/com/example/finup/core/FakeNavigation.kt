@@ -1,6 +1,7 @@
 package com.example.finup.core
 
 import androidx.lifecycle.LiveData
+import com.example.finup.core.Order
 import com.example.finup.main.Navigation
 import com.example.finup.main.Screen
 import org.junit.Assert.assertEquals

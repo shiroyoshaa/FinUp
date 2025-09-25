@@ -8,7 +8,7 @@ interface FakeClear : ClearViewModel {
     fun check(expected: Class<out ViewModel>)
 
     companion object {
-        const val CLEAR = "Fake clear#clear"
+        const val CLEAR = "Clear#clear"
     }
 
     class Base(private val order: Order) : FakeClear {
