@@ -42,6 +42,8 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
+    implementation(libs.lifecycle.viewmodel.ktx)
+
     implementation(libs.espresso.contrib)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
