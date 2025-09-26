@@ -1,54 +1,59 @@
 package com.example.finup.Transactions.list
 
 
-import com.example.finup.Transactions.core.FakeDateProvider
-import com.example.finup.Transactions.core.FakeDateProvider.Companion.CURRENT_MONTH
-import com.example.finup.Transactions.core.FakeDateProvider.Companion.CURRENT_YEAR
-import com.example.finup.Transactions.core.FakeDateProvider.Companion.FORMAT_DATE
+
 import com.example.finup.Transactions.core.Transaction
-import com.example.finup.Transactions.core.TransactionRepository
+
 import com.example.finup.Transactions.core.UiState
 import com.example.finup.Transactions.core.YearMonth
-import com.example.finup.Transactions.core.YearMonthRepository
+
 import com.example.finup.Transactions.list.FakeTransactionMapper.Companion.TRANSACTIONS_MAPPER
 import com.example.finup.Transactions.list.FakeTransactionsListLiveDataWrapper.Companion.TRANSACTION_UPDATE_LIST_LIVEDATA
+import com.example.finup.Transactions.list.useCases.GetTransactionsListByPeriodUseCase
+import com.example.finup.Transactions.list.useCases.GetYearMonthPeriodUseCase
+import com.example.finup.Transactions.list.useCases.NavigationMonthUseCase
+import com.example.finup.Transactions.list.useCases.Result
 import com.example.finup.Transactions.mappers.TransactionMappers
+import com.example.finup.core.FakeNavigation
 import com.example.finup.core.FakeUiStateLiveDataWrapper
 import com.example.finup.core.FakeUiStateLiveDataWrapper.Companion.UI_STATE_UPDATE_LIVEDATA
 import com.example.finup.core.Order
+
 import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.util.Locale
 
 class TransactionsListViewModelTest {
 
     lateinit var order: Order
     lateinit var viewModel: TransactionsListViewModel
-    lateinit var yearMonthRepository: FakeYearMonthRepository
-    lateinit var transactionsRepository: FakeTransactionRepository
     lateinit var transactionsListWrapper: FakeTransactionsListLiveDataWrapper
     lateinit var uiStateLiveDataWrapper: FakeUiStateLiveDataWrapper
-    lateinit var dateProvider: FakeDateProvider
     lateinit var transactionMapper: FakeTransactionMapper
-
+    lateinit var getYearMonthByPeriodUseCase: FakeGetYearMonthByPeriodUseCase
+    lateinit var getTransactionsListByPeriodUseCase: FakeGetTransactionsListByPeriodUseCase
+    lateinit var navigation: FakeNavigation
+    lateinit var navigationByMonthUseCase: FakeNavigationByMonthUseCase
     @Before
     fun setUp() {
         order = Order()
-        yearMonthRepository = FakeYearMonthRepository.Base(order)
-        transactionsRepository = FakeTransactionRepository.Base(order)
         transactionsListWrapper = FakeTransactionsListLiveDataWrapper.Base(order)
         uiStateLiveDataWrapper = FakeUiStateLiveDataWrapper.Base(order)
-        dateProvider = FakeDateProvider.Base(order, Locale.ENGLISH, 2025, 9)
         transactionMapper = FakeTransactionMapper.Base(order)
+        getYearMonthByPeriodUseCase = FakeGetYearMonthByPeriodUseCase.Base(order)
+        getTransactionsListByPeriodUseCase = FakeGetTransactionsListByPeriodUseCase.Base(order)
+        navigationByMonthUseCase = FakeNavigationByMonthUseCase.Base(order)
+        navigation = FakeNavigation.Base(order)
+
         viewModel = TransactionsListViewModel(
-            yearMonthRepository = yearMonthRepository,
-            transactionsRepository = transactionsRepository,
             transactionsListWrapper = transactionsListWrapper,
             uiStateLiveDataWrapper = uiStateLiveDataWrapper,
             transactionMapper = transactionMapper,
-            dateProvider = dateProvider,
+            getYearMonthByPeriodUseCase = getYearMonthByPeriodUseCase,
+            getTransactionsListByPeriodUseCase = getTransactionsListByPeriodUseCase,
+            navigationByMonthUseCase = navigationByMonthUseCase,
+            navigation = navigation,
             dispatcher = Dispatchers.Unconfined,
             dispatcherMain = Dispatchers.Unconfined,
         )
@@ -56,43 +61,6 @@ class TransactionsListViewModelTest {
 
     @Test
     fun init() {
-
-        transactionsRepository.expectTransactions(
-            listOf(
-                Transaction(
-                    id = 3L,
-                    name = "Utilities",
-                    sum = 1000,
-                    type = "type",
-                    day = 10,
-                    dateId = 1L
-                ),
-                Transaction(
-                    id = 4L,
-                    name = "Other",
-                    sum = 3000,
-                    type = "Expense",
-                    day = 10,
-                    dateId = 1L
-                ),
-                Transaction(
-                    id = 5L,
-                    name = "Groceries",
-                    sum = 2000,
-                    type = "Expense",
-                    day = 25,
-                    dateId = 1L
-                ),
-                Transaction(
-                    id = 6L,
-                    name = "Transfers",
-                    sum = 4000,
-                    type = "Expense",
-                    day = 25,
-                    dateId = 1L
-                ),
-            )
-        )
         transactionMapper.expectedUiLayer(
             listOf(
                 DisplayItem.TransactionDate(day = "10 September", "4000"),
@@ -127,17 +95,64 @@ class TransactionsListViewModelTest {
                 ),
             )
         )
+        getYearMonthByPeriodUseCase.expectedYearMonth(
+            YearMonth(
+                dateId = 1L,
+                year = 2025,
+                month = 9
+            )
+        )
+        getTransactionsListByPeriodUseCase.expectedResult(
+            Result(
+                listOf(
+                    Transaction(
+                        id = 3L,
+                        name = "Utilities",
+                        sum = 1000,
+                        type = "type",
+                        day = 10,
+                        dateId = 1L
+                    ),
+                    Transaction(
+                        id = 4L,
+                        name = "Other",
+                        sum = 3000,
+                        type = "Expense",
+                        day = 10,
+                        dateId = 1L
+                    ),
+                    Transaction(
+                        id = 5L,
+                        name = "Groceries",
+                        sum = 2000,
+                        type = "Expense",
+                        day = 25,
+                        dateId = 1L
+                    ),
+                    Transaction(
+                        id = 6L,
+                        name = "Transfers",
+                        sum = 4000,
+                        type = "Expense",
+                        day = 25,
+                        dateId = 1L
+                    ),
+                ),
+                formattedDateYearMonth = "September 2025",
+                totalSumByMonth = "10000",
+            )
+        )
         viewModel.init(type = "Expense")
-        dateProvider.checkCurrentYearCalled(2025)
-        dateProvider.checkCurrentMonthCalled(9)
-        yearMonthRepository.check(YearMonth(dateId = 1L, month = 9, 2025))
-        transactionsRepository.checkGetTransactionsIsCalled(
-            expectedDateId = 1L,
-            expectedType = "Expense"
+        getYearMonthByPeriodUseCase.checkCalledTimes(1)
+        getTransactionsListByPeriodUseCase.checkCalledTimes(
+            YearMonth(
+                dateId = 1L,
+                month = 9,
+                year = 2025
+            ), "Expense"
         )
 
         transactionMapper.checkCalledTime(1)
-
         transactionsListWrapper.check(
             listOf(
                 DisplayItem.TransactionDate(day = "10 September", "4000"),
@@ -181,16 +196,85 @@ class TransactionsListViewModelTest {
         )
         order.check(
             listOf(
-                CURRENT_YEAR,
-                CURRENT_MONTH,
-                GET_OR_CREATE_YEAR_MONTH,
-                GET_TRANSACTIONS_REPOSITORY,
+                GET_YEAR_MONTH_USE_CASE,
+                GET_TRANSACTIONS_LIST_USE_CASE,
                 TRANSACTIONS_MAPPER,
                 TRANSACTION_UPDATE_LIST_LIVEDATA,
-                FORMAT_DATE,
-                UI_STATE_UPDATE_LIVEDATA,
+                UI_STATE_UPDATE_LIVEDATA
             )
         )
+    }
+
+    @Test
+    fun navigateMonth() {
+
+        getYearMonthByPeriodUseCase.expectedYearMonth(
+            YearMonth(
+                dateId = 1L,
+                year = 2025,
+                month = 9
+            )
+        )
+
+        viewModel.navigateMonth(forward = true, type = "Income")
+        getYearMonthByPeriodUseCase.checkCalledTimes(1)
+
+    }
+}
+
+private const val GET_YEAR_MONTH_USE_CASE = "GetYearMonthByPeriodUseCase#invoke"
+private const val GET_TRANSACTIONS_LIST_USE_CASE = "GetTransactionsListByPeriodUseCase#invoke"
+
+interface FakeGetTransactionsListByPeriodUseCase : GetTransactionsListByPeriodUseCase {
+
+    fun checkCalledTimes(expectedYearMonth: YearMonth, expectedType: String)
+
+    fun expectedResult(result: Result)
+
+    class Base(private val order: Order) : FakeGetTransactionsListByPeriodUseCase {
+
+        private lateinit var expectedResult: Result
+        private lateinit var actualYearMonth: YearMonth
+        private lateinit var actualType: String
+
+        override suspend fun invoke(yearMonth: YearMonth, type: String): Result {
+            order.add(GET_TRANSACTIONS_LIST_USE_CASE)
+            return expectedResult
+        }
+
+        override fun checkCalledTimes(expectedYearMonth: YearMonth, expectedType: String) {
+            assertEquals(expectedYearMonth, actualYearMonth)
+            assertEquals(expectedType, actualType)
+        }
+
+        override fun expectedResult(result: Result) {
+            expectedResult = result
+        }
+    }
+}
+
+interface FakeGetYearMonthByPeriodUseCase : GetYearMonthPeriodUseCase {
+
+    fun expectedYearMonth(yearMonth: YearMonth)
+    fun checkCalledTimes(expected: Int)
+
+    class Base(private val order: Order) : FakeGetYearMonthByPeriodUseCase {
+
+        private lateinit var expectedYearMonth: YearMonth
+        private var actualCalledTimes = 0
+        override suspend fun invoke(): YearMonth {
+            order.add(GET_YEAR_MONTH_USE_CASE)
+            return expectedYearMonth
+        }
+
+        override fun expectedYearMonth(yearMonth: YearMonth) {
+            expectedYearMonth = yearMonth
+            actualCalledTimes++
+        }
+
+        override fun checkCalledTimes(expected: Int) {
+            assertEquals(expected, actualCalledTimes)
+        }
     }
 }
 
@@ -217,65 +301,6 @@ interface FakeTransactionsListLiveDataWrapper : TransactionsListLiveDataWrapper.
     }
 }
 
-private const val GET_OR_CREATE_YEAR_MONTH = "YearMonthRepository#GetOrCreateYearMonth"
-private const val GET_TRANSACTIONS_REPOSITORY = "TransactionsRepository#GetTransactions"
-
-interface FakeYearMonthRepository : YearMonthRepository.GetOrCreateYearMonth {
-
-    fun check(expected: YearMonth)
-
-    class Base(private val order: Order) : FakeYearMonthRepository {
-
-        lateinit var actual: YearMonth
-
-        private var id: Long = 1L
-
-        override suspend fun getOrCreateYearMonth(month: Int, year: Int): YearMonth {
-            actual = YearMonth(id, month, year)
-            order.add(GET_OR_CREATE_YEAR_MONTH)
-            return actual
-        }
-
-        override fun check(expected: YearMonth) {
-            assertEquals(expected, actual)
-        }
-    }
-}
-
-interface FakeTransactionRepository : TransactionRepository.ReadList {
-
-    fun expectTransactions(list: List<Transaction>)
-
-    fun checkGetTransactionsIsCalled(expectedDateId: Long, expectedType: String)
-
-    class Base(private val order: Order) : FakeTransactionRepository {
-
-        private lateinit var expectTransactions: List<Transaction>
-        private var actualDateId: Long = -1
-        private lateinit var actualType: String
-
-        override suspend fun getTransactions(
-            dateId: Long,
-            type: String
-        ): List<Transaction> {
-
-            actualDateId = dateId
-            actualType = type
-            order.add(GET_TRANSACTIONS_REPOSITORY)
-
-            return expectTransactions
-        }
-
-        override fun expectTransactions(list: List<Transaction>) {
-            expectTransactions = list
-        }
-
-        override fun checkGetTransactionsIsCalled(expectedDateId: Long, expectedType: String) {
-            assertEquals(expectedDateId, actualDateId)
-            assertEquals(expectedType, actualType)
-        }
-    }
-}
 
 interface FakeTransactionMapper : TransactionMappers.ToUiLayer {
 
@@ -305,6 +330,24 @@ interface FakeTransactionMapper : TransactionMappers.ToUiLayer {
 
         override fun checkCalledTime(expectedCalledTimes: Int) {
             assertEquals(expectedCalledTimes, actualCalledTimes)
+        }
+    }
+}
+interface FakeNavigationByMonthUseCase: NavigationMonthUseCase {
+
+    fun expectedYearMonth()
+
+    class Base: FakeNavigationByMonthUseCase {
+        lateinit var expected: YearMonth
+        private var actualForward: Boolean? = null
+        private lateinit var actualCurrentMonth: YearMonth
+
+        override suspend fun invoke(
+            currentMonth: YearMonth,
+            forward: Boolean
+        ): YearMonth {
+            actualCurrentMonth = currentMonth
+            actualForward = forward
         }
     }
 }
