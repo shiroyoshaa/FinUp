@@ -11,6 +11,6 @@ import androidx.room.PrimaryKey
 )
 data class YearMonthCache(
     @PrimaryKey val id: Long,
+    @ColumnInfo(name = "year_value") val year: Int,
     @ColumnInfo(name = "month_value") val month: Int,
-    @ColumnInfo(name = "year_value") val year: Int
 )
