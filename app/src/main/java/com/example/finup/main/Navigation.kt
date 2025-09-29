@@ -1,26 +1,16 @@
 package com.example.finup.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.example.finup.core.LiveDataWrapper
 
 
-interface Navigation {
-    interface Update {
-        fun update(value: Screen)
-    }
+interface Navigation: LiveDataWrapper {
 
-    interface Read {
-        fun liveData(): LiveData<Screen>
-    }
+    interface Update: LiveDataWrapper.Update<Screen>
 
-    interface Mutable : Update, Read
-    class Base(private val liveData: MutableLiveData<Screen> = MutableLiveData()) : Mutable {
-        override fun liveData(): LiveData<Screen> {
-            return liveData
-        }
+    interface Read: LiveDataWrapper.Read<Screen>
 
-        override fun update(value: Screen) {
-            liveData.value = value
-        }
-    }
+    interface Mutable: Update, Read
+
+    class Base: Mutable, LiveDataWrapper.Abstract<Screen>()
+
 }
