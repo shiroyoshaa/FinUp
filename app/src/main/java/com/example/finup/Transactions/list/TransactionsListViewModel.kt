@@ -2,50 +2,69 @@ package com.example.finup.Transactions.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.finup.Transactions.core.DateProvider
-import com.example.finup.Transactions.core.TransactionRepository
-import com.example.finup.Transactions.core.UiState
-import com.example.finup.Transactions.core.UiStateLiveDataWrapper
-import com.example.finup.Transactions.core.YearMonthRepository
+import com.example.finup.Transactions.core.YearMonthStateManager
+import com.example.finup.Transactions.createEdit.CreateEditTransactionScreen
+import com.example.finup.Transactions.list.useCases.GetTransactionsListByPeriodUseCase
+import com.example.finup.Transactions.list.useCases.NavigationMonthUseCase
 import com.example.finup.Transactions.mappers.TransactionMappers
+import com.example.finup.main.Navigation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TransactionsListViewModel(
-    private val yearMonthRepository: YearMonthRepository.GetOrCreateYearMonth,
-    private val transactionsRepository: TransactionRepository.ReadList,
     private val transactionsListWrapper: TransactionsListLiveDataWrapper.Update,
-    private val uiStateLiveDataWrapper: UiStateLiveDataWrapper.All,
+    private val uiStateLiveDataWrapper: TransactionListUiStateWrapper.Mutable,
     private val transactionMapper: TransactionMappers.ToUiLayer,
-    private val dateProvider: DateProvider.All,
+    private val getTransactionsListByPeriodUseCase: GetTransactionsListByPeriodUseCase,
+    private val navigationByMonthUseCase: NavigationMonthUseCase,
+    private val navigation: Navigation.Update,
+    private val stateManagerWrapper: YearMonthStateManager.All,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val dispatcherMain: CoroutineDispatcher = Dispatchers.Main,
-
-    ) : ViewModel() {
+) : ViewModel() {
 
     fun init(type: String) {
 
-        val currentYear = dateProvider.getCurrentYear()
-        val currentMonth = dateProvider.getCurrentMonth()
-
         viewModelScope.launch(dispatcher) {
-            val yearMonth = yearMonthRepository.getOrCreateYearMonth(currentMonth, currentYear)
-            val transactions = transactionsRepository.getTransactions(yearMonth.dateId, type)
+
+            val currentYearMonth = stateManagerWrapper.getInitialYearMonth()
+            val result = getTransactionsListByPeriodUseCase(currentYearMonth, type)
             withContext(dispatcherMain) {
-                val mappedTransactions = transactionMapper.toUiLayer(transactions)
-                transactionsListWrapper.update(mappedTransactions)
-                val formattedDateYearMonth =
-                    dateProvider.formatDate(yearMonth.year, yearMonth.month)
-                val totalSumByMonth = transactions.sumOf { it.sum }
+                transactionsListWrapper.update(transactionMapper.toUiLayer(result.listTransactions))
                 uiStateLiveDataWrapper.update(
-                    UiState.ShowDateTitle(
-                        title = formattedDateYearMonth,
-                        total = totalSumByMonth.toString()
+                    TransactionsListUiState.ShowDateTitle(
+                        title = result.formattedDateYearMonth,
+                        total = result.totalSumByMonth,
                     )
                 )
             }
         }
+    }
+
+    fun navigateMonth(forward: Boolean, type: String) {
+
+        viewModelScope.launch(dispatcher) {
+
+            val currentYearMonth = stateManagerWrapper.getInitialYearMonth()
+            val navigatedYearMonth = navigationByMonthUseCase(currentYearMonth, forward)
+            stateManagerWrapper.saveYearMonthState(navigatedYearMonth)
+            val result = getTransactionsListByPeriodUseCase(navigatedYearMonth, type)
+            withContext(dispatcherMain) {
+                transactionsListWrapper.update(transactionMapper.toUiLayer(result.listTransactions))
+                uiStateLiveDataWrapper.update(
+                    TransactionsListUiState.ShowDateTitle(
+                        title = result.formattedDateYearMonth,
+                        total = result.totalSumByMonth,
+                    )
+                )
+            }
+        }
+    }
+
+    fun editTransaction(transactionUi: DisplayItem.TransactionDetails) {
+
+        navigation.update(CreateEditTransactionScreen(screenType = "Edit", transactionUi.id, transactionUi.type))
     }
 }
