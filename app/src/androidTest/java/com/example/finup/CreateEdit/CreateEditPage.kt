@@ -52,7 +52,7 @@ class CreateEditPage(
         amountLabel().check(matches(isDisplayed()))
     }
 
-    fun checkNoteVisibleNow() {
+    fun checkNotVisibleNow() {
         title().check(doesNotExist())
         amountLabel().check(doesNotExist())
     }
