@@ -32,7 +32,7 @@ class ScenarioTest {
         createPage.openDatePickerAndCLickButton(9, 13)
         createPage.checkDateVisibleNow("13/9/2025")
         createPage.clickSaveButton()
-        createPage.checkNoteVisibleNow()
+        createPage.checkNotVisibleNow()
 
         expenseListPage.checkVisibleNow()
         expenseListPage.checkDateTitleVisible("13 september", 0)
@@ -57,7 +57,7 @@ class ScenarioTest {
         createExpensePage.checkDateVisibleNow("13/9/2025")
 
         createExpensePage.clickSaveButton()
-        createExpensePage.checkNoteVisibleNow()
+        createExpensePage.checkNotVisibleNow()
 
         expenseListPage.checkVisibleNow()
         expenseListPage.checkDateTitleVisible("13 september", 0)
@@ -87,7 +87,7 @@ class ScenarioTest {
         createExpensePage.checkVisibleNow()
 
         createExpensePage.clickBackButton()
-        createExpensePage.checkNoteVisibleNow()
+        createExpensePage.checkNotVisibleNow()
         expenseListPage.checkVisibleNow()
     }
 
@@ -108,7 +108,7 @@ class ScenarioTest {
         createExpensePage.openDatePickerAndCLickButton(9, 2)
 
         createExpensePage.clickSaveButton()
-        createExpensePage.checkNoteVisibleNow()
+        createExpensePage.checkNotVisibleNow()
 
         expenseListPage.checkVisibleNow()
         expenseListPage.checkDateTitleVisible("2 september", 0)
@@ -129,7 +129,7 @@ class ScenarioTest {
         createExpensePage.clickGroceriesButton()
         createExpensePage.openDatePickerAndCLickButton(8, 25)
         createExpensePage.clickSaveButton()
-        createExpensePage.checkNoteVisibleNow()
+        createExpensePage.checkNotVisibleNow()
 
         expenseListPage.checkVisibleNow()
         expenseListPage.setDate(2025, 8)
@@ -155,7 +155,7 @@ class ScenarioTest {
         createIncomePage.openDatePickerAndCLickButton(9, 13)
         createIncomePage.checkDateVisibleNow("13/9/2025")
         createIncomePage.clickSaveButton()
-        createIncomePage.checkNoteVisibleNow()
+        createIncomePage.checkNotVisibleNow()
 
         incomeListPage.checkVisibleNow()
         incomeListPage.checkDateTitleVisible("13 september", 0)
@@ -179,7 +179,7 @@ class ScenarioTest {
         createIncomePage.checkDateVisibleNow("13/9/2025")
 
         createIncomePage.clickSaveButton()
-        createIncomePage.checkNoteVisibleNow()
+        createIncomePage.checkNotVisibleNow()
 
         incomeListPage.checkVisibleNow()
         incomeListPage.checkDateTitleVisible("13 september", 0)
@@ -199,7 +199,7 @@ class ScenarioTest {
         createIncomePage.selectKaspiBank()
         createIncomePage.openDatePickerAndCLickButton(8, 25)
         createIncomePage.clickSaveButton()
-        createIncomePage.checkNoteVisibleNow()
+        createIncomePage.checkNotVisibleNow()
 
         incomeListPage.checkVisibleNow()
         incomeListPage.setDate(2025, 8)
@@ -226,7 +226,7 @@ class ScenarioTest {
         createIncomePage.openDatePickerAndCLickButton(9, 25)
 
         createIncomePage.clickSaveButton()
-        createIncomePage.checkNoteVisibleNow()
+        createIncomePage.checkNotVisibleNow()
 
         incomeListPage.checkVisibleNow()
         incomeListPage.checkDateTitleVisible("13 september", 0)
@@ -258,7 +258,7 @@ class ScenarioTest {
         createIncomePage.checkVisibleNow()
 
         createIncomePage.clickBackButton()
-        createIncomePage.checkNoteVisibleNow()
+        createIncomePage.checkNotVisibleNow()
         incomeListPage.checkVisibleNow()
     }
 
