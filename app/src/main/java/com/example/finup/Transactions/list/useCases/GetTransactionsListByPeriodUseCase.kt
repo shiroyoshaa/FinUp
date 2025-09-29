@@ -18,7 +18,7 @@ interface GetTransactionsListByPeriodUseCase {
 
         override suspend fun invoke(yearMonth: YearMonth, type: String): Result {
 
-            val transactionList = transactionRepository.getTransactions(yearMonth.dateId, type)
+            val transactionList = transactionRepository.getTransactions(yearMonth.id, type)
 
             val formattedDateTitle = dateProvider.formatDate(yearMonth.year, yearMonth.month)
             val totalSumByMonth = transactionList.sumOf { it.sum }.toString()

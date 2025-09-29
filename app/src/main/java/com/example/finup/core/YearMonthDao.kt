@@ -10,10 +10,10 @@ import androidx.room.Query
 interface YearMonthDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(dateTitleCache: YearMonthCache)
+    suspend fun insert(yearMonthCache: YearMonthCache)
 
-    @Query("SELECT * FROM DATE_TABLE WHERE month_value = :month AND year_value = :year")
-    suspend fun getDateItem(month: Int, year: Int): YearMonthCache?
+    @Query("SELECT * FROM DATE_TABLE WHERE id = :id")
+    suspend fun getDateItem(id: Long): YearMonthCache
 
 
     @Query("SELECT * FROM DATE_TABLE ORDER BY year_value, month_value")
