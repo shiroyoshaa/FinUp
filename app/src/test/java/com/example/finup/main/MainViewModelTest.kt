@@ -14,7 +14,7 @@ class MainViewModelTest {
     @get:Before
     private val order = Order()
     private val navigation = FakeNavigation.Base(order)
-    private val uiStateLiveDataWrapper = FakeMainUiStateLiveDataWrapper.Base(order)
+    private val uiStateLiveDataWrapper = FakeMainUiStateLiveDataWrapper.Base()
     private val viewModel = MainViewModel(
         navigation = navigation,
         uiStateLiveDataWrapper = uiStateLiveDataWrapper,
@@ -45,7 +45,7 @@ interface FakeMainUiStateLiveDataWrapper : MainUiStateLiveDataWrapper.Mutable {
 
     fun check(expected: MainUiState)
 
-    class Base(private val order: Order) : FakeMainUiStateLiveDataWrapper {
+    class Base : FakeMainUiStateLiveDataWrapper {
 
         lateinit var actual: MainUiState
         override fun update(value: MainUiState) {
