@@ -4,6 +4,12 @@ interface CreateEditUiState {
 
     data class ShowCreateTransactionPage(
         val title: String,
-    ): CreateEditUiState
+    ) : CreateEditUiState
+
+    data class ShowEditTransactionPage(
+        val title: String,
+        val selectedCategory: String,
+        val sum: String,
+    ) : CreateEditUiState
 
 }
