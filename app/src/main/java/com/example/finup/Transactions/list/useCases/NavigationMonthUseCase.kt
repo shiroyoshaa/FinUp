@@ -1,7 +1,7 @@
 package com.example.finup.Transactions.list.useCases
 
-import com.example.finup.Transactions.core.YearMonth
-import com.example.finup.Transactions.core.YearMonthRepository
+import com.example.finup.domain.YearMonth
+import com.example.finup.domain.YearMonthRepository
 
 
 interface NavigationMonthUseCase {

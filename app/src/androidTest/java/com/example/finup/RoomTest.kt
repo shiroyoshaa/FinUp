@@ -4,11 +4,11 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.finup.core.AppDataBase
-import com.example.finup.core.YearMonthCache
-import com.example.finup.core.TransactionCache
-import com.example.finup.core.TransactionDao
-import com.example.finup.core.YearMonthDao
+import com.example.finup.data.AppDataBase
+import com.example.finup.data.YearMonthCache
+import com.example.finup.data.TransactionCache
+import com.example.finup.data.TransactionDao
+import com.example.finup.data.YearMonthDao
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals

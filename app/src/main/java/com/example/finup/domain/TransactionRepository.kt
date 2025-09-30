@@ -1,7 +1,8 @@
-package com.example.finup.Transactions.core
+package com.example.finup.domain
 
-import com.example.finup.core.TransactionCache
-import com.example.finup.core.TransactionDao
+import com.example.finup.domain.Now
+import com.example.finup.data.TransactionCache
+import com.example.finup.data.TransactionDao
 
 
 interface TransactionRepository {
@@ -42,13 +43,12 @@ interface TransactionRepository {
 
     interface ReadList : GetTransactions
 
-    interface Edit : GetTransaction, EditTransaction, DeleteTransaction
-
+    interface EditAndCreate : GetTransaction, EditTransaction, DeleteTransaction, CreateTransaction
 
     class Base(
         private val transactionDao: TransactionDao,
         private val now: Now
-    ) :  CreateTransaction, Edit, ReadList {
+    ) : EditAndCreate, ReadList {
 
         override suspend fun createTransaction(
             sum: Int,

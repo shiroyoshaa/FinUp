@@ -1,6 +1,6 @@
 package com.example.finup.main
 
-import com.example.finup.core.LiveDataWrapper
+import com.example.finup.arch.LiveDataWrapper
 
 interface MainUiStateLiveDataWrapper : LiveDataWrapper {
 

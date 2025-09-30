@@ -1,6 +1,6 @@
 package com.example.finup.Transactions.createEdit
 
-import com.example.finup.core.LiveDataWrapper
+import com.example.finup.arch.LiveDataWrapper
 
 interface CreateEditUiStateWrapper: LiveDataWrapper {
 

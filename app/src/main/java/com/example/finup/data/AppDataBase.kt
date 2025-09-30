@@ -1,4 +1,4 @@
-package com.example.finup.core
+package com.example.finup.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

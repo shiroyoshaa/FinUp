@@ -1,4 +1,4 @@
-package com.example.finup.Transactions.core
+package com.example.finup.domain
 
 import android.annotation.SuppressLint
 import java.time.YearMonth
@@ -18,9 +18,8 @@ interface DateProvider {
     interface FormatDate {
         fun formatDate(year: Int, month: Int): String
     }
-
-    interface All : GetYear, GetMonth, FormatDate
-
+    interface Getters: GetYear, GetMonth
+    interface All: Getters, FormatDate
     class Base(private val locale: Locale = Locale.getDefault()) : All {
         @SuppressLint("NewApi")
         override fun getCurrentYear() = YearMonth.now().year

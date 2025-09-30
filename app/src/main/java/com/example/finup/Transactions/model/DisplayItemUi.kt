@@ -1,10 +1,11 @@
-package com.example.finup.Transactions.list
+package com.example.finup.Transactions.model
 
-interface DisplayItem {
+interface DisplayItemUi {
+
     data class TransactionDate(
         val day: String,
         val totalSumByDay: String,
-    ): DisplayItem
+    ): DisplayItemUi
 
     data class TransactionDetails(
         val id: Long,
@@ -12,5 +13,5 @@ interface DisplayItem {
         val name: String,
         val type: String,
         val dateId: Long,
-    ): DisplayItem
+    ): DisplayItemUi
 }

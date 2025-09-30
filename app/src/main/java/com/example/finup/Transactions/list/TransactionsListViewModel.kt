@@ -2,11 +2,12 @@ package com.example.finup.Transactions.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.finup.Transactions.core.YearMonthStateManager
 import com.example.finup.Transactions.createEdit.CreateEditTransactionScreen
 import com.example.finup.Transactions.list.useCases.GetTransactionsListByPeriodUseCase
 import com.example.finup.Transactions.list.useCases.NavigationMonthUseCase
 import com.example.finup.Transactions.mappers.TransactionMappers
+import com.example.finup.Transactions.model.DisplayItemUi
+import com.example.finup.domain.YearMonthStateManager
 import com.example.finup.main.Navigation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TransactionsListViewModel(
-    private val transactionsListWrapper: TransactionsListLiveDataWrapper.Update,
+    private val transactionsListWrapper: TransactionsListLiveDataWrapper.UpdateList,
     private val uiStateLiveDataWrapper: TransactionListUiStateWrapper.Mutable,
     private val transactionMapper: TransactionMappers.ToUiLayer,
     private val getTransactionsListByPeriodUseCase: GetTransactionsListByPeriodUseCase,
@@ -63,8 +64,14 @@ class TransactionsListViewModel(
         }
     }
 
-    fun editTransaction(transactionUi: DisplayItem.TransactionDetails) {
+    fun editTransaction(transactionUi: DisplayItemUi.TransactionDetails) {
 
-        navigation.update(CreateEditTransactionScreen(screenType = "Edit", transactionUi.id, transactionUi.type))
+        navigation.update(
+            CreateEditTransactionScreen(
+                screenType = "Edit",
+                transactionUi.id,
+                transactionUi.type
+            )
+        )
     }
 }

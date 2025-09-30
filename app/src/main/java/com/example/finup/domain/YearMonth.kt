@@ -1,4 +1,4 @@
-package com.example.finup.Transactions.core
+package com.example.finup.domain
 
 data class YearMonth(
     val id: Long,

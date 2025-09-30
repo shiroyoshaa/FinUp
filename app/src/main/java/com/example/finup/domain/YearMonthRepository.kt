@@ -1,9 +1,9 @@
-package com.example.finup.Transactions.core
+package com.example.finup.domain
 
-import com.example.finup.Transactions.mappers.listToDomain
-import com.example.finup.Transactions.mappers.toDomain
-import com.example.finup.core.YearMonthCache
-import com.example.finup.core.YearMonthDao
+import com.example.finup.data.mappers.listToDomain
+import com.example.finup.data.mappers.toDomain
+import com.example.finup.data.YearMonthCache
+import com.example.finup.data.YearMonthDao
 
 interface YearMonthRepository {
 

@@ -1,4 +1,4 @@
-package com.example.finup.core
+package com.example.finup.arch
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

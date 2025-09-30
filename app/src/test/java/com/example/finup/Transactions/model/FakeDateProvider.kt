@@ -1,6 +1,7 @@
-package com.example.finup.Transactions.core
+package com.example.finup.Transactions.model
 
 import com.example.finup.core.Order
+import com.example.finup.domain.DateProvider
 import org.junit.Assert.assertEquals
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
