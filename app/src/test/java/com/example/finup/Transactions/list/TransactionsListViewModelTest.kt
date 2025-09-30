@@ -2,9 +2,6 @@ package com.example.finup.Transactions.list
 
 
 import androidx.lifecycle.LiveData
-import com.example.finup.Transactions.core.Transaction
-import com.example.finup.Transactions.core.YearMonth
-import com.example.finup.Transactions.core.YearMonthStateManager
 import com.example.finup.Transactions.createEdit.CreateEditTransactionScreen
 import com.example.finup.Transactions.list.FakeTransactionMapper.Companion.TRANSACTIONS_MAPPER
 import com.example.finup.Transactions.list.FakeTransactionsListLiveDataWrapper.Companion.TRANSACTION_UPDATE_LIST_LIVEDATA
@@ -13,11 +10,15 @@ import com.example.finup.Transactions.list.FakeYearMonthStateManager.Companion.G
 import com.example.finup.Transactions.list.FakeYearMonthStateManager.Companion.SAVE_YEAR_MONTH_MANAGER
 import com.example.finup.Transactions.list.useCases.GetTransactionsListByPeriodUseCase
 import com.example.finup.Transactions.list.useCases.NavigationMonthUseCase
-import com.example.finup.Transactions.list.useCases.Result
 import com.example.finup.Transactions.mappers.TransactionMappers
+import com.example.finup.Transactions.model.DisplayItemUi
 import com.example.finup.core.FakeNavigation
 import com.example.finup.core.FakeNavigation.Companion.NAVIGATION
 import com.example.finup.core.Order
+import com.example.finup.domain.Result
+import com.example.finup.domain.Transaction
+import com.example.finup.domain.YearMonth
+import com.example.finup.domain.YearMonthStateManager
 import junit.framework.TestCase
 import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals
@@ -106,30 +107,30 @@ class TransactionsListViewModelTest {
         )
         transactionMapper.expectedUiLayer(
             listOf(
-                DisplayItem.TransactionDate(day = "10 September", "4000"),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDate(day = "10 September", "4000"),
+                DisplayItemUi.TransactionDetails(
                     id = 3L,
                     sum = 1000,
                     name = "Utilities",
                     type = "Expense",
                     dateId = 1L
                 ),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDetails(
                     id = 4L,
                     sum = 3000,
                     name = "Other",
                     type = "Expense",
                     dateId = 1L
                 ),
-                DisplayItem.TransactionDate(day = "25 September", "6000"),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDate(day = "25 September", "6000"),
+                DisplayItemUi.TransactionDetails(
                     id = 5L,
                     sum = 2000,
                     name = "Groceries",
                     type = "Expense",
                     dateId = 1L
                 ),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDetails(
                     id = 6L,
                     sum = 4000,
                     name = "Transfers",
@@ -153,30 +154,30 @@ class TransactionsListViewModelTest {
 
         transactionsListWrapper.check(
             listOf(
-                DisplayItem.TransactionDate(day = "10 September", "4000"),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDate(day = "10 September", "4000"),
+                DisplayItemUi.TransactionDetails(
                     id = 3L,
                     sum = 1000,
                     name = "Utilities",
                     type = "Expense",
                     dateId = 1L
                 ),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDetails(
                     id = 4L,
                     sum = 3000,
                     name = "Other",
                     type = "Expense",
                     dateId = 1L
                 ),
-                DisplayItem.TransactionDate(day = "25 September", "6000"),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDate(day = "25 September", "6000"),
+                DisplayItemUi.TransactionDetails(
                     id = 5L,
                     sum = 2000,
                     name = "Groceries",
                     type = "Expense",
                     dateId = 1L
                 ),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDetails(
                     id = 6L,
                     sum = 4000,
                     name = "Transfers",
@@ -243,24 +244,24 @@ class TransactionsListViewModelTest {
         )
         transactionMapper.expectedUiLayer(
             listOf(
-                DisplayItem.TransactionDate(day = "1 October", "3000"),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDate(day = "1 October", "3000"),
+                DisplayItemUi.TransactionDetails(
                     id = 7L,
                     sum = 3000,
                     name = "BCC Bank",
                     type = "Income",
                     dateId = 2L
                 ),
-                DisplayItem.TransactionDate(day = "5 October", "2000"),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDate(day = "5 October", "2000"),
+                DisplayItemUi.TransactionDetails(
                     id = 5L,
                     sum = 2000,
                     name = "Kaspi Bank",
                     type = "Income",
                     dateId = 1L
                 ),
-                DisplayItem.TransactionDate(day = "23 October", "1000"),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDate(day = "23 October", "1000"),
+                DisplayItemUi.TransactionDetails(
                     id = 5L,
                     sum = 1000,
                     name = "Kaspi Bank",
@@ -286,24 +287,24 @@ class TransactionsListViewModelTest {
 
         transactionsListWrapper.check(
             listOf(
-                DisplayItem.TransactionDate(day = "1 October", "3000"),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDate(day = "1 October", "3000"),
+                DisplayItemUi.TransactionDetails(
                     id = 7L,
                     sum = 3000,
                     name = "BCC Bank",
                     type = "Income",
                     dateId = 2L
                 ),
-                DisplayItem.TransactionDate(day = "5 October", "2000"),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDate(day = "5 October", "2000"),
+                DisplayItemUi.TransactionDetails(
                     id = 5L,
                     sum = 2000,
                     name = "Kaspi Bank",
                     type = "Income",
                     dateId = 1L
                 ),
-                DisplayItem.TransactionDate(day = "23 October", "1000"),
-                DisplayItem.TransactionDetails(
+                DisplayItemUi.TransactionDate(day = "23 October", "1000"),
+                DisplayItemUi.TransactionDetails(
                     id = 5L,
                     sum = 1000,
                     name = "Kaspi Bank",
@@ -333,7 +334,7 @@ class TransactionsListViewModelTest {
     }
     @Test
     fun editTransactionTest(){
-        viewModel.editTransaction(transactionUi = DisplayItem.TransactionDetails(id = 2L,sum = 2000,type = "Income", name = "Other", dateId = 10L))
+        viewModel.editTransaction(transactionUi = DisplayItemUi.TransactionDetails(id = 2L,sum = 2000,type = "Income", name = "Other", dateId = 10L))
         navigation.check(CreateEditTransactionScreen(screenType = "Edit", 2L, "Income"))
         order.check(listOf(NAVIGATION))
     }
@@ -397,9 +398,9 @@ private interface FakeGetTransactionsListByPeriodUseCase : GetTransactionsListBy
     }
 }
 
-private interface FakeTransactionsListLiveDataWrapper : TransactionsListLiveDataWrapper.Update {
+private interface FakeTransactionsListLiveDataWrapper : TransactionsListLiveDataWrapper.UpdateList {
 
-    fun check(expected: List<DisplayItem>)
+    fun check(expected: List<DisplayItemUi>)
 
     companion object {
         const val TRANSACTION_UPDATE_LIST_LIVEDATA = "TransactionsListLiveDataWrapper#Update"
@@ -407,14 +408,14 @@ private interface FakeTransactionsListLiveDataWrapper : TransactionsListLiveData
 
     class Base(private val order: Order) : FakeTransactionsListLiveDataWrapper {
 
-        private lateinit var actualList: List<DisplayItem>
+        private lateinit var actualList: List<DisplayItemUi>
 
-        override fun update(value: List<DisplayItem>) {
+        override fun update(value: List<DisplayItemUi>) {
             actualList = value
             order.add(TRANSACTION_UPDATE_LIST_LIVEDATA)
         }
 
-        override fun check(expected: List<DisplayItem>) {
+        override fun check(expected: List<DisplayItemUi>) {
             assertEquals(expected, actualList)
         }
     }
@@ -426,7 +427,7 @@ private interface FakeTransactionMapper : TransactionMappers.ToUiLayer {
 
     fun checkCalledTime(expectedCalledTimes: Int)
 
-    fun expectedUiLayer(expectedDisplayItem: List<DisplayItem>)
+    fun expectedUiLayer(expectedDisplayItem: List<DisplayItemUi>)
 
     companion object {
         const val TRANSACTIONS_MAPPER = "TransactionMappers#ToUiLayer"
@@ -434,16 +435,16 @@ private interface FakeTransactionMapper : TransactionMappers.ToUiLayer {
 
     class Base(private val order: Order) : FakeTransactionMapper {
 
-        private lateinit var mock: List<DisplayItem>
+        private lateinit var mock: List<DisplayItemUi>
         private var actualCalledTimes: Int = 0
 
-        override fun toUiLayer(transactions: List<Transaction>): List<DisplayItem> {
+        override fun toUiLayer(transactions: List<Transaction>): List<DisplayItemUi> {
             actualCalledTimes++
             order.add(TRANSACTIONS_MAPPER)
             return mock
         }
 
-        override fun expectedUiLayer(expectedDisplayItem: List<DisplayItem>) {
+        override fun expectedUiLayer(expectedDisplayItem: List<DisplayItemUi>) {
             mock = expectedDisplayItem
         }
 
