@@ -17,7 +17,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.example.finup.R
 import com.example.finup.RecyclerViewMatcher
-import com.example.finup.main.item
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.hamcrest.Matchers.allOf
@@ -30,7 +29,9 @@ class ExpenseAndIncomePage(
 ) {
     private var currentYearMonth = ""
 
-    private fun recyclerViewMatcher() = RecyclerViewMatcher(recyclerViewId = pagesIds.recyclerViewId)
+    private fun recyclerViewMatcher() =
+        RecyclerViewMatcher(recyclerViewId = pagesIds.recyclerViewId)
+
     private fun title(title: String) = onView(
         allOf(
             isAssignableFrom(TextView::class.java),
@@ -56,13 +57,13 @@ class ExpenseAndIncomePage(
             date.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault()))
     }
 
-    fun checkVisibleNow() {
+    fun checkVisibleNow(sum: String) {
         title(currentYearMonth).check(matches(isDisplayed()))
+        checkSumVisibleNow(sum).check(matches(isDisplayed()))
         bottomNav().check(matches(isDisplayed()))
     }
 
-    fun checkSumVisibleNow(sum: String) {
-        onView(
+    private fun  checkSumVisibleNow(sum: String) = onView(
             allOf(
                 isAssignableFrom(TextView::class.java),
                 withId(toolsBar.titleSumTextView),
@@ -70,8 +71,8 @@ class ExpenseAndIncomePage(
                 withParent(withId(pagesIds.rootId)),
                 withText(sum),
             )
-        ).check(matches(isDisplayed()))
-    }
+        )
+
 
     fun checkNotVisibleNow() {
         title(currentYearMonth).check(doesNotExist())
@@ -100,8 +101,9 @@ class ExpenseAndIncomePage(
     }
 
 
-    private fun dateTitle(position: Int) = onView(
+    private fun dateTitle(position: Int,title: String) = onView(
         allOf(
+            withText(title),
             isAssignableFrom(TextView::class.java),
             recyclerViewMatcher().atPosition(position, header.headerDateTextView),
             withParent(isAssignableFrom(LinearLayout::class.java)),
@@ -109,12 +111,24 @@ class ExpenseAndIncomePage(
         )
     )
 
-    fun checkDateTitleVisible(date: String, position: Int) {
-        dateTitle(position).check(matches(withText(date)))
+    private fun sumByDay(position: Int,sum: String) = onView(
+        allOf(
+            withText(sum),
+            isAssignableFrom(TextView::class.java),
+            recyclerViewMatcher().atPosition(position, header.headerTotalSumTextView),
+            withParent(isAssignableFrom(LinearLayout::class.java),
+            )
+        )
+    )
+
+    fun checkDateTitleVisible(date: String, position: Int,sum: String) {
+        dateTitle(position,date).check(matches(isDisplayed()))
+        sumByDay(position,sum).check(matches(isDisplayed()))
     }
 
-    fun checkDateTitleNoteVisible(date: String, position: Int) {
-        dateTitle(position).check(doesNotExist())
+    fun checkDateTitleNotVisible(position: Int,title: String,sum: String) {
+        dateTitle(position,title).check(doesNotExist())
+        sumByDay(position,sum).check(doesNotExist())
     }
 
     fun clickRecyclerButton(position: Int) {
@@ -149,7 +163,7 @@ class ExpenseAndIncomePage(
         itemSum(position).check(matches(withText(sum)))
     }
 
-    fun checkItemNotVisible(title: String, sum: String, position: Int) {
+    fun checkItemNotVisible(position: Int) {
         itemTitle(position).check(doesNotExist())
         itemSum(position).check(doesNotExist())
     }
@@ -168,7 +182,7 @@ class ExpenseAndIncomePage(
     fun clickItemAt(position: Int, nameExpense: String) {
         onView(
             allOf(
-                recyclerViewMatcher().atPosition(0, item.itemNameTextView),
+                recyclerViewMatcher().atPosition(position, item.itemNameTextView),
                 withText(nameExpense)
 
             )
@@ -187,6 +201,7 @@ class ExpenseAndIncomePage(
             .perform(click())
     }
 }
+
 private val toolsBar = ToolBar(
     titleMonthTextView = R.id.titleMonthTextView,
     titleSumTextView = R.id.titleSumTextView,
@@ -202,6 +217,7 @@ private val bottomNav = BottomNav(
 private val header = Header(
     headerRootLayout = R.id.headerRootLayout,
     headerDateTextView = R.id.headerDateTextView,
+    headerTotalSumTextView = R.id.headerTotalSumTextView,
     headerButton = R.id.headerButton,
 )
 private val item = Item(
@@ -210,7 +226,7 @@ private val item = Item(
     itemNameTextView = R.id.itemNameTextView,
 )
 private val pagesIds = MainPageIds(
-    rootId  = R.id.RootLayout,
+    rootId = R.id.RootLayout,
     floatingButtonId = R.id.addFloatingButtom,
     recyclerViewId = R.id.recyclerView,
 )

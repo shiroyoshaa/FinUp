@@ -11,7 +11,6 @@ data class ToolBar(
     val titleSumTextView: Int,
     val leftImageButtonId: Int,
     val rightImageButtonId: Int,
-
     )
 
 data class BottomNav(
@@ -24,6 +23,7 @@ data class BottomNav(
 data class Header(
     val headerRootLayout: Int,
     val headerDateTextView: Int,
+    val headerTotalSumTextView: Int,
     val headerButton: Int,
 )
 
