@@ -1,9 +1,6 @@
-package com.example.finup.Transactions.createEdit.CreateEditUseCasesTest
+package com.example.finup.domain
 
-import com.example.finup.Transactions.createEdit.UseCases.CleanUpEmptyPeriodUseCase
-import com.example.finup.domain.Transaction
-import com.example.finup.domain.TransactionRepository
-import com.example.finup.domain.YearMonthRepository
+import com.example.finup.domain.useCases.CleanUpEmptyPeriodUseCase
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Before

@@ -3,8 +3,8 @@ package com.example.finup.Transactions.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.finup.Transactions.createEdit.CreateEditTransactionScreen
-import com.example.finup.Transactions.list.useCases.GetTransactionsListByPeriodUseCase
-import com.example.finup.Transactions.list.useCases.NavigationMonthUseCase
+import com.example.finup.domain.useCases.GetTransactionsListByPeriodUseCase
+import com.example.finup.domain.useCases.NavigationMonthUseCase
 import com.example.finup.Transactions.mappers.TransactionMappers
 import com.example.finup.Transactions.model.DisplayItemUi
 import com.example.finup.domain.YearMonthStateManager

@@ -2,8 +2,8 @@ package com.example.finup.Transactions.createEdit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.finup.Transactions.createEdit.UseCases.CleanUpEmptyPeriodUseCase
-import com.example.finup.Transactions.createEdit.UseCases.GetOrCreatePeriodUseCase
+import com.example.finup.domain.useCases.CleanUpEmptyPeriodUseCase
+import com.example.finup.domain.useCases.GetOrCreatePeriodUseCase
 import com.example.finup.Transactions.model.TransactionInputDetails
 import com.example.finup.domain.TransactionRepository
 import kotlinx.coroutines.CoroutineDispatcher

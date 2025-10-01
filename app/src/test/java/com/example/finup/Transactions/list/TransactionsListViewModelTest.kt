@@ -8,8 +8,6 @@ import com.example.finup.Transactions.list.FakeTransactionsListLiveDataWrapper.C
 import com.example.finup.Transactions.list.FakeUiStateLiveDataWrapper.Companion.UI_STATE_UPDATE_LIVEDATA
 import com.example.finup.Transactions.list.FakeYearMonthStateManager.Companion.GET_YEAR_MONTH_MANAGER
 import com.example.finup.Transactions.list.FakeYearMonthStateManager.Companion.SAVE_YEAR_MONTH_MANAGER
-import com.example.finup.Transactions.list.useCases.GetTransactionsListByPeriodUseCase
-import com.example.finup.Transactions.list.useCases.NavigationMonthUseCase
 import com.example.finup.Transactions.mappers.TransactionMappers
 import com.example.finup.Transactions.model.DisplayItemUi
 import com.example.finup.core.FakeNavigation
@@ -19,6 +17,8 @@ import com.example.finup.domain.Result
 import com.example.finup.domain.Transaction
 import com.example.finup.domain.YearMonth
 import com.example.finup.domain.YearMonthStateManager
+import com.example.finup.domain.useCases.GetTransactionsListByPeriodUseCase
+import com.example.finup.domain.useCases.NavigationMonthUseCase
 import junit.framework.TestCase
 import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals

@@ -1,4 +1,4 @@
-package com.example.finup.Transactions.list.useCases
+package com.example.finup.domain.useCases
 
 import com.example.finup.domain.YearMonth
 import com.example.finup.domain.YearMonthRepository
@@ -23,8 +23,7 @@ interface NavigationMonthUseCase {
                     months[indexOfCurrentYearMonth + 1]
                 }
                 !forward && indexOfCurrentYearMonth > 0 -> {
-                    months[indexOfCurrentYearMonth - 1]
-                }
+                    months[indexOfCurrentYearMonth - 1]                }
 
                 else -> currentMonth
             }

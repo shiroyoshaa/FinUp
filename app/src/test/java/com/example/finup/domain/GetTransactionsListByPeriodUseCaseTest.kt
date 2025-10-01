@@ -1,11 +1,6 @@
-package com.example.finup.Transactions.list.TransactionListUseCasesTest
+package com.example.finup.domain
 
-import com.example.finup.Transactions.list.useCases.GetTransactionsListByPeriodUseCase
-import com.example.finup.domain.DateProvider
-import com.example.finup.domain.Result
-import com.example.finup.domain.Transaction
-import com.example.finup.domain.TransactionRepository
-import com.example.finup.domain.YearMonth
+import com.example.finup.domain.useCases.GetTransactionsListByPeriodUseCase
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before

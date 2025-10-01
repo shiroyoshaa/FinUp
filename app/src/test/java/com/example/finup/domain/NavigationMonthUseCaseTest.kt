@@ -1,8 +1,6 @@
-package com.example.finup.Transactions.list.TransactionListUseCasesTest
+package com.example.finup.domain
 
-import com.example.finup.Transactions.list.useCases.NavigationMonthUseCase
-import com.example.finup.domain.YearMonth
-import com.example.finup.domain.YearMonthRepository
+import com.example.finup.domain.useCases.NavigationMonthUseCase
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -10,11 +8,11 @@ import org.junit.Test
 class NavigationMonthUseCaseTest {
 
     private lateinit var navigationMonthUseCase: NavigationMonthUseCase
-    private lateinit var yearMonthRepository: FakeYearMonthRepository
+    private lateinit var yearMonthRepository: FakeGetYearMonthRepository
 
     @Test
     fun test() = runBlocking {
-        yearMonthRepository = FakeYearMonthRepository.Base()
+        yearMonthRepository = FakeGetYearMonthRepository.Base()
         navigationMonthUseCase = NavigationMonthUseCase.Base(yearMonthRepository)
         yearMonthRepository.expectedListYearMonth(listOf(YearMonth(1L, 11, 2025), YearMonth(2L,12,2025)))
         val actualYearMonth = navigationMonthUseCase(YearMonth(2L, 12, 2025), false)
@@ -28,12 +26,12 @@ class NavigationMonthUseCaseTest {
     }
 }
 
-private interface FakeYearMonthRepository : YearMonthRepository.GetAllPeriods {
+private interface FakeGetYearMonthRepository : YearMonthRepository.GetAllPeriods {
 
     fun expectedListYearMonth(expected: List<YearMonth>)
     fun checkCalledTimes(expected: Int)
 
-    class Base : FakeYearMonthRepository {
+    class Base : FakeGetYearMonthRepository {
 
         private lateinit var mockedList: List<YearMonth>
         private var actualCalledTime = 0

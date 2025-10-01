@@ -1,4 +1,4 @@
-package com.example.finup.Transactions.createEdit.UseCases
+package com.example.finup.domain.useCases
 
 import com.example.finup.domain.TransactionRepository
 import com.example.finup.domain.YearMonthRepository
