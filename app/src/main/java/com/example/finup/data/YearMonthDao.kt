@@ -18,4 +18,7 @@ interface YearMonthDao {
 
     @Query("SELECT * FROM DATE_TABLE ORDER BY year_value, month_value")
     suspend fun getAllPeriods(): List<YearMonthCache>
+
+    @Query("DELETE FROM DATE_TABLE WHERE id = :dateId")
+    suspend fun delete(dateId: Long)
 }

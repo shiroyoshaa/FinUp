@@ -5,9 +5,9 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.finup.data.AppDataBase
-import com.example.finup.data.YearMonthCache
 import com.example.finup.data.TransactionCache
 import com.example.finup.data.TransactionDao
+import com.example.finup.data.YearMonthCache
 import com.example.finup.data.YearMonthDao
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -26,7 +26,9 @@ class RoomTest {
 
     @Before
     fun createDb() {
+
         val context = ApplicationProvider.getApplicationContext<Context>()
+
         db = Room.inMemoryDatabaseBuilder(
             context,
             AppDataBase::class.java,
@@ -42,12 +44,28 @@ class RoomTest {
     }
 
     @Test
-    fun testDates() = runBlocking {
-        yearMonthDao.insert(dateTitleCache = YearMonthCache(id = 3L, month = 12, year = 2021))
-        val actual = yearMonthDao.getDateItem(month = 12, year = 2021)
+    fun testAddAndGetYearMonth() = runBlocking {
+        yearMonthDao.insert(yearMonthCache = YearMonthCache(id = 3L, month = 12, year = 2021))
+        yearMonthDao.insert(yearMonthCache = YearMonthCache(id = 4L, month = 1, year = 2022))
+        yearMonthDao.insert(yearMonthCache = YearMonthCache(id = 5L, month = 2, year = 2022))
+
+        val actual = yearMonthDao.getDateItem(3L)
         val expected = YearMonthCache(id = 3L, month = 12, year = 2021)
         assertEquals(expected, actual)
 
+        val actualListPeriods= yearMonthDao.getAllPeriods()
+        val expectedListPeriods = listOf(YearMonthCache(id = 3L, month = 12, year = 2021),YearMonthCache(id = 4L, month = 1, year = 2022),YearMonthCache(id = 5L, month = 2, year = 2022))
+        assertEquals(expectedListPeriods,actualListPeriods)
+    }
+
+    @Test
+    fun deleteYearMonth()= runBlocking {
+        yearMonthDao.insert(yearMonthCache = YearMonthCache(id = 5L, month = 2, year = 2022))
+        yearMonthDao.insert(yearMonthCache = YearMonthCache(id = 6L, month = 3, year = 2023))
+        yearMonthDao.delete(dateId = 5L)
+        val actualResult = yearMonthDao.getAllPeriods()
+        val expectedResult = listOf(YearMonthCache(id = 6L, month = 3, year = 2023))
+        assertEquals(expectedResult,actualResult)
     }
 
     @Test
