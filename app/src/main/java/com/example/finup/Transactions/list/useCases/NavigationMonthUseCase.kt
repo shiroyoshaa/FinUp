@@ -10,8 +10,6 @@ interface NavigationMonthUseCase {
 
     class Base(private val repository: YearMonthRepository.GetAllPeriods) : NavigationMonthUseCase {
 
-        private var currentIndexOfMonth = 0
-
         override suspend operator fun  invoke(
             currentMonth: YearMonth,
             forward: Boolean,
