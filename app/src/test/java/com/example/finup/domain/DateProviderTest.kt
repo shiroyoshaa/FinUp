@@ -1,6 +1,5 @@
-package com.example.finup.Transactions.model
+package com.example.finup.domain
 
-import com.example.finup.domain.DateProvider
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 import java.util.Locale
