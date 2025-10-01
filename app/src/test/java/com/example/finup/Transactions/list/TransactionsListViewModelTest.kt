@@ -205,7 +205,7 @@ class TransactionsListViewModelTest {
     }
 
     @Test
-    fun navigateMonth() {
+    fun `month navigation for toolBar`() {
 
         yearMonthStateManager.expectedSavedYearMonth(YearMonth(1L, 9, 2025))
         navigationByMonthUseCase.expectedYearMonth(YearMonth(2L, 10, 2025))
@@ -333,7 +333,7 @@ class TransactionsListViewModelTest {
         )
     }
     @Test
-    fun editTransactionTest(){
+    fun `navigating to edit transaction page`(){
         viewModel.editTransaction(transactionUi = DisplayItemUi.TransactionDetails(id = 2L,sum = 2000,type = "Income", name = "Other", dateId = 10L))
         navigation.check(CreateEditTransactionScreen(screenType = "Edit", 2L, "Income"))
         order.check(listOf(NAVIGATION))
