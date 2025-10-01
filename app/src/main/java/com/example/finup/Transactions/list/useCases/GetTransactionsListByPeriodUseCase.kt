@@ -11,7 +11,7 @@ interface GetTransactionsListByPeriodUseCase {
     suspend operator fun invoke(yearMonth: YearMonth, type: String): Result
 
     class Base(
-        private val transactionRepository: TransactionRepository.ReadList,
+        private val transactionRepository: TransactionRepository.GetTransactions,
         private val dateProvider: DateProvider.FormatDate
     ) :
 
