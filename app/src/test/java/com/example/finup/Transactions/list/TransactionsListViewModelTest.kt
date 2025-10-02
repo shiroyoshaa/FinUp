@@ -398,7 +398,7 @@ private interface FakeGetTransactionsListByPeriodUseCase : GetTransactionsListBy
     }
 }
 
-private interface FakeTransactionsListLiveDataWrapper : TransactionsListLiveDataWrapper.UpdateList {
+private interface FakeTransactionsListLiveDataWrapper : TransactionsListLiveDataWrapper.Mutable {
 
     fun check(expected: List<DisplayItemUi>)
 
@@ -417,6 +417,10 @@ private interface FakeTransactionsListLiveDataWrapper : TransactionsListLiveData
 
         override fun check(expected: List<DisplayItemUi>) {
             assertEquals(expected, actualList)
+        }
+
+        override fun liveData(): LiveData<List<DisplayItemUi>> {
+            throw IllegalStateException("not used in test")
         }
     }
 }
@@ -437,8 +441,7 @@ private interface FakeTransactionMapper : TransactionMappers.ToUiLayer {
 
         private lateinit var mock: List<DisplayItemUi>
         private var actualCalledTimes: Int = 0
-
-        override fun toUiLayer(transactions: List<Transaction>): List<DisplayItemUi> {
+        override fun toUiLayer(transactions: List<Transaction>,formattedMonth: String): List<DisplayItemUi> {
             actualCalledTimes++
             order.add(TRANSACTIONS_MAPPER)
             return mock
