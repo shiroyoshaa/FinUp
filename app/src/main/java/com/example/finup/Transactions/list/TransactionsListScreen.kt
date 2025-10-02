@@ -4,5 +4,5 @@ import com.example.finup.main.Screen
 
 data class TransactionsListScreen(
     val type: String,
-): Screen
+): Screen.Replace(TransactionsListFragment())
 
