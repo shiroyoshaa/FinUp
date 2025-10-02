@@ -14,7 +14,7 @@ class MainViewModelTest {
     @get:Before
     private val order = Order()
     private val navigation = FakeNavigation.Base(order)
-    private val uiStateLiveDataWrapper = FakeMainUiStateLiveDataWrapper.Base()
+    private val uiStateLiveDataWrapper = FakeMainUiStateLiveDataWrapper.Base(order)
     private val viewModel = MainViewModel(
         navigation = navigation,
         uiStateLiveDataWrapper = uiStateLiveDataWrapper,
@@ -36,7 +36,7 @@ class MainViewModelTest {
     fun `navigate to create page`() {
         viewModel.createTransaction(type = "Expense")
         uiStateLiveDataWrapper.check(MainUiState.Hide)
-        navigation.check(CreateEditTransactionScreen(screenType = "Create", 2L, "Expense"))
+        navigation.check(CreateEditTransactionScreen(screenType = "Create", 0L, "Expense"))
 
     }
 }
@@ -44,11 +44,14 @@ class MainViewModelTest {
 interface FakeMainUiStateLiveDataWrapper : MainUiStateLiveDataWrapper.Mutable {
 
     fun check(expected: MainUiState)
-
-    class Base : FakeMainUiStateLiveDataWrapper {
+    companion object {
+        const val MAIN_UI_STATE_UPDATE = "MainUiStateLiveDataWrapper#Update"
+    }
+    class Base(private val order: Order): FakeMainUiStateLiveDataWrapper {
 
         lateinit var actual: MainUiState
         override fun update(value: MainUiState) {
+            order.add(MAIN_UI_STATE_UPDATE)
             actual = value
         }
 

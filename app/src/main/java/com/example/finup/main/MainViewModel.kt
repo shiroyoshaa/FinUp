@@ -1,5 +1,6 @@
 package com.example.finup.main
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.finup.Transactions.createEdit.CreateEditTransactionScreen
 import com.example.finup.Transactions.list.TransactionsListScreen
@@ -9,7 +10,8 @@ class MainViewModel(private val navigation: Navigation.Mutable,
 private val uiStateLiveDataWrapper: MainUiStateLiveDataWrapper.Mutable) : ViewModel() {
 
     fun init(firstRun: Boolean) {
-        navigation.update(TransactionsListScreen("Expense"))
+        if(firstRun)
+            navigation.update(TransactionsListScreen("Expense"))
     }
 
     fun navigateToIncomes() {
@@ -22,4 +24,6 @@ private val uiStateLiveDataWrapper: MainUiStateLiveDataWrapper.Mutable) : ViewMo
         uiStateLiveDataWrapper.update(MainUiState.Hide)
         navigation.update(CreateEditTransactionScreen("Create",0L,type))
     }
+    fun navigationLiveData() = navigation.liveData()
+    fun uiStateLiveData() = uiStateLiveDataWrapper.liveData()
 }
