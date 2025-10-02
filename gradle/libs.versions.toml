@@ -14,6 +14,7 @@ espressoContrib = "3.7.0"
 room = "2.6.1"
 ksp = "2.0.21-1.0.28"
 lifecycle = "2.8.6"
+google-material = "1.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +30,7 @@ espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib"
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+google-material = { module = "com.google.android.material:material", version.ref = "google-material" }
 
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 

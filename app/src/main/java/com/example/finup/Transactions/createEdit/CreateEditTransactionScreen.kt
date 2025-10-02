@@ -6,4 +6,4 @@ data class CreateEditTransactionScreen(
     val screenType: String,
     val transactionId: Long,
     val transactionType: String,
-): Screen
+): Screen.Replace(CreateEditFragment.newInstance(screenType,transactionId,transactionType))

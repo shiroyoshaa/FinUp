@@ -2,10 +2,9 @@ package com.example.finup.CreateEdit
 
 import android.widget.Button
 import android.widget.DatePicker
-import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.R
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
@@ -20,6 +19,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.example.finup.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import org.hamcrest.Matchers
@@ -60,7 +60,7 @@ class CreateEditPage(
     fun clickBackButton() {
         onView(
             allOf(
-                isAssignableFrom(ImageButton::class.java),
+                isAssignableFrom(ImageView::class.java),
                 withId(mainIds.backButton),
                 withParent(withId(mainIds.editCreateRootLayout)),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
@@ -192,10 +192,10 @@ class CreateEditPage(
 
 private val mainIds = CreateEditPageIds(
     titleTextView = R.id.titleTextView,
-    editCreateRootLayout = R.id.editCreateRootLayout,
+    editCreateRootLayout = R.id.createEditRootLayout,
     amountLabelTextView = R.id.amountLabelTextView,
     backButton = R.id.backButton,
-    sumInputEditText = R.id.suminputEditText,
+    sumInputEditText = R.id.sumInputEditText,
     openDateButton = R.id.openDateButton,
     dateTextView = R.id.dateTextView,
     saveButton = R.id.saveButton,

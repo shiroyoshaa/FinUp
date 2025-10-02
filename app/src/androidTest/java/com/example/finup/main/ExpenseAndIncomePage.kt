@@ -2,6 +2,7 @@ package com.example.finup.main
 
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -81,7 +82,7 @@ class ExpenseAndIncomePage(
     fun clickLeftArrow() {
         onView(
             allOf(
-                isAssignableFrom(ImageButton::class.java),
+                isAssignableFrom(ImageView::class.java),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
                 withId(toolsBar.leftImageButtonId),
                 withParent(withId(pagesIds.rootId))
@@ -92,7 +93,7 @@ class ExpenseAndIncomePage(
     fun clickRightArrow() {
         onView(
             allOf(
-                isAssignableFrom(ImageButton::class.java),
+                isAssignableFrom(ImageView::class.java),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
                 withId(toolsBar.rightImageButtonId),
                 withParent(withId(pagesIds.rootId))
@@ -174,7 +175,7 @@ class ExpenseAndIncomePage(
                 isAssignableFrom(FloatingActionButton::class.java),
                 withId(pagesIds.floatingButtonId),
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(pagesIds.rootId)),
+                withParent(withId(pagesIds.startRootId)),
             )
         ).perform(click())
     }
@@ -205,15 +206,17 @@ class ExpenseAndIncomePage(
 private val toolsBar = ToolBar(
     titleMonthTextView = R.id.titleMonthTextView,
     titleSumTextView = R.id.titleSumTextView,
-    leftImageButtonId = R.id.leftImageButtonId,
-    rightImageButtonId = R.id.rightImageButtonId,
+    leftImageButtonId = R.id.leftImageViewId,
+    rightImageButtonId = R.id.rightImageViewId,
 )
+
 private val bottomNav = BottomNav(
     coordinatorLayout = R.id.coordinatorLayout,
     bottomNavId = R.id.bottomNav,
     expenseIcon = R.id.expenseIcon,
     incomeIcon = R.id.incomeIcon,
 )
+
 private val header = Header(
     headerRootLayout = R.id.headerRootLayout,
     headerDateTextView = R.id.headerDateTextView,
@@ -226,7 +229,8 @@ private val item = Item(
     itemNameTextView = R.id.itemNameTextView,
 )
 private val pagesIds = MainPageIds(
+    startRootId = R.id.startRootLayout,
     rootId = R.id.RootLayout,
-    floatingButtonId = R.id.addFloatingButtom,
+    floatingButtonId = R.id.addFloatingButton,
     recyclerViewId = R.id.recyclerView,
 )

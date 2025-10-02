@@ -32,7 +32,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget= "11"
+    }
+    buildFeatures {
+        viewBinding = true
     }
 }
 
@@ -41,6 +44,7 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+    implementation(libs.google.material)
 
     implementation(libs.lifecycle.viewmodel.ktx)
 

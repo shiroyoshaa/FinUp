@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">FinUp</string>
+    <string name="Expense">Expenses</string>
+    <string name="income">Incomes</string>
+    <string name="total">total:</string>
+    <string name="CreateExpensePageTitle">Create expense</string>
+    <string name="CreateIncomePageTitle">Create income</string>
+    <string name="EditExpenseTitle">Edit expense</string>
+    <string name="EditIncomeTitle">Edit income</string>
+    <string name="utilities">Utilities</string>
+    <string name="transfers">Transfers</string>
+    <string name="groceries">Groceries</string>
+    <string name="other">other</string>
+    <string name="save">save</string>
+    <string name="delete">delete</string>
 </resources>

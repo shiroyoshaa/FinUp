@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FinUp</string>
+    <string name="Expense">Расходы</string>
+    <string name="income">Доходы</string>
+    <string name="total">Сумма:</string>
+    <string name="CreateExpensePageTitle">Добавить Расход</string>
+    <string name="CreateIncomePageTitle">Добавить Доход</string>
+    <string name="EditExpenseTitle">Редактировать расход</string>
+    <string name="EditIncomeTitle">Редактировать доход</string>
+    <string name="utilities">Коммуналка</string>
+    <string name="transfers">Переводы</string>
+    <string name="groceries">Продукты</string>
+    <string name="other">Прочие</string>
+    <string name="save">Сохранить</string>
+    <string name="delete">Удалить</string>
+</resources>

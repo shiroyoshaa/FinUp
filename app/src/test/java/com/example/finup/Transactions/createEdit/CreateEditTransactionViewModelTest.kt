@@ -1,13 +1,19 @@
 package com.example.finup.Transactions.createEdit
 
 import androidx.lifecycle.LiveData
-import com.example.finup.domain.useCases.CleanUpEmptyPeriodUseCase
-import com.example.finup.domain.useCases.GetOrCreatePeriodUseCase
+import com.example.finup.Transactions.list.TransactionsListScreen
 import com.example.finup.Transactions.model.TransactionInputDetails
+import com.example.finup.core.FakeNavigation
+import com.example.finup.core.FakeNavigation.Companion.NAVIGATION
 import com.example.finup.core.Order
 import com.example.finup.domain.Transaction
 import com.example.finup.domain.TransactionRepository
 import com.example.finup.domain.YearMonth
+import com.example.finup.domain.useCases.CleanUpEmptyPeriodUseCase
+import com.example.finup.domain.useCases.GetOrCreatePeriodUseCase
+import com.example.finup.main.FakeMainUiStateLiveDataWrapper
+import com.example.finup.main.FakeMainUiStateLiveDataWrapper.Companion.MAIN_UI_STATE_UPDATE
+import com.example.finup.main.MainUiState
 import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -22,6 +28,8 @@ class CreateEditTransactionViewModelTest {
     private lateinit var transactionRepository: FakeTransactionRepository
     private lateinit var getOrCreatePeriodUseCase: FakeGetOrCreatePeriodUseCase
     private lateinit var cleanUpEmptyPeriodUseCase: FakeCleanUpEmptyPeriodUseCase
+    private lateinit var mainUiStateLiveDataWrapper: FakeMainUiStateLiveDataWrapper
+    private lateinit var navigation: FakeNavigation
 
     @Before
     fun setUp() {
@@ -30,11 +38,15 @@ class CreateEditTransactionViewModelTest {
         transactionRepository = FakeTransactionRepository.Base(order)
         getOrCreatePeriodUseCase = FakeGetOrCreatePeriodUseCase.Base(order)
         cleanUpEmptyPeriodUseCase = FakeCleanUpEmptyPeriodUseCase.Base(order)
+        mainUiStateLiveDataWrapper = FakeMainUiStateLiveDataWrapper.Base(order)
+        navigation = FakeNavigation.Base(order)
         viewModel = CreateEditTransactionViewModel(
             uiStateLiveDataWrapper = uiStateLiveDataWrapper,
+            mainUiStateLiveDataWrapper = mainUiStateLiveDataWrapper,
             repository = transactionRepository,
             getOrCreatePeriodUseCase = getOrCreatePeriodUseCase,
             cleanUpEmptyPeriodUseCase = cleanUpEmptyPeriodUseCase,
+            navigation = navigation,
             dispatcher = Dispatchers.Unconfined,
             dispatcherMain = Dispatchers.Unconfined,
         )
@@ -93,7 +105,16 @@ class CreateEditTransactionViewModelTest {
                 3000, "Utilities", "Expense", 25, 1L
             )
         )
-        order.check(listOf(GET_OR_CREATE_PERIOD_USE_CASE, CREATE_TRANSACTION_REPOSITORY))
+        navigation.check(TransactionsListScreen(type = "Expense"))
+        mainUiStateLiveDataWrapper.check(MainUiState.Show)
+        order.check(
+            listOf(
+                GET_OR_CREATE_PERIOD_USE_CASE,
+                CREATE_TRANSACTION_REPOSITORY,
+                NAVIGATION,
+                MAIN_UI_STATE_UPDATE
+            )
+        )
     }
 
     @Test
@@ -125,11 +146,15 @@ class CreateEditTransactionViewModelTest {
                 5L
             )
         )
+        navigation.check(TransactionsListScreen(type = "Expense"))
+        mainUiStateLiveDataWrapper.check(MainUiState.Show)
         order.check(
             listOf(
                 GET_OR_CREATE_PERIOD_USE_CASE,
                 CLEAN_UP_USE_CASE,
-                EDIT_TRANSACTION_REPOSITORY
+                EDIT_TRANSACTION_REPOSITORY,
+                NAVIGATION,
+                MAIN_UI_STATE_UPDATE,
             )
         )
     }
@@ -147,10 +172,34 @@ class CreateEditTransactionViewModelTest {
             )
         )
         viewModel.delete(transactionId = 3L, transactionType = "Expense")
-        transactionRepository.checkGetOrDeleteIsCalled(expectedId = 3L, "Expense") //this is get method
-        transactionRepository.checkGetOrDeleteIsCalled(expectedId = 3L, "Expense") //this is delete method
+        transactionRepository.checkGetOrDeleteIsCalled(
+            expectedId = 3L,
+            "Expense"
+        ) //this is get method
+        transactionRepository.checkGetOrDeleteIsCalled(
+            expectedId = 3L,
+            "Expense"
+        ) //this is delete method
         cleanUpEmptyPeriodUseCase.check(44L)
-        order.check(listOf(GET_TRANSACTION_REPOSITORY,DELETE_TRANSACTION_REPOSITORY,CLEAN_UP_USE_CASE))
+        navigation.check(TransactionsListScreen(type = "Expense"))
+        mainUiStateLiveDataWrapper.check(MainUiState.Show)
+        order.check(
+            listOf(
+                GET_TRANSACTION_REPOSITORY,
+                DELETE_TRANSACTION_REPOSITORY,
+                CLEAN_UP_USE_CASE,
+                NAVIGATION,
+                MAIN_UI_STATE_UPDATE,
+            )
+        )
+    }
+
+    @Test
+    fun `arrow back press`() {
+        viewModel.comeback(type = "Expense")
+        navigation.check(TransactionsListScreen("Expense"))
+        mainUiStateLiveDataWrapper.check(MainUiState.Show)
+        order.check(listOf(NAVIGATION,MAIN_UI_STATE_UPDATE))
     }
 }
 
