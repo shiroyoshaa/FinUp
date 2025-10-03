@@ -3,7 +3,6 @@ package com.example.finup.arch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.finup.Transactions.createEdit.CreateEditTransactionViewModel
 import com.example.finup.Transactions.createEdit.CreateEditUiStateWrapper
@@ -11,10 +10,12 @@ import com.example.finup.Transactions.list.TransactionListUiStateWrapper
 import com.example.finup.Transactions.list.TransactionsListLiveDataWrapper
 import com.example.finup.Transactions.list.TransactionsListViewModel
 import com.example.finup.Transactions.mappers.TransactionUiMapper
+import com.example.finup.data.DataStoreManager
 import com.example.finup.data.TransactionDao
 import com.example.finup.data.TransactionRepositoryImpl
 import com.example.finup.data.YearMonthDao
 import com.example.finup.data.YearMonthRepositoryImpl
+import com.example.finup.data.YearMonthStateRepositoryImpl
 import com.example.finup.domain.DateProvider
 import com.example.finup.domain.Now
 import com.example.finup.domain.YearMonthStateManager
@@ -32,7 +33,7 @@ interface ProvideViewModel {
 
     fun <T : ViewModel> getViewModel(owner: ViewModelStoreOwner, modelClass: Class<T>): T
 
-    class Base(transactionDao: TransactionDao, yearMonthDao: YearMonthDao, now: Now) :
+    class Base(transactionDao: TransactionDao, yearMonthDao: YearMonthDao, now: Now,dataStoreManager: DataStoreManager) :
         ViewModelProvider.Factory, ProvideViewModel {
         private val mainUiStateLiveDataWrapper: MainUiStateLiveDataWrapper.Mutable =
             MainUiStateLiveDataWrapper.Base()
@@ -49,9 +50,9 @@ interface ProvideViewModel {
         private val getOrCreatePeriodUseCase = GetOrCreatePeriodUseCase.Base(yearMonthRepository)
         private val cleanUpEmptyPeriodUseCase = CleanUpEmptyPeriodUseCase.Base(transactionRepository,yearMonthRepository)
         private val navigation = Navigation.Base()
+        private val yearMonthStateRepository = YearMonthStateRepositoryImpl(dataStoreManager)
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-            val handle = extras.createSavedStateHandle()
-            val stateManager = YearMonthStateManager.Base(yearMonthRepository, handle, dateProvider)
+            val stateManager = YearMonthStateManager.Base(yearMonthRepository,  yearMonthStateRepository,dateProvider)
             return when (modelClass) {
                 MainViewModel::class.java -> MainViewModel(navigation, mainUiStateLiveDataWrapper)
                 TransactionsListViewModel::class.java -> TransactionsListViewModel(

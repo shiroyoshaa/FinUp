@@ -12,13 +12,13 @@ interface YearMonthDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(yearMonthCache: YearMonthCache)
 
-    @Query("SELECT * FROM DATE_TABLE WHERE id = :id")
+    @Query("SELECT * FROM date_table WHERE id = :id")
     suspend fun getDateItem(id: Long): YearMonthCache
 
 
-    @Query("SELECT * FROM DATE_TABLE ORDER BY year_value, month_value")
+    @Query("SELECT * FROM date_table ORDER BY year_value, month_value")
     suspend fun getAllPeriods(): List<YearMonthCache>
 
-    @Query("DELETE FROM DATE_TABLE WHERE id = :dateId")
+    @Query("DELETE FROM date_table WHERE id = :dateId")
     suspend fun delete(dateId: Long)
 }
