@@ -10,7 +10,7 @@ import com.example.finup.Transactions.createEdit.CreateEditUiStateWrapper
 import com.example.finup.Transactions.list.TransactionListUiStateWrapper
 import com.example.finup.Transactions.list.TransactionsListLiveDataWrapper
 import com.example.finup.Transactions.list.TransactionsListViewModel
-import com.example.finup.Transactions.mappers.TransactionMappers
+import com.example.finup.Transactions.mappers.TransactionUiMapper
 import com.example.finup.data.TransactionDao
 import com.example.finup.data.TransactionRepositoryImpl
 import com.example.finup.data.YearMonthDao
@@ -39,7 +39,7 @@ interface ProvideViewModel {
         private val createEditUiStateWrapper = CreateEditUiStateWrapper.Base()
         private val transactionListWrapper = TransactionsListLiveDataWrapper.Base()
         private val transactionListUiStateWrapper = TransactionListUiStateWrapper.Base()
-        private val transactionMapper = TransactionMappers.Base()
+        private val transactionMapper = TransactionUiMapper.Base()
         private val dateProvider = DateProvider.Base()
         private val transactionRepository = TransactionRepositoryImpl(transactionDao, now)
         private val yearMonthRepository = YearMonthRepositoryImpl(yearMonthDao, now)

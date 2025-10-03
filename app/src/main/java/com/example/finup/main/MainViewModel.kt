@@ -1,6 +1,5 @@
 package com.example.finup.main
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.finup.Transactions.createEdit.CreateEditTransactionScreen
 import com.example.finup.Transactions.list.TransactionsListScreen
@@ -17,13 +16,16 @@ private val uiStateLiveDataWrapper: MainUiStateLiveDataWrapper.Mutable) : ViewMo
     fun navigateToIncomes() {
         navigation.update(TransactionsListScreen("Income"))
     }
+
     fun navigateToExpenses(){
         navigation.update(TransactionsListScreen("Expense"))
     }
+
     fun createTransaction(type: String){
         uiStateLiveDataWrapper.update(MainUiState.Hide)
         navigation.update(CreateEditTransactionScreen("Create",0L,type))
     }
+
     fun navigationLiveData() = navigation.liveData()
     fun uiStateLiveData() = uiStateLiveDataWrapper.liveData()
 }

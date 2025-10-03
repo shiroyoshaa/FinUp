@@ -8,7 +8,7 @@ import com.example.finup.Transactions.list.FakeTransactionsListLiveDataWrapper.C
 import com.example.finup.Transactions.list.FakeUiStateLiveDataWrapper.Companion.UI_STATE_UPDATE_LIVEDATA
 import com.example.finup.Transactions.list.FakeYearMonthStateManager.Companion.GET_YEAR_MONTH_MANAGER
 import com.example.finup.Transactions.list.FakeYearMonthStateManager.Companion.SAVE_YEAR_MONTH_MANAGER
-import com.example.finup.Transactions.mappers.TransactionMappers
+import com.example.finup.Transactions.mappers.TransactionUiMapper
 import com.example.finup.Transactions.model.DisplayItemUi
 import com.example.finup.core.FakeNavigation
 import com.example.finup.core.FakeNavigation.Companion.NAVIGATION
@@ -426,7 +426,7 @@ private interface FakeTransactionsListLiveDataWrapper : TransactionsListLiveData
 }
 
 
-private interface FakeTransactionMapper : TransactionMappers.ToUiLayer {
+private interface FakeTransactionMapper : TransactionUiMapper.ToUiLayer {
 
 
     fun checkCalledTime(expectedCalledTimes: Int)

@@ -1,5 +1,7 @@
 package com.example.finup.data
 
+import com.example.finup.data.mappers.transactionDataToDomain
+import com.example.finup.data.mappers.transactionListDataToDomain
 import com.example.finup.domain.Now
 import com.example.finup.domain.Transaction
 import com.example.finup.domain.TransactionRepository.EditAndCreate
@@ -37,30 +39,12 @@ class TransactionRepositoryImpl(
 
     override suspend fun getOneTransaction(id: Long, type: String): Transaction {
         val transactionCache = transactionDao.getOneTransaction(id, type)
-        val transaction = Transaction(
-            transactionCache.id,
-            transactionCache.sum,
-            transactionCache.name,
-            transactionCache.type,
-            transactionCache.day,
-            transactionCache.dateId
-        )
-        return transaction
+        return transactionCache.transactionDataToDomain()
     }
 
     override suspend fun getTransactions(dateId: Long, type: String): List<Transaction> {
         val listTransactions = transactionDao.getTransactions(dateId, type)
-        val newConvertedTransactions = listTransactions.map {
-            Transaction(
-                it.id,
-                it.sum,
-                it.name,
-                it.type,
-                it.day,
-                it.dateId
-            )
-        }
-        return newConvertedTransactions
+        return listTransactions.transactionListDataToDomain()
     }
 
     override suspend fun deleteTransaction(id: Long) {

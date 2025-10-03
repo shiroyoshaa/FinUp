@@ -1,7 +1,7 @@
 package com.example.finup.data
 
-import com.example.finup.data.mappers.listToDomain
-import com.example.finup.data.mappers.toDomain
+import com.example.finup.data.mappers.yearMonthDataToDomain
+import com.example.finup.data.mappers.yearMonthListDataToDomain
 import com.example.finup.domain.Now
 import com.example.finup.domain.YearMonth
 import com.example.finup.domain.YearMonthRepository.CreateAndLoad
@@ -19,18 +19,18 @@ class YearMonthRepositoryImpl(
 
         val currentPeriods = yearMonthDao.getAllPeriods()
 
-        return currentPeriods.listToDomain()
+        return currentPeriods.yearMonthListDataToDomain()
     }
 
     override suspend fun create(year: Int, month: Int): YearMonth {
         val newId = now.timeInMills()
         val newCache = YearMonthCache(newId, year, month)
         yearMonthDao.insert(YearMonthCache(newId, year, month))
-        return newCache.toDomain()
+        return newCache.yearMonthDataToDomain()
     }
 
     override suspend fun getById(yearMonthId: Long): YearMonth {
-        return yearMonthDao.getDateItem(yearMonthId).toDomain()
+        return yearMonthDao.getDateItem(yearMonthId).yearMonthDataToDomain()
     }
 
     override suspend fun delete(dateId: Long) {

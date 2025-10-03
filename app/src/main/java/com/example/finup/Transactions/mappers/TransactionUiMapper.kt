@@ -4,7 +4,7 @@ package com.example.finup.Transactions.mappers
 import com.example.finup.Transactions.model.DisplayItemUi
 import com.example.finup.domain.Transaction
 
-interface TransactionMappers {
+interface TransactionUiMapper {
     interface ToUiLayer {
         fun toUiLayer(transactions: List<Transaction>, month: String): List<DisplayItemUi>
     }

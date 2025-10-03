@@ -3,7 +3,7 @@ package com.example.finup.Transactions.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.finup.Transactions.createEdit.CreateEditTransactionScreen
-import com.example.finup.Transactions.mappers.TransactionMappers
+import com.example.finup.Transactions.mappers.TransactionUiMapper
 import com.example.finup.Transactions.model.DisplayItemUi
 import com.example.finup.domain.YearMonthStateManager
 import com.example.finup.domain.useCases.GetTransactionsListByPeriodUseCase
@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 class TransactionsListViewModel(
     private val transactionsListWrapper: TransactionsListLiveDataWrapper.Mutable,
     private val uiStateLiveDataWrapper: TransactionListUiStateWrapper.Mutable,
-    private val transactionMapper: TransactionMappers.ToUiLayer,
+    private val transactionMapper: TransactionUiMapper.ToUiLayer,
     private val getTransactionsListByPeriodUseCase: GetTransactionsListByPeriodUseCase,
     private val navigationByMonthUseCase: NavigationMonthUseCase,
     private val navigation: Navigation.Update,
