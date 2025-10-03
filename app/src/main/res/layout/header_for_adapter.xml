@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+
+    android:id="@+id/headerRootLayout"
+    >
+
+
+    <TextView
+        android:id="@+id/headerDateTextView"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="2 August" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
+    <TextView
+        android:id="@+id/headerTotalSumTextView"
+        android:textSize="20sp"
+        android:padding="9dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="5000" />
+
+    <Button
+        android:id="@+id/headerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

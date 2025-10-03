@@ -11,32 +11,21 @@
 
     <FrameLayout
         android:id="@+id/container"
-        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout"
+        android:fitsSystemWindows="true"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addFloatingButton"
-        android:layout_margin="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout"
+        android:layout_margin="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent" />
-
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-
-        android:id="@+id/coordinatorLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
 
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -46,5 +35,4 @@
             app:itemIconSize="45dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/bottom_nav_menu" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

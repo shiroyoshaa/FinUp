@@ -62,7 +62,13 @@ class TransactionsListViewModelTest {
 
     @Test
     fun init() {
-        yearMonthStateManager.expectedSavedYearMonth(yearMonth = YearMonth(id = 1L, month = 9,year = 2025))
+        yearMonthStateManager.expectedSavedYearMonth(
+            expectedYearMonth = YearMonth(
+                id = 1L,
+                month = 9,
+                year = 2025
+            )
+        )
         getTransactionsListByPeriodUseCase.expectedResult(
             Result(
                 listOf(
@@ -273,11 +279,7 @@ class TransactionsListViewModelTest {
         yearMonthStateManager.checkGetCalledTimes(expectedGetCalledTimes = 1)
         navigationByMonthUseCase.check(true, expectedCurrentYearMonth = YearMonth(1L, 9, 2025))
         yearMonthStateManager.checkSaveIsCalled(
-            expectedYearMonth = YearMonth(
-                id = 2L,
-                10,
-                2025
-            )
+            2L
         )
 
         getTransactionsListByPeriodUseCase.checkCalledTimes(YearMonth(2L, 10, 2025), "Income")
@@ -337,7 +339,8 @@ class TransactionsListViewModelTest {
 //        order.check(listOf(NAVIGATION))
 //    }
 }
-private interface FakeUiStateLiveDataWrapper: TransactionListUiStateWrapper.Mutable {
+
+private interface FakeUiStateLiveDataWrapper : TransactionListUiStateWrapper.Mutable {
 
     fun check(expectedUiState: ShowDateTitle)
 
@@ -345,7 +348,7 @@ private interface FakeUiStateLiveDataWrapper: TransactionListUiStateWrapper.Muta
         const val UI_STATE_UPDATE_LIVEDATA = "UiStateLiveDataWrapper#Update"
     }
 
-    class Base(private val order: Order): FakeUiStateLiveDataWrapper {
+    class Base(private val order: Order) : FakeUiStateLiveDataWrapper {
 
         lateinit var actualUiState: ShowDateTitle
 
@@ -439,7 +442,10 @@ private interface FakeTransactionMapper : TransactionUiMapper.ToUiLayer {
 
         private lateinit var mock: List<DisplayItemUi>
         private var actualCalledTimes: Int = 0
-        override fun toUiLayer(transactions: List<Transaction>,formattedMonth: String): List<DisplayItemUi> {
+        override fun toUiLayer(
+            transactions: List<Transaction>,
+            formattedMonth: String
+        ): List<DisplayItemUi> {
             actualCalledTimes++
             order.add(TRANSACTIONS_MAPPER)
             return mock
@@ -496,8 +502,9 @@ private interface FakeYearMonthStateManager : YearMonthStateManager.All {
 
     fun checkGetCalledTimes(expectedGetCalledTimes: Int)
 
-    fun checkSaveIsCalled(expectedYearMonth: YearMonth)
-    fun expectedSavedYearMonth(yearMonth: YearMonth)
+    fun checkSaveIsCalled(expectedYearMonthId: Long)
+
+    fun expectedSavedYearMonth(expectedYearMonth: YearMonth)
 
     companion object {
         const val GET_YEAR_MONTH_MANAGER = "YearMonthStateManager#getInitialYearMonth"
@@ -509,7 +516,7 @@ private interface FakeYearMonthStateManager : YearMonthStateManager.All {
         private var actualGetCalledTimes: Int = 0
 
         private lateinit var mock: YearMonth
-        private lateinit var savedYearMonth: YearMonth
+        private var savedYearMonthId = 0L
 
         override suspend fun getInitialYearMonth(): YearMonth {
             order.add(GET_YEAR_MONTH_MANAGER)
@@ -517,9 +524,9 @@ private interface FakeYearMonthStateManager : YearMonthStateManager.All {
             return mock
         }
 
-        override fun saveYearMonthState(yearMonth: YearMonth) {
+        override suspend fun saveYearMonthState(id: Long) {
             order.add(SAVE_YEAR_MONTH_MANAGER)
-            savedYearMonth = yearMonth
+            savedYearMonthId = id
         }
 
         override fun expectedSavedYearMonth(yearMonth: YearMonth) {
@@ -530,8 +537,8 @@ private interface FakeYearMonthStateManager : YearMonthStateManager.All {
             assertEquals(expectedGetCalledTimes, actualGetCalledTimes)
         }
 
-        override fun checkSaveIsCalled(expectedYearMonth: YearMonth) {
-            assertEquals(expectedYearMonth, savedYearMonth)
+        override fun checkSaveIsCalled(expectedYearMonthId: Long) {
+            assertEquals(expectedYearMonthId, savedYearMonthId)
         }
     }
 }

@@ -45,6 +45,8 @@
         android:text="23000" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:paddingBottom="170dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:id="@+id/recyclerView"
         android:layout_marginTop="45dp"
         android:layout_width="wrap_content"
