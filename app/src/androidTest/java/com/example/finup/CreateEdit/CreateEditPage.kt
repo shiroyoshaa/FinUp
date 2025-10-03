@@ -1,7 +1,7 @@
 package com.example.finup.CreateEdit
 
 import android.widget.Button
-import android.widget.DatePicker
+import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -11,19 +11,17 @@ import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.PickerActions
-import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
+import androidx.test.espresso.matcher.ViewMatchers.withTagValue
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.example.finup.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.`is`
 
 class CreateEditPage(
     private val title: String,
@@ -79,7 +77,9 @@ class CreateEditPage(
         ).perform(typeText(sum), closeSoftKeyboard())
     }
 
-    fun openDatePickerAndCLickButton(month: Int, day: Int) {
+    fun openDatePickerAndCLickButton(month: String, day: String) {
+        val year = 2025
+
         onView(
             allOf(
                 isAssignableFrom(MaterialButton::class.java),
@@ -88,11 +88,14 @@ class CreateEditPage(
                 withParent(isAssignableFrom(ConstraintLayout::class.java)),
             )
         ).check(matches(isDisplayed())).perform(click())
-        onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
-            .perform(PickerActions.setDate(2025, month, day))
-        onView(withText("OK"))
-            .inRoot(isDialog())
-            .perform(click())
+
+        onView(withTagValue(`is`("TOGGLE_BUTTON_TAG" as Any))).perform(click())
+        onView(
+            isAssignableFrom(TextInputEditText::class.java)
+        ).perform(typeText("$month$day$year"))
+        onView(
+            withText("OK")
+        ).perform(click())
     }
 
     fun checkDateVisibleNow(date: String) {
@@ -135,7 +138,7 @@ class CreateEditPage(
         allOf(
             isAssignableFrom(MaterialButton::class.java),
             withId(buttonIds),
-            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+            withParent(isAssignableFrom(GridLayout::class.java)),
             withParent(withId(parentId)),
             withText(categoryText)
         )
@@ -189,6 +192,7 @@ class CreateEditPage(
         ).check(matches(isDisplayed())).perform(click())
     }
 }
+
 
 private val mainIds = CreateEditPageIds(
     titleTextView = R.id.titleTextView,

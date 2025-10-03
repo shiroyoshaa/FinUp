@@ -1,12 +1,10 @@
 package com.example.finup.main
 
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
@@ -24,7 +22,6 @@ import org.hamcrest.Matchers.allOf
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlin.Int
 
 class ExpenseAndIncomePage(
 ) {
@@ -47,24 +44,25 @@ class ExpenseAndIncomePage(
         allOf(
             isAssignableFrom(BottomNavigationView::class.java),
             withId(bottomNav.bottomNavId),
-            withParent(isAssignableFrom(CoordinatorLayout::class.java)),
-            withParent(withId(bottomNav.coordinatorLayout))
-        )
-    )
+            withParent(isAssignableFrom(ConstraintLayout::class.java)),
+            withParent(
+                withId(pagesIds.startRootId),
+            )
+        ))
 
-    fun setDate(year: Int, month: Int) {
-        val date = YearMonth.of(year, month)
-        currentYearMonth =
-            date.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault()))
-    }
+        fun setDate(year: Int, month: Int) {
+            val date = YearMonth.of(year, month)
+            currentYearMonth =
+                date.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault()))
+        }
 
-    fun checkVisibleNow(sum: String) {
-        title(currentYearMonth).check(matches(isDisplayed()))
-        checkSumVisibleNow(sum).check(matches(isDisplayed()))
-        bottomNav().check(matches(isDisplayed()))
-    }
+        fun checkVisibleNow(sum: String) {
+            title(currentYearMonth).check(matches(isDisplayed()))
+            checkSumVisibleNow(sum).check(matches(isDisplayed()))
+            bottomNav().check(matches(isDisplayed()))
+        }
 
-    private fun  checkSumVisibleNow(sum: String) = onView(
+                private fun checkSumVisibleNow(sum: String) = onView(
             allOf(
                 isAssignableFrom(TextView::class.java),
                 withId(toolsBar.titleSumTextView),
@@ -75,132 +73,133 @@ class ExpenseAndIncomePage(
         )
 
 
-    fun checkNotVisibleNow() {
-        title(currentYearMonth).check(doesNotExist())
-    }
+        fun checkNotVisibleNow() {
+            title(currentYearMonth).check(doesNotExist())
+        }
 
-    fun clickLeftArrow() {
-        onView(
+        fun clickLeftArrow() {
+            onView(
+                allOf(
+                    isAssignableFrom(ImageView::class.java),
+                    withParent(isAssignableFrom(ConstraintLayout::class.java)),
+                    withId(toolsBar.leftImageButtonId),
+                    withParent(withId(pagesIds.rootId))
+                )
+            ).perform(click())
+        }
+
+        fun clickRightArrow() {
+            onView(
+                allOf(
+                    isAssignableFrom(ImageView::class.java),
+                    withParent(isAssignableFrom(ConstraintLayout::class.java)),
+                    withId(toolsBar.rightImageButtonId),
+                    withParent(withId(pagesIds.rootId))
+                )
+            ).perform(click())
+        }
+
+
+                private fun dateTitle(position: Int, title: String) = onView(
             allOf(
-                isAssignableFrom(ImageView::class.java),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withId(toolsBar.leftImageButtonId),
-                withParent(withId(pagesIds.rootId))
-            )
-        ).perform(click())
-    }
-
-    fun clickRightArrow() {
-        onView(
-            allOf(
-                isAssignableFrom(ImageView::class.java),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withId(toolsBar.rightImageButtonId),
-                withParent(withId(pagesIds.rootId))
-            )
-        ).perform(click())
-    }
-
-
-    private fun dateTitle(position: Int,title: String) = onView(
-        allOf(
-            withText(title),
-            isAssignableFrom(TextView::class.java),
-            recyclerViewMatcher().atPosition(position, header.headerDateTextView),
-            withParent(isAssignableFrom(LinearLayout::class.java)),
-            withParent(withId(header.headerRootLayout))
-        )
-    )
-
-    private fun sumByDay(position: Int,sum: String) = onView(
-        allOf(
-            withText(sum),
-            isAssignableFrom(TextView::class.java),
-            recyclerViewMatcher().atPosition(position, header.headerTotalSumTextView),
-            withParent(isAssignableFrom(LinearLayout::class.java),
-            )
-        )
-    )
-
-    fun checkDateTitleVisible(date: String, position: Int,sum: String) {
-        dateTitle(position,date).check(matches(isDisplayed()))
-        sumByDay(position,sum).check(matches(isDisplayed()))
-    }
-
-    fun checkDateTitleNotVisible(position: Int,title: String,sum: String) {
-        dateTitle(position,title).check(doesNotExist())
-        sumByDay(position,sum).check(doesNotExist())
-    }
-
-    fun clickRecyclerButton(position: Int) {
-        onView(
-            allOf(
-                isAssignableFrom(Button::class.java),
-                recyclerViewMatcher().atPosition(position, header.headerButton),
+                withText(title),
+                isAssignableFrom(TextView::class.java),
+                recyclerViewMatcher().atPosition(position, header.headerDateTextView),
                 withParent(isAssignableFrom(LinearLayout::class.java)),
-                withParent(withId(header.headerRootLayout)),
+                withParent(withId(header.headerRootLayout))
             )
-        ).check(matches(isDisplayed())).perform(click())
-    }
-
-    private fun itemTitle(position: Int) = onView(
-        allOf(
-            isAssignableFrom(TextView::class.java),
-            withParent(isAssignableFrom(LinearLayout::class.java)),
-            recyclerViewMatcher().atPosition(position, item.itemNameTextView),
         )
-    )
 
-    private fun itemSum(position: Int) = onView(
-        allOf(
-            isAssignableFrom(TextView::class.java),
-            withParent(withId(item.itemRootLayout)),
-            recyclerViewMatcher().atPosition(position, item.itemSumTextView),
-        )
-    )
-
-    fun checkItemVisible(title: String, sum: String, position: Int) {
-        itemTitle(position).check(matches(withText(title)))
-        itemSum(position).check(matches(withText(sum)))
-    }
-
-    fun checkItemNotVisible(position: Int) {
-        itemTitle(position).check(doesNotExist())
-        itemSum(position).check(doesNotExist())
-    }
-
-    fun clickCreateButton() {
-        onView(
+                private fun sumByDay(position: Int, sum: String) = onView(
             allOf(
-                isAssignableFrom(FloatingActionButton::class.java),
-                withId(pagesIds.floatingButtonId),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                withParent(withId(pagesIds.startRootId)),
+                withText(sum),
+                isAssignableFrom(TextView::class.java),
+                recyclerViewMatcher().atPosition(position, header.headerTotalSumTextView),
+                withParent(
+                    isAssignableFrom(LinearLayout::class.java),
+                )
             )
-        ).perform(click())
-    }
+        )
 
-    fun clickItemAt(position: Int, nameExpense: String) {
-        onView(
+        fun checkDateTitleVisible(date: String, position: Int, sum: String) {
+            dateTitle(position, date).check(matches(isDisplayed()))
+            sumByDay(position, sum).check(matches(isDisplayed()))
+        }
+
+        fun checkDateTitleNotVisible(position: Int, title: String, sum: String) {
+            dateTitle(position, title).check(doesNotExist())
+            sumByDay(position, sum).check(doesNotExist())
+        }
+
+        fun clickRecyclerButton(position: Int) {
+            onView(
+                allOf(
+                    isAssignableFrom(Button::class.java),
+                    recyclerViewMatcher().atPosition(position, header.headerButton),
+                    withParent(isAssignableFrom(LinearLayout::class.java)),
+                    withParent(withId(header.headerRootLayout)),
+                )
+            ).check(matches(isDisplayed())).perform(click())
+        }
+
+                private fun itemTitle(position: Int) = onView(
             allOf(
+                isAssignableFrom(TextView::class.java),
+                withParent(isAssignableFrom(LinearLayout::class.java)),
                 recyclerViewMatcher().atPosition(position, item.itemNameTextView),
-                withText(nameExpense)
-
             )
-        ).perform(click())
-    }
+        )
 
-    fun clickBottomIncomeIcon() {
-        onView(withId(bottomNav.incomeIcon))
-            .check(matches(isDisplayed()))
-            .perform(click())
-    }
+                private fun itemSum(position: Int) = onView(
+            allOf(
+                isAssignableFrom(TextView::class.java),
+                withParent(withId(item.itemRootLayout)),
+                recyclerViewMatcher().atPosition(position, item.itemSumTextView),
+            )
+        )
 
-    fun clickBottomExpenseIcon() {
-        onView(withId(bottomNav.expenseIcon))
-            .check(matches(isDisplayed()))
-            .perform(click())
-    }
+        fun checkItemVisible(title: String, sum: String, position: Int) {
+            itemTitle(position).check(matches(withText(title)))
+            itemSum(position).check(matches(withText(sum)))
+        }
+
+        fun checkItemNotVisible(position: Int) {
+            itemTitle(position).check(doesNotExist())
+            itemSum(position).check(doesNotExist())
+        }
+
+        fun clickCreateButton() {
+            onView(
+                allOf(
+                    isAssignableFrom(FloatingActionButton::class.java),
+                    withId(pagesIds.floatingButtonId),
+                    withParent(isAssignableFrom(ConstraintLayout::class.java)),
+                    withParent(withId(pagesIds.startRootId)),
+                )
+            ).perform(click())
+        }
+
+        fun clickItemAt(position: Int, nameExpense: String) {
+            onView(
+                allOf(
+                    recyclerViewMatcher().atPosition(position, item.itemNameTextView),
+                    withText(nameExpense)
+
+                )
+            ).perform(click())
+        }
+
+        fun clickBottomIncomeIcon() {
+            onView(withId(bottomNav.incomeIcon))
+                .check(matches(isDisplayed()))
+                .perform(click())
+        }
+
+        fun clickBottomExpenseIcon() {
+            onView(withId(bottomNav.expenseIcon))
+                .check(matches(isDisplayed()))
+                .perform(click())
+        }
 }
 
 private val toolsBar = ToolBar(
@@ -211,7 +210,6 @@ private val toolsBar = ToolBar(
 )
 
 private val bottomNav = BottomNav(
-    coordinatorLayout = R.id.coordinatorLayout,
     bottomNavId = R.id.bottomNav,
     expenseIcon = R.id.expenseIcon,
     incomeIcon = R.id.incomeIcon,
