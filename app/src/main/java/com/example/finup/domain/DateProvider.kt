@@ -1,6 +1,7 @@
 package com.example.finup.domain
 
 import android.annotation.SuppressLint
+import com.example.finup.domain.DateProvider.All
 import java.time.Clock
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -20,24 +21,45 @@ interface DateProvider {
         fun formatDate(year: Int, month: Int): String
     }
 
-    interface Getters: GetYear, GetMonth
-    interface All: Getters, FormatDate
+    interface Getters : GetYear, GetMonth
+    interface All : Getters, FormatDate
 
-    @SuppressLint("NewApi")
-    class Base(private val locale: Locale = Locale.getDefault(),
-               private val clock: Clock = Clock.systemDefaultZone(),
-    ) : All {
+}
 
-        override fun getCurrentYear() = YearMonth.now(clock).year
+@SuppressLint("NewApi")
+class RealProviderBase(
+    private val locale: Locale = Locale.getDefault(),
+    private val clock: Clock = Clock.systemDefaultZone(),
+) : All {
+
+    override fun getCurrentYear() = YearMonth.now(clock).year
 
 
-        override fun getCurrentMonth() = YearMonth.now(clock).monthValue
+    override fun getCurrentMonth() = YearMonth.now(clock).monthValue
 
 
-        override fun formatDate(year: Int, month: Int): String {
-            val date = YearMonth.of(year,month)
-            val formatter = DateTimeFormatter.ofPattern("MMMM yyyy",locale)
-            return date.format(formatter)
-        }
+    override fun formatDate(year: Int, month: Int): String {
+        val date = YearMonth.of(year, month)
+        val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", locale)
+        return date.format(formatter)
+    }
+}
+
+@SuppressLint("NewApi")
+class MockProviderBase(
+    private val locale: Locale = Locale.getDefault(),
+    private val clock: Clock = Clock.systemDefaultZone(),
+) : All {
+
+    override fun getCurrentYear() = 2025
+
+
+    override fun getCurrentMonth() = 9
+
+
+    override fun formatDate(year: Int, month: Int): String {
+        val date = YearMonth.of(year, month)
+        val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", locale)
+        return date.format(formatter)
     }
 }

@@ -16,8 +16,9 @@ import com.example.finup.data.TransactionRepositoryImpl
 import com.example.finup.data.YearMonthDao
 import com.example.finup.data.YearMonthRepositoryImpl
 import com.example.finup.data.YearMonthStateRepositoryImpl
-import com.example.finup.domain.DateProvider
+import com.example.finup.domain.MockProviderBase
 import com.example.finup.domain.Now
+import com.example.finup.domain.RealProviderBase
 import com.example.finup.domain.YearMonthStateManager
 import com.example.finup.domain.useCases.CleanUpEmptyPeriodUseCase
 import com.example.finup.domain.useCases.GetOrCreatePeriodUseCase
@@ -41,18 +42,19 @@ interface ProvideViewModel {
         private val transactionListWrapper = TransactionsListLiveDataWrapper.Base()
         private val transactionListUiStateWrapper = TransactionListUiStateWrapper.Base()
         private val transactionMapper = TransactionUiMapper.Base()
-        private val dateProvider = DateProvider.Base()
+        private val realDateProvider = RealProviderBase()
+        private val mockDateProviderForUiTests = MockProviderBase()
         private val transactionRepository = TransactionRepositoryImpl(transactionDao, now)
         private val yearMonthRepository = YearMonthRepositoryImpl(yearMonthDao, now)
         private val navigationMonthUseCase = NavigationMonthUseCase.Base(yearMonthRepository)
         private val getTransactionsListByPeriodUseCase =
-            GetTransactionsListByPeriodUseCase.Base(transactionRepository, dateProvider)
+            GetTransactionsListByPeriodUseCase.Base(transactionRepository, mockDateProviderForUiTests)
         private val getOrCreatePeriodUseCase = GetOrCreatePeriodUseCase.Base(yearMonthRepository)
         private val cleanUpEmptyPeriodUseCase = CleanUpEmptyPeriodUseCase.Base(transactionRepository,yearMonthRepository)
         private val navigation = Navigation.Base()
         private val yearMonthStateRepository = YearMonthStateRepositoryImpl(dataStoreManager)
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-            val stateManager = YearMonthStateManager.Base(yearMonthRepository,  yearMonthStateRepository,dateProvider)
+            val stateManager = YearMonthStateManager.Base(yearMonthRepository,  yearMonthStateRepository,mockDateProviderForUiTests)
             return when (modelClass) {
                 MainViewModel::class.java -> MainViewModel(navigation, mainUiStateLiveDataWrapper)
                 TransactionsListViewModel::class.java -> TransactionsListViewModel(
