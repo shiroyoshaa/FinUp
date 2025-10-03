@@ -5,20 +5,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.finup.arch.Core
 import com.example.finup.arch.ProvideViewModel
+import com.example.finup.data.DataStoreManager
 import com.example.finup.domain.Now
 
-class App: Application(), ProvideViewModel {
+class App : Application(), ProvideViewModel {
     lateinit var factory: ProvideViewModel
     lateinit var core: Core
     lateinit var now: Now
+    lateinit var dataStoreManager: DataStoreManager
     override fun onCreate() {
         super.onCreate()
         core = Core(applicationContext)
         now = Now.Base()
-        factory = ProvideViewModel.Base(core.transactionDao(),core.yearMonthDao(),now)
+        dataStoreManager = DataStoreManager(applicationContext)
+        factory = ProvideViewModel.Base(core.transactionDao(), core.yearMonthDao(), now,dataStoreManager)
     }
 
     override fun <T : ViewModel> getViewModel(owner: ViewModelStoreOwner, modelClass: Class<T>): T {
-        return factory.getViewModel(owner,modelClass)
+        return factory.getViewModel(owner, modelClass)
     }
 }
