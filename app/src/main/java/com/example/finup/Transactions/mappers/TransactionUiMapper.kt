@@ -15,7 +15,7 @@ interface TransactionUiMapper {
             month: String
         ): List<DisplayItemUi> {
             val currentMonth = month.split(" ")[0].lowercase()
-            val newGroupedList = transactions.groupBy { it.day }
+            val newGroupedList = transactions.sortedBy { it.day }.groupBy { it.day }
             return newGroupedList.flatMap { (day, transactions) ->
                 listOf(
                     DisplayItemUi.TransactionDate(
@@ -25,7 +25,7 @@ interface TransactionUiMapper {
                 ) + transactions.map {
                     DisplayItemUi.TransactionDetails(
                         it.id,
-                        it.day,
+                        it.sum,
                         it.name,
                         it.type,
                         it.dateId,

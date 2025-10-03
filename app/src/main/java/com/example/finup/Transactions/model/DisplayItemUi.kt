@@ -1,17 +1,25 @@
 package com.example.finup.Transactions.model
 
 interface DisplayItemUi {
+    fun getItemType(): Int
 
     data class TransactionDate(
         val day: String,
         val totalSumByDay: String,
-    ): DisplayItemUi
-
+    ): DisplayItemUi {
+        override fun getItemType(): Int {
+            return 0
+        }
+    }
     data class TransactionDetails(
         val id: Long,
         val sum: Int,
         val name: String,
         val type: String,
         val dateId: Long,
-    ): DisplayItemUi
+    ): DisplayItemUi {
+        override fun getItemType(): Int {
+            return 1
+        }
+    }
 }
