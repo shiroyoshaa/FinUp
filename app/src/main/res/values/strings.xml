@@ -10,8 +10,8 @@
     <string name="utilities">Utilities</string>
     <string name="transfers">Transfers</string>
     <string name="groceries">Groceries</string>
-    <string name="other">other</string>
-    <string name="save">save</string>
+    <string name="other">Other</string>
+    <string name="save">Save</string>
     <string name="delete">delete</string>
     <string name="dateTitle">Select date</string>
 </resources>

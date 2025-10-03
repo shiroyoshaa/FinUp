@@ -4,5 +4,6 @@
         <item name="android:checkable">true</item>
         <item name="iconSize">100dp</item>
         <item name="iconGravity">textTop</item>
+        <item name="android:visibility">gone</item>
     </style>
 </resources>
