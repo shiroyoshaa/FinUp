@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="categoryButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:checkable">true</item>
+        <item name="iconSize">100dp</item>
+        <item name="iconGravity">textTop</item>
+    </style>
+</resources>

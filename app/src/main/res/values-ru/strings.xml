@@ -14,4 +14,5 @@
     <string name="other">Прочие</string>
     <string name="save">Сохранить</string>
     <string name="delete">Удалить</string>
+    <string name="dateTitle">Выберите дату</string>
 </resources>

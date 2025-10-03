@@ -211,6 +211,6 @@ private val expenseCategoryIds = ExpenseCategoryIds(
 )
 private val incomeCategoryIds = IncomeCategoryIds(
     gridRootId = R.id.gridIncomeLayout,
-    kaspiButton = R.id.kaspiButtn,
-    bccBankButton = R.id.BccButton,
+    kaspiButton = R.id.kaspiButton,
+    bccBankButton = R.id.bccButton,
 )

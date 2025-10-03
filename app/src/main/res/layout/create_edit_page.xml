@@ -15,10 +15,10 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:layout_marginEnd="35dp"
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="35dp"
         android:text="Create Expense123123"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,24 +37,24 @@
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:inputType="number"
         android:id="@+id/sumInputEditText"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/amountLabelTextView" />
 
     <TextView
-        android:textSize="18sp"
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="50dp"
-        tools:text="somer date here"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sumInputEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/sumInputEditText"
+        tools:text="somer date here" />
 
     <com.google.android.material.button.MaterialButton
 
@@ -74,56 +74,80 @@
         android:layout_marginTop="50dp"
         android:columnCount="2"
         android:rowCount="2"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/openDateButton">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/utilitiesButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/categoryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/utilities"
-            app:icon="@drawable/ic_launcher_foreground"
-            app:iconGravity="textTop"
-            app:iconSize="100dp" />
+            app:icon="@drawable/ic_launcher_foreground" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/transfersButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/categoryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/transfers"
-            app:icon="@drawable/ic_launcher_foreground"
-            app:iconGravity="textTop"
-            app:iconSize="100dp" />
+            app:icon="@drawable/ic_launcher_foreground" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/groceriesButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/groceries"
             app:icon="@drawable/ic_launcher_foreground"
-            app:iconGravity="textTop"
-            app:iconSize="100dp" />
+            style="@style/categoryButton"
+            />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/otherButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/categoryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/other"
-            app:icon="@drawable/ic_launcher_foreground"
-            app:iconGravity="textTop"
-            app:iconSize="100dp" />
+            app:icon="@drawable/ic_launcher_foreground" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/gridIncomeLayout"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:columnCount="3"
+        android:rowCount="1"
+        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/openDateButton">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/kaspiButton"
+            style="@style/categoryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="kaspi Bank"
+            app:icon="@drawable/ic_launcher_foreground" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bccButton"
+            style="@style/categoryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BCC bank"
+            app:icon="@drawable/ic_launcher_foreground" />
     </GridLayout>
 
     <Button
-        android:enabled="false"
         android:id="@+id/saveButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

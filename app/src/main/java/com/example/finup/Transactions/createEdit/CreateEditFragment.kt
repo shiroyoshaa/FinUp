@@ -4,7 +4,6 @@ import android.icu.util.Calendar
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
@@ -39,7 +38,7 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
         ): Fragment {
             val fragment = CreateEditFragment()
             fragment.arguments = Bundle().apply {
-                putString(SCREEN_TYPE_KEY, screenType)
+                 putString(SCREEN_TYPE_KEY, screenType)
                 putLong(TRANSACTION_ID_KEY, transactionId)
                 putString(TRANSACTION_TYPE_KEY, transactionType)
             }
@@ -66,12 +65,11 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
             "Create Income" -> R.string.CreateIncomePageTitle
             "Edit Expense" -> R.string.EditExpenseTitle
             "Edit Income" -> R.string.EditIncomeTitle
-            else -> throw IllegalStateException("Неизвестный тип экрана: $key")
+            else -> throw IllegalStateException("screen is not found: $key")
         }
 
         val currentTitle = getString(titleResId)
         if (screenType == "Create") {
-            Log.d("init123", currentTitle)
             viewModel.createInit(currentTitle)
         } else {
             viewModel.editInit(currentTitle, transactionId, transactionType)
@@ -86,19 +84,20 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
         )
         expenseCategoriesButtons.forEach { button ->
             button.setOnClickListener {
+                expenseCategoriesButtons.forEach { if(button!= it) it.isChecked = false }
                 selectedCategory = button.text.toString()
                 updateSaveButtonState()
             }
         }
-
         val datePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText("titleText")
+            .setTitleText(getString(R.string.dateTitle))
             .build()
         datePicker.addOnPositiveButtonClickListener { selection ->
             val (day, month, year) = formatLongToDateComponents(selection)
             dayDate = day
             monthDate = month
             yearDate = year
+            binding.dateTextView.text = "$day.$month.$year"
             updateSaveButtonState()
         }
 
@@ -116,6 +115,7 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
                 )
             )
         }
+
         binding.backButton.setOnClickListener {
             viewModel.comeback(transactionType)
         }
@@ -127,6 +127,7 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
         binding.openDateButton.setOnClickListener {
             datePicker.show(requireActivity().supportFragmentManager,"DATE_PICKER_TAG")
         }
+
     }
 
     private fun formatLongToDateComponents(selection: Long): Triple<Int, Int, Int> {

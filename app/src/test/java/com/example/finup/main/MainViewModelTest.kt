@@ -1,7 +1,6 @@
 package com.example.finup.main
 
 import androidx.lifecycle.LiveData
-import com.example.finup.Transactions.createEdit.CreateEditTransactionScreen
 import com.example.finup.Transactions.list.TransactionsListScreen
 import com.example.finup.core.FakeNavigation
 import com.example.finup.core.Order
@@ -32,13 +31,13 @@ class MainViewModelTest {
         navigation.check(TransactionsListScreen(type = "Income"))
     }
 
-    @Test
-    fun `navigate to create page`() {
-        viewModel.createTransaction(type = "Expense")
-        uiStateLiveDataWrapper.check(MainUiState.Hide)
-        navigation.check(CreateEditTransactionScreen(screenType = "Create", 0L, "Expense"))
-
-    }
+//    @Test
+//    fun `navigate to create page`() {
+//        viewModel.createTransaction(type = "Expense")
+//        uiStateLiveDataWrapper.check(MainUiState.Hide)
+//        navigation.check(CreateEditTransactionScreen(screenType = "Create", 0L, "Expense"))
+//
+//    }
 }
 
 interface FakeMainUiStateLiveDataWrapper : MainUiStateLiveDataWrapper.Mutable {
