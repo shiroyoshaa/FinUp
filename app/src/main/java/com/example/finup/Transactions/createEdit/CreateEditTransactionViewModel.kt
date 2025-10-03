@@ -101,4 +101,5 @@ class CreateEditTransactionViewModel(
         navigation.update(TransactionsListScreen(type))
         mainUiStateLiveDataWrapper.update(MainUiState.Show)
     }
+    fun uiStateLiveData() = uiStateLiveDataWrapper.liveData()
 }

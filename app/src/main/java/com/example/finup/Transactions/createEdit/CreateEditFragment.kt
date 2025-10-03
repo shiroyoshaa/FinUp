@@ -76,16 +76,22 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
             viewModel.editInit(currentTitle, transactionId, transactionType)
         }
 
-        val expenseCategoriesButtons = listOf(
-            binding.utilitiesButton,
-            binding.transfersButton,
-            binding.groceriesButton,
-            binding.otherButton
-        )
-
-        expenseCategoriesButtons.forEach { button ->
+        val categories = if (transactionType == "Expense") {
+            listOf(
+                binding.utilitiesButton,
+                binding.transfersButton,
+                binding.groceriesButton,
+                binding.otherButton,
+            )
+        } else {
+            listOf(
+                binding.kaspiButton,
+                binding.bccButton,
+            )
+        }
+        categories.forEach { button ->
             button.setOnClickListener {
-                expenseCategoriesButtons.forEach { if (button != it) it.isChecked = false }
+                categories.forEach { if (button != it) it.isChecked = false }
                 selectedCategory = button.text.toString()
                 updateSaveButtonState()
             }
@@ -129,6 +135,9 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
         binding.openDateButton.setOnClickListener {
             datePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER_TAG")
         }
+        viewModel.uiStateLiveData().observe(viewLifecycleOwner) {
+            it.show(categories,binding.titleTextView,binding.deleteButton)
+        }
 
     }
 
@@ -161,7 +170,13 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
         super.onPause()
         binding.sumInputEditText.removeTextChangedListener(watcher)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }
+
 abstract class SimpleTextWatcher : TextWatcher {
     override fun afterTextChanged(s: Editable?) = Unit
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
