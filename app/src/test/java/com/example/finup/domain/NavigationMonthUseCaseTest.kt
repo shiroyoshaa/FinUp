@@ -17,10 +17,12 @@ class NavigationMonthUseCaseTest {
         yearMonthRepository.expectedListYearMonth(listOf(YearMonth(1L, 11, 2025), YearMonth(2L,12,2025)))
         val actualYearMonth = navigationMonthUseCase(YearMonth(2L, 12, 2025), false)
         val expectedYearMonth = YearMonth(1L,11,2025)
+        yearMonthRepository.checkCalledTimes(1)
         assertEquals(expectedYearMonth,actualYearMonth)
 
 
         val actual = navigationMonthUseCase(YearMonth(1L,11,2025),false)
+        yearMonthRepository.checkCalledTimes(2)
         val expected = YearMonth(1L,11,2025)
         assertEquals(actual,expected)
     }

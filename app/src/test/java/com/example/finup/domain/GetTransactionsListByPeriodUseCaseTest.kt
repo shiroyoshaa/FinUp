@@ -98,7 +98,7 @@ private interface FakeReadTransactionRepository : TransactionRepository.GetTrans
 
         override fun checkGetIsCalled(expectedDateId: Long, expectedType: String) {
             assertEquals(expectedDateId, actualDateId)
-            assertEquals(expectedType, expectedType)
+            assertEquals(expectedType, actualType)
         }
     }
 }
