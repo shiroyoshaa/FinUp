@@ -23,9 +23,10 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
     private val binding
         get() = _binding!!
 
-    private val watcher = object: SimpleTextWatcher() {
-        override fun afterTextChanged(s: Editable?)  = updateSaveButtonState()
+    private val watcher = object : SimpleTextWatcher() {
+        override fun afterTextChanged(s: Editable?) = updateSaveButtonState()
     }
+
     companion object {
         private const val SCREEN_TYPE_KEY = "ScreenTypeKey"
         private const val TRANSACTION_ID_KEY = "TransactionIdKey"
@@ -38,7 +39,7 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
         ): Fragment {
             val fragment = CreateEditFragment()
             fragment.arguments = Bundle().apply {
-                 putString(SCREEN_TYPE_KEY, screenType)
+                putString(SCREEN_TYPE_KEY, screenType)
                 putLong(TRANSACTION_ID_KEY, transactionId)
                 putString(TRANSACTION_TYPE_KEY, transactionType)
             }
@@ -75,20 +76,21 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
             viewModel.editInit(currentTitle, transactionId, transactionType)
         }
 
-
         val expenseCategoriesButtons = listOf(
             binding.utilitiesButton,
             binding.transfersButton,
             binding.groceriesButton,
             binding.otherButton
         )
+
         expenseCategoriesButtons.forEach { button ->
             button.setOnClickListener {
-                expenseCategoriesButtons.forEach { if(button!= it) it.isChecked = false }
+                expenseCategoriesButtons.forEach { if (button != it) it.isChecked = false }
                 selectedCategory = button.text.toString()
                 updateSaveButtonState()
             }
         }
+
         val datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText(getString(R.string.dateTitle))
             .build()
@@ -125,7 +127,7 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
         }
 
         binding.openDateButton.setOnClickListener {
-            datePicker.show(requireActivity().supportFragmentManager,"DATE_PICKER_TAG")
+            datePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER_TAG")
         }
 
     }
