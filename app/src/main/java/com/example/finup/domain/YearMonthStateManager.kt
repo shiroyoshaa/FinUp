@@ -1,6 +1,6 @@
 package com.example.finup.domain
 
-import androidx.lifecycle.SavedStateHandle
+import android.util.Log
 
 interface YearMonthStateManager {
 
@@ -10,31 +10,34 @@ interface YearMonthStateManager {
     }
 
     interface StateSaver {
-        fun saveYearMonthState(yearMonth: YearMonth)
+        suspend fun saveYearMonthState(id: Long)
     }
 
     interface All : InitialGetter, StateSaver
-    companion object {
-        private const val CURRENT_YEAR_MONTH_ID_KEY = "YearMonthId"
-    }
 
     class Base(
         private val repository: YearMonthRepository.CreateAndLoad,
-        private val saveStateHandle: SavedStateHandle,
+        private val yearMonthStateRepository: YearMonthStateRepository,
         private val dateProvider: DateProvider.Getters,
     ) : All {
 
         override suspend fun getInitialYearMonth(): YearMonth {
-            val savedId = saveStateHandle.get<Long?>(CURRENT_YEAR_MONTH_ID_KEY)
-            return if (savedId != null) {
-                repository.getById(savedId)
+            val currentId = yearMonthStateRepository.getActiveYearMonthId()
+            if (currentId != 0L) {
+                Log.d("init123", "getInitialYearMonth is true")
+
+                return repository.getById(currentId)
+
             } else {
-                repository.create(dateProvider.getCurrentYear(),dateProvider.getCurrentMonth())
+                val newYearMonth =
+                    repository.create(dateProvider.getCurrentYear(), dateProvider.getCurrentMonth())
+                saveYearMonthState(newYearMonth.id)
+                return newYearMonth
             }
         }
 
-        override fun saveYearMonthState(yearMonth: YearMonth) {
-            saveStateHandle[CURRENT_YEAR_MONTH_ID_KEY] = yearMonth.id
+        override suspend fun saveYearMonthState(id: Long) {
+            yearMonthStateRepository.setActiveYearMonthId(id)
         }
     }
 }

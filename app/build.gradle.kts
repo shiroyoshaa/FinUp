@@ -44,7 +44,8 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
-    implementation(libs.google.material)
+    implementation(libs.androidx.datastore.preferences)
+
 
     implementation(libs.lifecycle.viewmodel.ktx)
 
