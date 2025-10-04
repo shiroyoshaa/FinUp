@@ -44,7 +44,7 @@ interface ProvideViewModel {
         private val typeLiveDataWrapper = TypeLiveDataWrapper.Base()
         private val transactionMapper = TransactionUiMapper.Base()
         private val realDateProvider = RealProviderBase()
-        private val mockDateProviderForUiTests = MockProviderBase()
+        private val mockDateProviderForUiTests = MockProviderBase() //for Ui Test, Please use that if you want to run Ui Tests
         private val transactionRepository = TransactionRepositoryImpl(transactionDao, now)
         private val yearMonthRepository = YearMonthRepositoryImpl(yearMonthDao, now)
         private val navigationMonthUseCase = NavigationMonthUseCase.Base(yearMonthRepository)
