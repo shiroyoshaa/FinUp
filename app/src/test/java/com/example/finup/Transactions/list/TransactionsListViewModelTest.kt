@@ -19,6 +19,9 @@ import com.example.finup.domain.YearMonth
 import com.example.finup.domain.YearMonthStateManager
 import com.example.finup.domain.useCases.GetTransactionsListByPeriodUseCase
 import com.example.finup.domain.useCases.NavigationMonthUseCase
+import com.example.finup.main.FakeMainUiStateLiveDataWrapper
+import com.example.finup.main.FakeMainUiStateLiveDataWrapper.Companion.MAIN_UI_STATE_UPDATE
+import com.example.finup.main.MainUiState
 import junit.framework.TestCase
 import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals
@@ -40,7 +43,7 @@ class TransactionsListViewModelTest {
     private lateinit var navigation: FakeNavigation
     private lateinit var navigationByMonthUseCase: FakeNavigationByMonthUseCase
     private lateinit var yearMonthStateManager: FakeYearMonthStateManager
-
+    private lateinit var mainUiStateLiveDataWrapper: FakeMainUiStateLiveDataWrapper
     @Before
     fun setUp() {
 
@@ -52,11 +55,12 @@ class TransactionsListViewModelTest {
         navigationByMonthUseCase = FakeNavigationByMonthUseCase.Base(order)
         navigation = FakeNavigation.Base(order)
         yearMonthStateManager = FakeYearMonthStateManager.Base(order)
-
+        mainUiStateLiveDataWrapper = FakeMainUiStateLiveDataWrapper.Base(order)
         viewModel = TransactionsListViewModel(
             transactionsListWrapper = transactionsListWrapper,
             uiStateLiveDataWrapper = uiStateLiveDataWrapper,
             transactionMapper = transactionMapper,
+            mainUiStateLiveDataWrapper = mainUiStateLiveDataWrapper,
             getTransactionsListByPeriodUseCase = getTransactionsListByPeriodUseCase,
             navigationByMonthUseCase = navigationByMonthUseCase,
             navigation = navigation,
@@ -342,7 +346,8 @@ class TransactionsListViewModelTest {
     fun `navigating to edit transaction page`(){
         viewModel.editTransaction(transactionUi = DisplayItemUi.TransactionDetails(id = 2L,sum = 2000,type = "Income", name = "Other", dateId = 10L))
         navigation.check(CreateEditTransactionScreen(screenType = "Edit", 2L, "Income"))
-        order.check(listOf(NAVIGATION))
+        mainUiStateLiveDataWrapper.check(MainUiState.Hide)
+        order.check(listOf(NAVIGATION, MAIN_UI_STATE_UPDATE))
     }
 }
 

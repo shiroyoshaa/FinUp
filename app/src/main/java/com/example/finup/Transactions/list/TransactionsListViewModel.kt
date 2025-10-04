@@ -8,6 +8,8 @@ import com.example.finup.Transactions.model.DisplayItemUi
 import com.example.finup.domain.YearMonthStateManager
 import com.example.finup.domain.useCases.GetTransactionsListByPeriodUseCase
 import com.example.finup.domain.useCases.NavigationMonthUseCase
+import com.example.finup.main.MainUiState
+import com.example.finup.main.MainUiStateLiveDataWrapper
 import com.example.finup.main.Navigation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +19,7 @@ import kotlinx.coroutines.withContext
 class TransactionsListViewModel(
     private val transactionsListWrapper: TransactionsListLiveDataWrapper.Mutable,
     private val uiStateLiveDataWrapper: TransactionListUiStateWrapper.Mutable,
+    private val mainUiStateLiveDataWrapper: MainUiStateLiveDataWrapper.Update,
     private val transactionMapper: TransactionUiMapper.ToUiLayer,
     private val getTransactionsListByPeriodUseCase: GetTransactionsListByPeriodUseCase,
     private val navigationByMonthUseCase: NavigationMonthUseCase,
@@ -72,6 +75,7 @@ class TransactionsListViewModel(
                 transactionUi.type
             )
         )
+        mainUiStateLiveDataWrapper.update(MainUiState.Hide)
     }
     fun uiStateLiveData() = uiStateLiveDataWrapper.liveData()
     fun listLiveData() = transactionsListWrapper.liveData()

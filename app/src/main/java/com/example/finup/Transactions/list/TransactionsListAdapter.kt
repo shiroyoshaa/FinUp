@@ -9,7 +9,9 @@ import com.example.finup.databinding.HeaderForAdapterBinding
 import com.example.finup.databinding.ItemForHolderBinding
 
 
-class TransactionsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TransactionsListAdapter(
+    private val onItemClick: (DisplayItemUi.TransactionDetails) -> Unit
+): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val list = ArrayList<DisplayItemUi>()
 
@@ -23,7 +25,7 @@ class TransactionsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     ): RecyclerView.ViewHolder {
         return when (viewType) {
             0 -> HeaderViewHolder(HeaderForAdapterBinding.inflate(LayoutInflater.from(parent.context)))
-            1 -> ItemViewHolder(ItemForHolderBinding.inflate(LayoutInflater.from(parent.context)))
+            1 -> ItemViewHolder(ItemForHolderBinding.inflate(LayoutInflater.from(parent.context)),onItemClick)
             else -> throw IllegalStateException("view type not found")
         }
     }
@@ -60,12 +62,17 @@ class HeaderViewHolder(private val binding: HeaderForAdapterBinding) :
     }
 }
 
-class ItemViewHolder(private val binding: ItemForHolderBinding) :
-
+class ItemViewHolder(private val binding: ItemForHolderBinding,
+    private val onItemClick: ((DisplayItemUi.TransactionDetails) -> Unit)
+) :
     RecyclerView.ViewHolder(binding.root) {
+
     fun bind(details: DisplayItemUi.TransactionDetails) {
         binding.itemNameTextView.text = details.name
         binding.itemSumTextView.text = details.sum.toString()
+        binding.root.setOnClickListener {
+            onItemClick(details)
+        }
     }
 }
 

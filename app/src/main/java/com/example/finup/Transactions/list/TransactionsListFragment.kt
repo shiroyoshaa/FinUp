@@ -29,9 +29,11 @@ class TransactionsListFragment : Fragment(R.layout.transactions_list_page) {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = TransactionsListPageBinding.bind(view)
-        val adapter = TransactionsListAdapter()
         val viewModel =
             (activity as ProvideViewModel).getViewModel(this, TransactionsListViewModel::class.java)
+        val adapter = TransactionsListAdapter {
+            viewModel.editTransaction(it)
+        }
         val type = requireArguments().getString(TRANSACTION_TYPE_KEY)!!
         viewModel.init(type)
         binding.recyclerView.adapter = adapter
