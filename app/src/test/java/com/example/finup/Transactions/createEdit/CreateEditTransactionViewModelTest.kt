@@ -18,8 +18,10 @@ import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
-
+@RunWith(RobolectricTestRunner::class)
 class CreateEditTransactionViewModelTest {
 
     private lateinit var order: Order

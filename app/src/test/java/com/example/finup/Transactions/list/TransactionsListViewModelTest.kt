@@ -2,6 +2,7 @@ package com.example.finup.Transactions.list
 
 
 import androidx.lifecycle.LiveData
+import com.example.finup.Transactions.createEdit.CreateEditTransactionScreen
 import com.example.finup.Transactions.list.FakeTransactionMapper.Companion.TRANSACTIONS_MAPPER
 import com.example.finup.Transactions.list.FakeTransactionsListLiveDataWrapper.Companion.TRANSACTION_UPDATE_LIST_LIVEDATA
 import com.example.finup.Transactions.list.FakeUiStateLiveDataWrapper.Companion.UI_STATE_UPDATE_LIVEDATA
@@ -10,6 +11,7 @@ import com.example.finup.Transactions.list.FakeYearMonthStateManager.Companion.S
 import com.example.finup.Transactions.mappers.TransactionUiMapper
 import com.example.finup.Transactions.model.DisplayItemUi
 import com.example.finup.core.FakeNavigation
+import com.example.finup.core.FakeNavigation.Companion.NAVIGATION
 import com.example.finup.core.Order
 import com.example.finup.domain.Result
 import com.example.finup.domain.Transaction
@@ -22,7 +24,11 @@ import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+
+@RunWith(RobolectricTestRunner::class)
 class TransactionsListViewModelTest {
 
     private lateinit var order: Order
@@ -332,12 +338,12 @@ class TransactionsListViewModelTest {
             )
         )
     }
-//    @Test
-//    fun `navigating to edit transaction page`(){
-//        viewModel.editTransaction(transactionUi = DisplayItemUi.TransactionDetails(id = 2L,sum = 2000,type = "Income", name = "Other", dateId = 10L))
-//        navigation.check(CreateEditTransactionScreen(screenType = "Edit", 2L, "Income"))
-//        order.check(listOf(NAVIGATION))
-//    }
+    @Test
+    fun `navigating to edit transaction page`(){
+        viewModel.editTransaction(transactionUi = DisplayItemUi.TransactionDetails(id = 2L,sum = 2000,type = "Income", name = "Other", dateId = 10L))
+        navigation.check(CreateEditTransactionScreen(screenType = "Edit", 2L, "Income"))
+        order.check(listOf(NAVIGATION))
+    }
 }
 
 private interface FakeUiStateLiveDataWrapper : TransactionListUiStateWrapper.Mutable {
