@@ -10,6 +10,9 @@
     >
 
     <ImageView
+        android:background="?attr/selectableItemBackgroundBorderless"
+
+        android:onClick="onImageClicked"
         android:id="@+id/rightImageViewId"
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -17,6 +20,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <ImageView
+        android:background="?attr/selectableItemBackgroundBorderless"
+
+        android:onClick="onImageClicked"
         android:id="@+id/leftImageViewId"
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -25,16 +31,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textAllCaps="true"
         android:textSize="25sp"
         android:id="@+id/titleMonthTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@+id/rightImageViewId"
         app:layout_constraintStart_toEndOf="@+id/leftImageViewId"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="December 2026" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textAllCaps="true"
         android:textSize="20sp"
         android:id="@+id/titleSumTextView"
         android:layout_width="wrap_content"
@@ -42,7 +49,7 @@
         app:layout_constraintEnd_toStartOf="@+id/rightImageViewId"
         app:layout_constraintStart_toEndOf="@+id/leftImageViewId"
         app:layout_constraintTop_toBottomOf="@+id/titleMonthTextView"
-        android:text="23000" />
+   />
 
     <androidx.recyclerview.widget.RecyclerView
         android:paddingBottom="170dp"

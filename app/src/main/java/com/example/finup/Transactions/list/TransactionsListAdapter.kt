@@ -2,8 +2,10 @@ package com.example.finup.Transactions.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.finup.R
 import com.example.finup.Transactions.model.DisplayItemUi
 import com.example.finup.databinding.HeaderForAdapterBinding
 import com.example.finup.databinding.ItemForHolderBinding
@@ -59,6 +61,7 @@ class HeaderViewHolder(private val binding: HeaderForAdapterBinding) :
     fun bind(header: DisplayItemUi.TransactionDate) {
         binding.headerDateTextView.text = header.day
         binding.headerTotalSumTextView.text = header.totalSumByDay
+
     }
 }
 
@@ -70,6 +73,16 @@ class ItemViewHolder(private val binding: ItemForHolderBinding,
     fun bind(details: DisplayItemUi.TransactionDetails) {
         binding.itemNameTextView.text = details.name
         binding.itemSumTextView.text = details.sum.toString()
+        val color = when(details.type) {
+            "Expense" -> {
+                ContextCompat.getColor(binding.root.context,R.color.Red)
+            }
+            "Income" -> {
+                ContextCompat.getColor(binding.root.context,R.color.Green)
+            }
+            else -> { ContextCompat.getColor(binding.root.context, R.color.black) }
+        }
+        binding.itemSumTextView.setTextColor(color)
         binding.root.setOnClickListener {
             onItemClick(details)
         }

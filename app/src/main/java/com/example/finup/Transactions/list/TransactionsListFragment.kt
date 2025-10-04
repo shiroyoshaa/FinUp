@@ -2,8 +2,8 @@ package com.example.finup.Transactions.list
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.finup.R
 import com.example.finup.arch.ProvideViewModel
@@ -27,28 +27,43 @@ class TransactionsListFragment : Fragment(R.layout.transactions_list_page) {
         }
 
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         _binding = TransactionsListPageBinding.bind(view)
         val viewModel =
             (activity as ProvideViewModel).getViewModel(this, TransactionsListViewModel::class.java)
+
+        val type = requireArguments().getString(TRANSACTION_TYPE_KEY)!!
+        viewModel.init(type)
+
         val adapter = TransactionsListAdapter {
             viewModel.editTransaction(it)
         }
-        val type = requireArguments().getString(TRANSACTION_TYPE_KEY)!!
-        viewModel.init(type)
         binding.recyclerView.adapter = adapter
         binding.rightImageViewId.setOnClickListener {
-            viewModel.navigateMonth(true,type)
+            viewModel.navigateMonth(true, type)
         }
+
         binding.leftImageViewId.setOnClickListener {
-            viewModel.navigateMonth(false,type)
+            viewModel.navigateMonth(false, type)
         }
+        val color = when(type) {
+            "Expense" -> {
+                ContextCompat.getColor(binding.root.context,R.color.Red)
+            }
+            "Income" -> {
+                ContextCompat.getColor(binding.root.context,R.color.Green)
+            }
+            else -> { ContextCompat.getColor(binding.root.context, R.color.black) }
+        }
+        binding.titleSumTextView.setTextColor(color)
         viewModel.uiStateLiveData().observe(viewLifecycleOwner) {
             binding.titleMonthTextView.text = it.title
             binding.titleSumTextView.text = it.total
         }
+
         viewModel.listLiveData().observe(viewLifecycleOwner) {
-            Log.d("init123","observe list $it")
             adapter.addItems(it)
         }
     }

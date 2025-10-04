@@ -15,6 +15,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
+        android:textAllCaps="true"
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,6 +27,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textAllCaps="true"
         android:id="@+id/amountLabelTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,6 +39,7 @@
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
     <com.google.android.material.textfield.TextInputEditText
+
         android:id="@+id/sumInputEditText"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
@@ -57,11 +60,13 @@
         tools:text="somer date here" />
 
     <com.google.android.material.button.MaterialButton
-
+       app:icon="@drawable/outline_calendar_month_24"
         android:id="@+id/openDateButton"
+        app:iconSize="35dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="88dp"
+
         android:layout_marginTop="35dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/dateTextView"
@@ -85,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/utilities"
-            app:icon="@drawable/ic_launcher_foreground" />
+            app:icon="@drawable/utlities_icon" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/transfersButton"
@@ -93,14 +98,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/transfers"
-            app:icon="@drawable/ic_launcher_foreground" />
+            app:icon="@drawable/transfers_icon" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/groceriesButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/groceries"
-            app:icon="@drawable/ic_launcher_foreground"
+            app:icon="@drawable/groceries_icon"
             style="@style/categoryButton"
             />
 
@@ -110,7 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/other"
-            app:icon="@drawable/ic_launcher_foreground" />
+            app:icon="@drawable/other_icon" />
     </GridLayout>
 
     <GridLayout
@@ -155,6 +160,7 @@
         app:layout_constraintTop_toBottomOf="@+id/gridExpensesLayout" />
 
     <Button
+
         android:id="@+id/deleteButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
