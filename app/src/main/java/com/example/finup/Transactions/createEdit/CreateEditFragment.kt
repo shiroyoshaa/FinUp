@@ -12,19 +12,29 @@ import com.example.finup.Transactions.model.TransactionInputDetails
 import com.example.finup.arch.ProvideViewModel
 import com.example.finup.databinding.CreateEditPageBinding
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener
 
 class CreateEditFragment : Fragment(R.layout.create_edit_page) {
     private var yearDate = 0
     private var monthDate = 0
     private var dayDate = 0
     private var selectedCategory = ""
-
+    private lateinit var materialDatePicker: MaterialDatePicker<Long>
     private var _binding: CreateEditPageBinding? = null
     private val binding
         get() = _binding!!
 
     private val watcher = object : SimpleTextWatcher() {
         override fun afterTextChanged(s: Editable?) = updateSaveButtonState()
+    }
+    private val datePickerListener = MaterialPickerOnPositiveButtonClickListener<Long> { selection ->
+        val (day, month, year) = formatLongToDateComponents(selection)
+        dayDate = day
+        monthDate = month
+        yearDate = year
+        binding.dateTextView.text = "$day.$month.$year"
+        updateSaveButtonState()
     }
 
     companion object {
@@ -97,48 +107,58 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
             }
         }
 
-        val datePicker = MaterialDatePicker.Builder.datePicker()
+        materialDatePicker = datePicker()
             .setTitleText(getString(R.string.dateTitle))
             .build()
-        datePicker.addOnPositiveButtonClickListener { selection ->
-            val (day, month, year) = formatLongToDateComponents(selection)
-            dayDate = day
-            monthDate = month
-            yearDate = year
-            binding.dateTextView.text = "$day.$month.$year"
-            updateSaveButtonState()
-        }
-
+        materialDatePicker.addOnPositiveButtonClickListener(datePickerListener)
         binding.saveButton.setOnClickListener {
             val sum = binding.sumInputEditText.text.toString()
             val intSum = sum.toIntOrNull() ?: 0
-            viewModel.create(
-                TransactionInputDetails(
-                    transactionType,
-                    selectedCategory,
-                    intSum,
-                    dayDate,
-                    monthDate,
-                    yearDate
+            if (screenType == "Edit") {
+                viewModel.edit(
+                    transactionId,
+                    TransactionInputDetails(
+                        transactionType,
+                        selectedCategory,
+                        intSum,
+                        dayDate,
+                        monthDate,
+                        yearDate
+                    )
                 )
-            )
+            } else {
+                viewModel.create(
+                    TransactionInputDetails(
+                        transactionType,
+                        selectedCategory,
+                        intSum,
+                        dayDate,
+                        monthDate,
+                        yearDate
+                    )
+                )
+            }
         }
 
         binding.backButton.setOnClickListener {
             viewModel.comeback(transactionType)
         }
-
+        binding.deleteButton.setOnClickListener {
+            viewModel.delete(transactionId,transactionType)
+        }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             viewModel.comeback(transactionType)
         }
 
         binding.openDateButton.setOnClickListener {
-            datePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER_TAG")
+            materialDatePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER_TAG")
         }
         viewModel.uiStateLiveData().observe(viewLifecycleOwner) {
-            it.show(categories,binding.titleTextView,binding.deleteButton)
+            it.show(categories, binding.titleTextView,binding.dateTextView ,binding.deleteButton,binding.sumInputEditText)
         }
-
+        viewModel.uiStateLiveData().observe(viewLifecycleOwner) {
+            it.show(categories,binding.titleTextView,binding.dateTextView,binding.deleteButton,binding.sumInputEditText)
+        }
     }
 
     private fun formatLongToDateComponents(selection: Long): Triple<Int, Int, Int> {
@@ -173,6 +193,7 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
 
     override fun onDestroy() {
         super.onDestroy()
+        materialDatePicker.clearOnPositiveButtonClickListeners()
         _binding = null
     }
 }

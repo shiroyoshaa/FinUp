@@ -5,7 +5,7 @@ import com.example.finup.domain.YearMonthRepository
 
 interface GetOrCreatePeriodUseCase {
     suspend operator fun invoke(year: Int, month: Int): YearMonth
-
+    suspend fun getById(id: Long): YearMonth
     class Base(private val repository: YearMonthRepository.GetAndCreate): GetOrCreatePeriodUseCase {
 
         override suspend fun invoke(year: Int, month: Int): YearMonth {
@@ -15,6 +15,10 @@ interface GetOrCreatePeriodUseCase {
             }
             val createdPeriod = repository.create(year,month)
             return createdPeriod
+        }
+
+        override suspend fun getById(id: Long): YearMonth {
+            return repository.getById(id)
         }
     }
 }
