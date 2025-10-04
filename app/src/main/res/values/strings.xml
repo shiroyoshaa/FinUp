@@ -12,7 +12,7 @@
     <string name="groceries">Groceries</string>
     <string name="other">Other</string>
     <string name="save">Save</string>
-    <string name="delete">delete</string>
+    <string name="delete">Delete</string>
     <string name="dateTitle">Select date</string>
     <string name="sum_by_day">sum by day:</string>
 </resources>

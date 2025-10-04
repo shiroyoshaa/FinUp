@@ -131,7 +131,7 @@
             style="@style/categoryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="kaspi Bank"
+            android:text="Kaspi Bank"
             app:icon="@drawable/ic_launcher_foreground" />
 
         <com.google.android.material.button.MaterialButton
@@ -139,7 +139,7 @@
             style="@style/categoryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="BCC bank"
+            android:text="BCC Bank"
             app:icon="@drawable/ic_launcher_foreground" />
     </GridLayout>
 

@@ -20,7 +20,7 @@ import com.example.finup.domain.MockProviderBase
 import com.example.finup.domain.Now
 import com.example.finup.domain.RealProviderBase
 import com.example.finup.domain.YearMonthStateManager
-import com.example.finup.domain.useCases.CleanUpEmptyPeriodUseCase
+
 import com.example.finup.domain.useCases.GetOrCreatePeriodUseCase
 import com.example.finup.domain.useCases.GetTransactionsListByPeriodUseCase
 import com.example.finup.domain.useCases.NavigationMonthUseCase
@@ -50,7 +50,6 @@ interface ProvideViewModel {
         private val getTransactionsListByPeriodUseCase =
             GetTransactionsListByPeriodUseCase.Base(transactionRepository, mockDateProviderForUiTests)
         private val getOrCreatePeriodUseCase = GetOrCreatePeriodUseCase.Base(yearMonthRepository)
-        private val cleanUpEmptyPeriodUseCase = CleanUpEmptyPeriodUseCase.Base(transactionRepository,yearMonthRepository)
         private val navigation = Navigation.Base()
         private val yearMonthStateRepository = YearMonthStateRepositoryImpl(dataStoreManager)
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
@@ -60,6 +59,7 @@ interface ProvideViewModel {
                 TransactionsListViewModel::class.java -> TransactionsListViewModel(
                     transactionListWrapper,
                     transactionListUiStateWrapper,
+                    mainUiStateLiveDataWrapper,
                     transactionMapper,
                     getTransactionsListByPeriodUseCase,
                     navigationMonthUseCase,
@@ -72,7 +72,6 @@ interface ProvideViewModel {
                     mainUiStateLiveDataWrapper,
                     transactionRepository,
                     getOrCreatePeriodUseCase,
-                    cleanUpEmptyPeriodUseCase,
                     navigation
                 )
 

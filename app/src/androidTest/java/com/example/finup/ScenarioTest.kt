@@ -70,20 +70,20 @@ class ScenarioTest {
         expenseListPage.setDate(2025, 9)
         expenseListPage.checkVisibleNow("5000")
 
-        expenseListPage.clickItemAt(0, "Utilities")
+        expenseListPage.clickItemAt(1, "Utilities")
         expenseListPage.checkNotVisibleNow()
 
-        val expenseEditPage = CreateEditPage("Edit Expense")
+        val expenseEditPage = CreateEditPage("Edit expense")
         expenseEditPage.checkVisibleNow()
         expenseEditPage.clickDeleteButton()
         expenseListPage.checkVisibleNow("0")
         expenseListPage.checkDateTitleNotVisible(0,"13 september","5000")
-        expenseListPage.checkItemNotVisible(0)
+        expenseListPage.checkItemNotVisible(1)
 
         expenseListPage.clickCreateButton()
         expenseListPage.checkNotVisibleNow()
 
-        val createExpensePage = CreateEditPage("Create Expense")
+        val createExpensePage = CreateEditPage("Create expense")
         createExpensePage.checkVisibleNow()
 
         createExpensePage.clickBackButton()
@@ -155,13 +155,13 @@ class ScenarioTest {
         createIncomePage.inputSum("5000")
         createIncomePage.selectKaspiBank()
         createIncomePage.openDatePickerAndCLickButton("09", "13")
-        createIncomePage.checkDateVisibleNow("13/9/2025")
+        createIncomePage.checkDateVisibleNow("13.9.2025")
         createIncomePage.clickSaveButton()
         createIncomePage.checkNotVisibleNow()
 
         incomeListPage.checkVisibleNow("5000")
         incomeListPage.checkDateTitleVisible("13 september", 0,"5000")
-        incomeListPage.checkItemVisible("Kaspi Bank", "5000", 0)
+        incomeListPage.checkItemVisible("Kaspi Bank", "5000", 1)
     }
 
     @Test
@@ -173,20 +173,20 @@ class ScenarioTest {
         incomeListPage.clickCreateButton()
         incomeListPage.checkNotVisibleNow()
 
-        val createIncomePage = CreateEditPage("create income")
+        val createIncomePage = CreateEditPage("Create income")
         createIncomePage.checkVisibleNow()
         createIncomePage.inputSum("2000")
         createIncomePage.selectBccBank()
         createIncomePage.openDatePickerAndCLickButton("09", "13")
-        createIncomePage.checkDateVisibleNow("13/9/2025")
+        createIncomePage.checkDateVisibleNow("13.9.2025")
 
         createIncomePage.clickSaveButton()
         createIncomePage.checkNotVisibleNow()
 
         incomeListPage.checkVisibleNow("7000")
         incomeListPage.checkDateTitleVisible("13 september", 0,"7000")
-        incomeListPage.checkItemVisible("Kaspi Bank", "5000", 0)
-        incomeListPage.checkItemVisible("BCC", "2000", 0)
+        incomeListPage.checkItemVisible("Kaspi Bank", "5000", 1)
+        incomeListPage.checkItemVisible("BCC Bank", "2000", 2)
     }
 
     @Test
@@ -195,11 +195,13 @@ class ScenarioTest {
         incomeListPage.clickBottomIncomeIcon()
         incomeListPage.setDate(2025, 9)
         incomeListPage.checkVisibleNow("0")
+        incomeListPage.clickCreateButton()
 
         val createIncomePage = CreateEditPage("Create income")
         createIncomePage.inputSum("1000")
         createIncomePage.selectKaspiBank()
         createIncomePage.openDatePickerAndCLickButton("08", "25")
+        createIncomePage.checkDateVisibleNow("25.8.2025")
         createIncomePage.clickSaveButton()
         createIncomePage.checkNotVisibleNow()
 
@@ -208,7 +210,7 @@ class ScenarioTest {
         incomeListPage.clickLeftArrow()
         incomeListPage.checkVisibleNow("1000")
         incomeListPage.checkDateTitleVisible("25 august", 0,"1000")
-        incomeListPage.checkItemVisible("Kaspi Bank", "1000", 0)
+        incomeListPage.checkItemVisible("Kaspi Bank", "1000", 1)
     }
 
     @Test
@@ -226,16 +228,16 @@ class ScenarioTest {
         createIncomePage.inputSum("15000")
         createIncomePage.selectBccBank()
         createIncomePage.openDatePickerAndCLickButton("09", "25")
-
+        createIncomePage.checkDateVisibleNow("25.9.2025")
         createIncomePage.clickSaveButton()
         createIncomePage.checkNotVisibleNow()
 
         incomeListPage.checkVisibleNow("22000")
         incomeListPage.checkDateTitleVisible("13 september", 0,"7000")
-        incomeListPage.checkItemVisible("Kaspi Bank", "5000", 0)
-        incomeListPage.checkItemVisible("BCC", "2000", 0)
-        incomeListPage.checkDateTitleVisible("25 september", 1,"15000")
-        incomeListPage.checkItemVisible("Kaspi Bank", "15000", 1)
+        incomeListPage.checkItemVisible("Kaspi Bank", "5000", 1)
+        incomeListPage.checkItemVisible("BCC Bank", "2000", 2)
+        incomeListPage.checkDateTitleVisible("25 september", 3,"15000")
+        incomeListPage.checkItemVisible("BCC Bank", "15000", 4)
     }
 
     @Test
@@ -245,9 +247,9 @@ class ScenarioTest {
         incomeListPage.setDate(2025, 9)
         incomeListPage.checkVisibleNow("5000")
 
-        incomeListPage.clickItemAt(0, "Kaspi Bank")
+        incomeListPage.clickItemAt(1, "Kaspi Bank")
         incomeListPage.checkNotVisibleNow()
-        val incomeEditListPage = CreateEditPage("edit expense")
+        val incomeEditListPage = CreateEditPage("Edit income")
         incomeEditListPage.checkVisibleNow()
         incomeEditListPage.clickDeleteButton()
         incomeListPage.checkVisibleNow("0")
