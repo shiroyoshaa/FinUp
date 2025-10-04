@@ -20,6 +20,6 @@ interface YearMonthRepository {
     }
 
     interface CreateAndLoad: Create, LoadYearMonth
-    interface GetAndCreate: Create, GetAllPeriods
+    interface GetAndCreate: Create, GetAllPeriods, LoadYearMonth
 
 }

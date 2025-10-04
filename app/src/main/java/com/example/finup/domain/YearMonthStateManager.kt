@@ -1,7 +1,5 @@
 package com.example.finup.domain
 
-import android.util.Log
-
 interface YearMonthStateManager {
 
     interface InitialGetter {
@@ -23,9 +21,8 @@ interface YearMonthStateManager {
 
         override suspend fun getInitialYearMonth(): YearMonth {
             val currentId = yearMonthStateRepository.getActiveYearMonthId()
-            if (currentId != 0L) {
-                Log.d("init123", "getInitialYearMonth is true")
 
+            if (currentId != 0L) {
                 return repository.getById(currentId)
 
             } else {
