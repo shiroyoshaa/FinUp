@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.finup.Transactions.list.TransactionsListScreen
 import com.example.finup.Transactions.model.TransactionInputDetails
 import com.example.finup.domain.TransactionRepository
-import com.example.finup.domain.useCases.CleanUpEmptyPeriodUseCase
 import com.example.finup.domain.useCases.GetOrCreatePeriodUseCase
 import com.example.finup.main.MainUiState
 import com.example.finup.main.MainUiStateLiveDataWrapper
@@ -20,7 +19,6 @@ class CreateEditTransactionViewModel(
     private val mainUiStateLiveDataWrapper: MainUiStateLiveDataWrapper.Update,
     private val repository: TransactionRepository.EditAndCreate,
     private val getOrCreatePeriodUseCase: GetOrCreatePeriodUseCase,
-    private val cleanUpEmptyPeriodUseCase: CleanUpEmptyPeriodUseCase,
     private val navigation: Navigation.Update,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val dispatcherMain: CoroutineDispatcher = Dispatchers.Main,
@@ -33,10 +31,12 @@ class CreateEditTransactionViewModel(
     fun editInit(title: String, transactionId: Long, transactionType: String) {
         viewModelScope.launch(dispatcher) {
             val currentTransaction = repository.getOneTransaction(transactionId, transactionType)
+            val getCurrentYearMonth = getOrCreatePeriodUseCase.getById(currentTransaction.dateId)
             withContext(dispatcherMain) {
                 uiStateLiveDataWrapper.update(
                     CreateEditUiState.ShowEditTransactionPage(
                         title,
+                        date = "${currentTransaction.day}.${getCurrentYearMonth.month}.${getCurrentYearMonth.year}",
                         currentTransaction.name,
                         currentTransaction.sum.toString()
                     )
@@ -47,7 +47,6 @@ class CreateEditTransactionViewModel(
 
     fun edit(
         transactionId: Long,
-        previousDateId: Long,
         newInput: TransactionInputDetails
     ) {
         viewModelScope.launch(dispatcher) {
@@ -55,7 +54,7 @@ class CreateEditTransactionViewModel(
                 newInput.year,
                 newInput.month,
             )
-            cleanUpEmptyPeriodUseCase(previousDateId)
+            val currentTransaction = repository.getOneTransaction(transactionId,newInput.type)
             repository.editTransaction(
                 transactionId,
                 newInput.sum,
@@ -85,13 +84,12 @@ class CreateEditTransactionViewModel(
         }
         navigation.update(TransactionsListScreen(type = newInput.type))
         mainUiStateLiveDataWrapper.update(MainUiState.Show)
+
     }
 
     fun delete(transactionId: Long, transactionType: String) {
         viewModelScope.launch(dispatcher) {
-            val currentTransaction = repository.getOneTransaction(transactionId, transactionType)
             repository.deleteTransaction(transactionId)
-            cleanUpEmptyPeriodUseCase(currentTransaction.dateId)
         }
         navigation.update(TransactionsListScreen(transactionType))
         mainUiStateLiveDataWrapper.update(MainUiState.Show)

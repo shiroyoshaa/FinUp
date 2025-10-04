@@ -9,7 +9,6 @@ import com.example.finup.core.Order
 import com.example.finup.domain.Transaction
 import com.example.finup.domain.TransactionRepository
 import com.example.finup.domain.YearMonth
-import com.example.finup.domain.useCases.CleanUpEmptyPeriodUseCase
 import com.example.finup.domain.useCases.GetOrCreatePeriodUseCase
 import com.example.finup.main.FakeMainUiStateLiveDataWrapper
 import com.example.finup.main.FakeMainUiStateLiveDataWrapper.Companion.MAIN_UI_STATE_UPDATE
@@ -74,17 +73,19 @@ class CreateEditTransactionViewModelTest {
                 dateId = 5L
             )
         )
-
+        getOrCreatePeriodUseCase.expectedYearMonth(YearMonth(5L,10,2025))
         viewModel.editInit(title = "Edit Expense", transactionId = 1L, transactionType = "Expense")
         transactionRepository.checkGetOrDeleteIsCalled(1L, "Expense")
+
         uiStateLiveDataWrapper.check(
             CreateEditUiState.ShowEditTransactionPage(
                 title = "Edit Expense",
+                date = "15.10.2025",
                 selectedCategory = "Other",
                 sum = "5000",
             )
         )
-        order.check(listOf(GET_TRANSACTION_REPOSITORY, CREATE_EDIT_UI_STATE_UPDATE))
+        order.check(listOf(GET_TRANSACTION_REPOSITORY, GET_BY_ID,CREATE_EDIT_UI_STATE_UPDATE))
     }
 
     @Test
@@ -100,7 +101,7 @@ class CreateEditTransactionViewModelTest {
                 year = 2025
             )
         )
-        getOrCreatePeriodUseCase.check(expectedYear = 2025, expectedMonth = 10)
+        getOrCreatePeriodUseCase.checkInvokeIsCalled(expectedYear = 2025, expectedMonth = 10)
         transactionRepository.checkOtherMethodsIsCalled(
             Transaction(
                 105L,
@@ -122,9 +123,9 @@ class CreateEditTransactionViewModelTest {
     @Test
     fun `edit transaction`() {
         getOrCreatePeriodUseCase.expectedYearMonth(YearMonth(5L, 12, 2025))
+        transactionRepository.expectedTransaction(Transaction(id = 2L,3500 , name = "Groceries",type = "Expense",day = 13, dateId = 1L))
         viewModel.edit(
-            2L,
-            previousDateId = 35L, TransactionInputDetails(
+            2L, TransactionInputDetails(
                 type = "Expense",
                 selectedCategory = "Other",
                 sum = 5000,
@@ -133,11 +134,8 @@ class CreateEditTransactionViewModelTest {
                 year = 2025
             )
         )
-
-        getOrCreatePeriodUseCase.check(expectedYear = 2025, expectedMonth = 12)
-        cleanUpEmptyPeriodUseCase.check(35L)
-
-
+        getOrCreatePeriodUseCase.checkInvokeIsCalled(expectedYear = 2025, expectedMonth = 12)
+        transactionRepository.checkGetOrDeleteIsCalled(expectedId = 2L,"Expense") //get
         transactionRepository.checkOtherMethodsIsCalled(
             Transaction(
                 2L,
@@ -146,15 +144,19 @@ class CreateEditTransactionViewModelTest {
                 "Expense",
                 15,
                 5L
-            )
+            ) //method - edit transaction
         )
+        cleanUpEmptyPeriodUseCase.check(1L)
+
+
         navigation.check(TransactionsListScreen(type = "Expense"))
         mainUiStateLiveDataWrapper.check(MainUiState.Show)
         order.check(
             listOf(
                 GET_OR_CREATE_PERIOD_USE_CASE,
-                CLEAN_UP_USE_CASE,
+                GET_TRANSACTION_REPOSITORY,
                 EDIT_TRANSACTION_REPOSITORY,
+                CLEAN_UP_USE_CASE,
                 NAVIGATION,
                 MAIN_UI_STATE_UPDATE,
             )
@@ -201,7 +203,7 @@ class CreateEditTransactionViewModelTest {
         viewModel.comeback(type = "Expense")
         navigation.check(TransactionsListScreen("Expense"))
         mainUiStateLiveDataWrapper.check(MainUiState.Show)
-        order.check(listOf(NAVIGATION,MAIN_UI_STATE_UPDATE))
+        order.check(listOf(NAVIGATION, MAIN_UI_STATE_UPDATE))
     }
 }
 
@@ -226,18 +228,18 @@ private interface FakeCleanUpEmptyPeriodUseCase : CleanUpEmptyPeriodUseCase {
 }
 
 private const val GET_OR_CREATE_PERIOD_USE_CASE = "GetOrCreatePeriodUseCase#Invoke"
-
+private const val GET_BY_ID = "GetOrCreatePeriodUseCase#GetById"
 private interface FakeGetOrCreatePeriodUseCase : GetOrCreatePeriodUseCase {
 
-    fun check(expectedYear: Int, expectedMonth: Int)
+    fun checkInvokeIsCalled(expectedYear: Int, expectedMonth: Int)
+    fun checkGetByIdIsCalled(calledTimes: Int)
     fun expectedYearMonth(yearMonth: YearMonth)
-
     class Base(private val order: Order) : FakeGetOrCreatePeriodUseCase {
 
         private lateinit var expectedYearMonth: YearMonth
         private var actualYear = 1
         private var actualMonth = 1
-
+        private var getByIdCalledTimes = 0
         override suspend fun invoke(year: Int, month: Int): YearMonth {
             actualYear = year
             actualMonth = month
@@ -245,13 +247,23 @@ private interface FakeGetOrCreatePeriodUseCase : GetOrCreatePeriodUseCase {
             return expectedYearMonth
         }
 
+        override suspend fun getById(id: Long): YearMonth {
+            getByIdCalledTimes++
+            order.add(GET_BY_ID)
+            return expectedYearMonth
+        }
+
         override fun expectedYearMonth(yearMonth: YearMonth) {
             expectedYearMonth = yearMonth
         }
 
-        override fun check(expectedYear: Int, expectedMonth: Int) {
+        override fun checkInvokeIsCalled(expectedYear: Int, expectedMonth: Int) {
             assertEquals(expectedYear, actualYear)
             assertEquals(expectedMonth, actualMonth)
+        }
+
+        override fun checkGetByIdIsCalled(calledTimes: Int) {
+            assertEquals(calledTimes,getByIdCalledTimes)
         }
     }
 }
@@ -283,7 +295,7 @@ private interface FakeCreateEditUiStateWrapper : CreateEditUiStateWrapper.Mutabl
 
 private const val GET_TRANSACTION_REPOSITORY = "TransactionRepository#GetTransaction"
 private const val DELETE_TRANSACTION_REPOSITORY = "TransactionRepository#DeleteTransaction"
-private const val EDIT_TRANSACTION_REPOSITORY = "TransactionRepository#DeleteTransaction"
+private const val EDIT_TRANSACTION_REPOSITORY = "TransactionRepository#EditTransaction"
 private const val CREATE_TRANSACTION_REPOSITORY = "TransactionRepository#CreateTransaction"
 
 private interface FakeTransactionRepository : TransactionRepository.EditAndCreate {
