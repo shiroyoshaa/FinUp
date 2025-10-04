@@ -120,7 +120,16 @@ class CreateEditTransactionViewModelTest {
     @Test
     fun `edit transaction`() {
         getOrCreatePeriodUseCase.expectedYearMonth(YearMonth(5L, 12, 2025))
-        transactionRepository.expectedTransaction(Transaction(id = 2L,3500 , name = "Groceries",type = "Expense",day = 13, dateId = 1L))
+        transactionRepository.expectedTransaction(
+            Transaction(
+                id = 2L,
+                3500,
+                name = "Groceries",
+                type = "Expense",
+                day = 13,
+                dateId = 1L
+            )
+        )
         viewModel.edit(
             2L, TransactionInputDetails(
                 type = "Expense",
@@ -132,7 +141,6 @@ class CreateEditTransactionViewModelTest {
             )
         )
         getOrCreatePeriodUseCase.checkInvokeIsCalled(expectedYear = 2025, expectedMonth = 12)
-        transactionRepository.checkGetOrDeleteIsCalled(expectedId = 2L,"Expense") //get
         transactionRepository.checkOtherMethodsIsCalled(
             Transaction(
                 2L,
@@ -150,7 +158,6 @@ class CreateEditTransactionViewModelTest {
         order.check(
             listOf(
                 GET_OR_CREATE_PERIOD_USE_CASE,
-                GET_TRANSACTION_REPOSITORY,
                 EDIT_TRANSACTION_REPOSITORY,
                 NAVIGATION,
                 MAIN_UI_STATE_UPDATE,
@@ -197,6 +204,7 @@ class CreateEditTransactionViewModelTest {
 
 private const val GET_OR_CREATE_PERIOD_USE_CASE = "GetOrCreatePeriodUseCase#Invoke"
 private const val GET_BY_ID = "GetOrCreatePeriodUseCase#GetById"
+
 private interface FakeGetOrCreatePeriodUseCase : GetOrCreatePeriodUseCase {
 
     fun checkInvokeIsCalled(expectedYear: Int, expectedMonth: Int)
@@ -231,7 +239,7 @@ private interface FakeGetOrCreatePeriodUseCase : GetOrCreatePeriodUseCase {
         }
 
         override fun checkGetByIdIsCalled(calledTimes: Int) {
-            assertEquals(calledTimes,getByIdCalledTimes)
+            assertEquals(calledTimes, getByIdCalledTimes)
         }
     }
 }
