@@ -54,7 +54,6 @@ class CreateEditTransactionViewModel(
                 newInput.year,
                 newInput.month,
             )
-            val currentTransaction = repository.getOneTransaction(transactionId,newInput.type)
             repository.editTransaction(
                 transactionId,
                 newInput.sum,

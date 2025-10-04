@@ -156,9 +156,6 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
         viewModel.uiStateLiveData().observe(viewLifecycleOwner) {
             it.show(categories, binding.titleTextView,binding.dateTextView ,binding.deleteButton,binding.sumInputEditText)
         }
-        viewModel.uiStateLiveData().observe(viewLifecycleOwner) {
-            it.show(categories,binding.titleTextView,binding.dateTextView,binding.deleteButton,binding.sumInputEditText)
-        }
     }
 
     private fun formatLongToDateComponents(selection: Long): Triple<Int, Int, Int> {

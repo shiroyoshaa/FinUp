@@ -28,7 +28,6 @@ class CreateEditTransactionViewModelTest {
     private lateinit var uiStateLiveDataWrapper: FakeCreateEditUiStateWrapper
     private lateinit var transactionRepository: FakeTransactionRepository
     private lateinit var getOrCreatePeriodUseCase: FakeGetOrCreatePeriodUseCase
-    private lateinit var cleanUpEmptyPeriodUseCase: FakeCleanUpEmptyPeriodUseCase
     private lateinit var mainUiStateLiveDataWrapper: FakeMainUiStateLiveDataWrapper
     private lateinit var navigation: FakeNavigation
 
@@ -38,7 +37,6 @@ class CreateEditTransactionViewModelTest {
         uiStateLiveDataWrapper = FakeCreateEditUiStateWrapper.Base(order)
         transactionRepository = FakeTransactionRepository.Base(order)
         getOrCreatePeriodUseCase = FakeGetOrCreatePeriodUseCase.Base(order)
-        cleanUpEmptyPeriodUseCase = FakeCleanUpEmptyPeriodUseCase.Base(order)
         mainUiStateLiveDataWrapper = FakeMainUiStateLiveDataWrapper.Base(order)
         navigation = FakeNavigation.Base(order)
         viewModel = CreateEditTransactionViewModel(
@@ -46,7 +44,6 @@ class CreateEditTransactionViewModelTest {
             mainUiStateLiveDataWrapper = mainUiStateLiveDataWrapper,
             repository = transactionRepository,
             getOrCreatePeriodUseCase = getOrCreatePeriodUseCase,
-            cleanUpEmptyPeriodUseCase = cleanUpEmptyPeriodUseCase,
             navigation = navigation,
             dispatcher = Dispatchers.Unconfined,
             dispatcherMain = Dispatchers.Unconfined,
@@ -146,7 +143,6 @@ class CreateEditTransactionViewModelTest {
                 5L
             ) //method - edit transaction
         )
-        cleanUpEmptyPeriodUseCase.check(1L)
 
 
         navigation.check(TransactionsListScreen(type = "Expense"))
@@ -156,7 +152,6 @@ class CreateEditTransactionViewModelTest {
                 GET_OR_CREATE_PERIOD_USE_CASE,
                 GET_TRANSACTION_REPOSITORY,
                 EDIT_TRANSACTION_REPOSITORY,
-                CLEAN_UP_USE_CASE,
                 NAVIGATION,
                 MAIN_UI_STATE_UPDATE,
             )
@@ -179,19 +174,12 @@ class CreateEditTransactionViewModelTest {
         transactionRepository.checkGetOrDeleteIsCalled(
             expectedId = 3L,
             "Expense"
-        ) //this is get method
-        transactionRepository.checkGetOrDeleteIsCalled(
-            expectedId = 3L,
-            "Expense"
         ) //this is delete method
-        cleanUpEmptyPeriodUseCase.check(44L)
         navigation.check(TransactionsListScreen(type = "Expense"))
         mainUiStateLiveDataWrapper.check(MainUiState.Show)
         order.check(
             listOf(
-                GET_TRANSACTION_REPOSITORY,
                 DELETE_TRANSACTION_REPOSITORY,
-                CLEAN_UP_USE_CASE,
                 NAVIGATION,
                 MAIN_UI_STATE_UPDATE,
             )
@@ -204,26 +192,6 @@ class CreateEditTransactionViewModelTest {
         navigation.check(TransactionsListScreen("Expense"))
         mainUiStateLiveDataWrapper.check(MainUiState.Show)
         order.check(listOf(NAVIGATION, MAIN_UI_STATE_UPDATE))
-    }
-}
-
-private const val CLEAN_UP_USE_CASE = "CleanUpEmptyPeriodUseCase#invoke"
-
-private interface FakeCleanUpEmptyPeriodUseCase : CleanUpEmptyPeriodUseCase {
-
-    fun check(expectedDateId: Long)
-
-    class Base(private val order: Order) : FakeCleanUpEmptyPeriodUseCase {
-
-        private var actualDateId = -1L
-        override suspend fun invoke(dateId: Long) {
-            actualDateId = dateId
-            order.add(CLEAN_UP_USE_CASE)
-        }
-
-        override fun check(expectedDateId: Long) {
-            assertEquals(expectedDateId, actualDateId)
-        }
     }
 }
 
