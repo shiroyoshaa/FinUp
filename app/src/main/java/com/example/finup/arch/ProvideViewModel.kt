@@ -20,13 +20,13 @@ import com.example.finup.domain.MockProviderBase
 import com.example.finup.domain.Now
 import com.example.finup.domain.RealProviderBase
 import com.example.finup.domain.YearMonthStateManager
-
 import com.example.finup.domain.useCases.GetOrCreatePeriodUseCase
 import com.example.finup.domain.useCases.GetTransactionsListByPeriodUseCase
 import com.example.finup.domain.useCases.NavigationMonthUseCase
 import com.example.finup.main.MainUiStateLiveDataWrapper
 import com.example.finup.main.MainViewModel
 import com.example.finup.main.Navigation
+import com.example.finup.main.TypeLiveDataWrapper
 
 
 interface ProvideViewModel {
@@ -41,6 +41,7 @@ interface ProvideViewModel {
         private val createEditUiStateWrapper = CreateEditUiStateWrapper.Base()
         private val transactionListWrapper = TransactionsListLiveDataWrapper.Base()
         private val transactionListUiStateWrapper = TransactionListUiStateWrapper.Base()
+        private val typeLiveDataWrapper = TypeLiveDataWrapper.Base()
         private val transactionMapper = TransactionUiMapper.Base()
         private val realDateProvider = RealProviderBase()
         private val mockDateProviderForUiTests = MockProviderBase()
@@ -55,7 +56,7 @@ interface ProvideViewModel {
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             val stateManager = YearMonthStateManager.Base(yearMonthRepository,  yearMonthStateRepository,mockDateProviderForUiTests)
             return when (modelClass) {
-                MainViewModel::class.java -> MainViewModel(navigation, mainUiStateLiveDataWrapper)
+                MainViewModel::class.java -> MainViewModel(navigation, mainUiStateLiveDataWrapper,typeLiveDataWrapper)
                 TransactionsListViewModel::class.java -> TransactionsListViewModel(
                     transactionListWrapper,
                     transactionListUiStateWrapper,
