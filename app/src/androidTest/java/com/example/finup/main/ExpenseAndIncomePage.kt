@@ -1,6 +1,5 @@
 package com.example.finup.main
 
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -131,17 +130,6 @@ class ExpenseAndIncomePage(
             sumByDay(position, sum).check(doesNotExist())
         }
 
-        fun clickRecyclerButton(position: Int) {
-            onView(
-                allOf(
-                    isAssignableFrom(Button::class.java),
-                    recyclerViewMatcher().atPosition(position, header.headerButton),
-                    withParent(isAssignableFrom(LinearLayout::class.java)),
-                    withParent(withId(header.headerRootLayout)),
-                )
-            ).check(matches(isDisplayed())).perform(click())
-        }
-
                 private fun itemTitle(position: Int) = onView(
             allOf(
                 isAssignableFrom(TextView::class.java),
@@ -219,7 +207,6 @@ private val header = Header(
     headerRootLayout = R.id.headerRootLayout,
     headerDateTextView = R.id.headerDateTextView,
     headerTotalSumTextView = R.id.headerTotalSumTextView,
-    headerButton = R.id.headerButton,
 )
 private val item = Item(
     itemRootLayout = R.id.itemRootLayout,

@@ -35,7 +35,6 @@ class ScenarioTest {
 
         expenseListPage.checkVisibleNow("5000")
         expenseListPage.checkDateTitleVisible("13 september", 0, "5000")
-        expenseListPage.clickRecyclerButton(0)
         expenseListPage.checkItemVisible("Utilities", "5000", 1)
     }
 

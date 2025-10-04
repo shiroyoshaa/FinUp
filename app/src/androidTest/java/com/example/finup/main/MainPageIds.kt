@@ -15,7 +15,6 @@ data class ToolBar(
     )
 
 data class BottomNav(
-    val coordinatorLayout: Int,
     val bottomNavId: Int,
     val expenseIcon: Int,
     val incomeIcon: Int,
@@ -25,7 +24,6 @@ data class Header(
     val headerRootLayout: Int,
     val headerDateTextView: Int,
     val headerTotalSumTextView: Int,
-    val headerButton: Int,
 )
 
 data class Item(
