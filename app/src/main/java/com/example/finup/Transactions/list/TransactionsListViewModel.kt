@@ -1,6 +1,5 @@
 package com.example.finup.Transactions.list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.finup.Transactions.createEdit.CreateEditTransactionScreen
@@ -34,7 +33,6 @@ class TransactionsListViewModel(
             val currentYearMonth = stateManagerWrapper.getInitialYearMonth()
             val result = getTransactionsListByPeriodUseCase(currentYearMonth, type)
             withContext(dispatcherMain) {
-                Log.d("init123","init in transactionsLitViewModel $currentYearMonth")
                 transactionsListWrapper.update(transactionMapper.toUiLayer(result.listTransactions,result.formattedDateYearMonth))
                 uiStateLiveDataWrapper.update(
                     ShowDateTitle(

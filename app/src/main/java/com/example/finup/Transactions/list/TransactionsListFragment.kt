@@ -15,7 +15,9 @@ class TransactionsListFragment : Fragment(R.layout.transactions_list_page) {
     private val binding get() = _binding!!
 
     companion object {
+
         private const val TRANSACTION_TYPE_KEY = "TransactionTypeKey"
+
         fun newInstance(type: String): TransactionsListFragment {
             val fragment = TransactionsListFragment()
             fragment.arguments = Bundle().apply {
@@ -23,6 +25,7 @@ class TransactionsListFragment : Fragment(R.layout.transactions_list_page) {
             }
             return fragment
         }
+
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = TransactionsListPageBinding.bind(view)

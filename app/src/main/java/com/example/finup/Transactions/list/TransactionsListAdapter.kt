@@ -2,6 +2,7 @@ package com.example.finup.Transactions.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.finup.Transactions.model.DisplayItemUi
 import com.example.finup.databinding.HeaderForAdapterBinding
@@ -9,11 +10,13 @@ import com.example.finup.databinding.ItemForHolderBinding
 
 
 class TransactionsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     private val list = ArrayList<DisplayItemUi>()
 
     override fun getItemViewType(position: Int): Int {
         return list[position].getItemType()
     }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -24,6 +27,7 @@ class TransactionsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
             else -> throw IllegalStateException("view type not found")
         }
     }
+
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int
@@ -37,10 +41,13 @@ class TransactionsListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() 
     override fun getItemCount(): Int {
         return list.size
     }
-    fun addItems(currentList: List<DisplayItemUi>) {
+
+    fun addItems(newList: List<DisplayItemUi>) {
+        val diffUtil = com.example.finup.Transactions.list.DiffUtil(newList,list)
+        val calculating = DiffUtil.calculateDiff(diffUtil)
         list.clear()
-        list.addAll(currentList)
-        notifyDataSetChanged()
+        list.addAll(newList)
+        calculating.dispatchUpdatesTo(this)
     }
 }
 
@@ -60,4 +67,32 @@ class ItemViewHolder(private val binding: ItemForHolderBinding) :
         binding.itemNameTextView.text = details.name
         binding.itemSumTextView.text = details.sum.toString()
     }
+}
+
+class DiffUtil(
+    private val currentList: List<DisplayItemUi>,
+    private val oldList: List<DisplayItemUi>
+) : DiffUtil.Callback() {
+    override fun getOldListSize(): Int {
+        return oldList.size
+    }
+
+    override fun getNewListSize(): Int {
+        return currentList.size
+    }
+
+    override fun areItemsTheSame(
+        oldItemPosition: Int,
+        newItemPosition: Int
+    ): Boolean {
+       return oldList[oldItemPosition] == currentList[newItemPosition]
+    }
+
+    override fun areContentsTheSame(
+        oldItemPosition: Int,
+        newItemPosition: Int
+    ): Boolean {
+        return oldList[oldItemPosition] == currentList[newItemPosition]
+    }
+
 }
