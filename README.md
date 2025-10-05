@@ -23,17 +23,21 @@ Technology -
 9. Asynchrony	- Coroutines
 10. And i used Robolectric only for mock Bundle
 
-⚙️ Build and Run
-Instructions
+⚙️ Build and Run Instructions
+
 Clone the repository: 
+
 git clone https://github.com/shiroyoshaa/FinUp.git
+
 Open the project in Android Studio and wait for Gradle to sync.
 
 Click the Run button (▶️) to deploy the app to an emulator or device.
 
 🧪 Running UI Tests (Espresso)
 To successfully run UI tests, they must be isolated from external factors like system time, which is critical for month-dependent logic.
+
 Important Step:
+
 You need to open the ProvideViewModel.Base class and manually change the time provider being used: instead of RealProviderBase, you should use mockDateProviderForUiTests to inject static (mocked) time into the components.
 
 A short clip demonstrating an Espresso UI Test running rapidly - 
