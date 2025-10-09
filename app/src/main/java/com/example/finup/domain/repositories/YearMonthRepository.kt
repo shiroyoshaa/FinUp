@@ -1,4 +1,6 @@
-package com.example.finup.domain
+package com.example.finup.domain.repositories
+
+import com.example.finup.domain.models.YearMonth
 
 interface YearMonthRepository {
 

@@ -1,47 +1,25 @@
 package com.example.finup.Transactions.core
 
-import com.example.finup.data.TransactionCache
-import com.example.finup.data.TransactionDao
-import com.example.finup.data.TransactionRepositoryImpl
-import com.example.finup.data.YearMonthCache
-import com.example.finup.data.YearMonthDao
-import com.example.finup.data.YearMonthRepositoryImpl
-import com.example.finup.domain.Now
-import com.example.finup.domain.Transaction
-import com.example.finup.domain.YearMonth
+import com.example.finup.data.FakeNow
+import com.example.finup.data.db.dao.TransactionDao
+import com.example.finup.data.db.entities.TransactionCache
+import com.example.finup.data.repositories.TransactionRepositoryImpl
+import com.example.finup.domain.models.Transaction
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
 
-class RepositoriesTests {
+class TransactionRepositoryTest {
 
     private lateinit var now: FakeNow
-    private lateinit var yearMonthDao: FakeYearMonth
     private lateinit var transactionDao: FakeTransactionDao
 
     @Before
     fun initialize() {
         now = FakeNow.Base(2L)
-        yearMonthDao = FakeYearMonth.Base()
         transactionDao = FakeTransactionDao.Base()
-
-    }
-
-    @Test
-    fun yearMonthTest() = runBlocking {
-        val yearMonthRepository = YearMonthRepositoryImpl(
-            yearMonthDao,
-            now,
-        )
-        val actualNewYearMonth = yearMonthRepository.create(month = 10, year = 2025)
-        val expectedNewYearMonth = YearMonth(
-            id = 2L,
-            month = 10,
-            year = 2025,
-        )
-        assertEquals(expectedNewYearMonth, actualNewYearMonth)
 
     }
 
@@ -180,42 +158,6 @@ class RepositoriesTests {
         assertEquals(exptectedFinalTransactions, actualFinalTransactions)
     }
 }
-
-
-interface FakeNow : Now {
-    class Base(private var time: Long) : FakeNow {
-        override fun timeInMills(): Long {
-            return time++
-        }
-    }
-}
-
-private interface FakeYearMonth : YearMonthDao {
-
-    class Base : FakeYearMonth {
-
-        private val newList = mutableListOf<YearMonthCache>()
-
-        override suspend fun insert(dateTitleCache: YearMonthCache) {
-            newList.add(dateTitleCache)
-        }
-
-        override suspend fun getDateItem(dateId: Long): YearMonthCache {
-            return newList.find { (id, _, _) -> id == dateId }!!
-        }
-
-        override suspend fun getAllPeriods(): List<YearMonthCache> {
-            return newList
-        }
-
-        override suspend fun delete(dateId: Long) {
-            newList.find { it.id == dateId }.let {
-                newList.remove(it)
-            }
-        }
-    }
-}
-
 
 private interface FakeTransactionDao : TransactionDao {
 

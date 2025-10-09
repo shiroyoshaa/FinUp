@@ -1,4 +1,4 @@
-package com.example.finup.domain
+package com.example.finup.data.repositories
 
 interface Now {
     fun timeInMills(): Long
