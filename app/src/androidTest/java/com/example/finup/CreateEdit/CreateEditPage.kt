@@ -3,6 +3,7 @@ package com.example.finup.CreateEdit
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.test.espresso.Espresso.onView
@@ -82,10 +83,10 @@ class CreateEditPage(
 
         onView(
             allOf(
-                isAssignableFrom(MaterialButton::class.java),
+                isAssignableFrom(ImageView::class.java),
                 withId(mainIds.openDateButton),
-                withParent(withId(mainIds.editCreateRootLayout)),
-                withParent(isAssignableFrom(ConstraintLayout::class.java)),
+                withParent(withId(mainIds.dateLinearLayout)),
+                withParent(isAssignableFrom(LinearLayout::class.java)),
             )
         ).check(matches(isDisplayed())).perform(click())
 
@@ -200,6 +201,8 @@ private val mainIds = CreateEditPageIds(
     amountLabelTextView = R.id.amountLabelTextView,
     backButton = R.id.backButton,
     sumInputEditText = R.id.sumInputEditText,
+    dateLinearLayout = R.id.dateLinearLayout,
+    pickDateTextView = R.id.pickDateTextView,
     openDateButton = R.id.openDateButton,
     dateTextView = R.id.dateTextView,
     saveButton = R.id.saveButton,
