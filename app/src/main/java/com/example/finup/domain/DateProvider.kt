@@ -1,6 +1,7 @@
 package com.example.finup.domain
 
 import android.annotation.SuppressLint
+import android.icu.util.Calendar
 import com.example.finup.domain.DateProvider.All
 import java.time.Clock
 import java.time.YearMonth
@@ -20,9 +21,12 @@ interface DateProvider {
     interface FormatDate {
         fun formatDate(year: Int, month: Int): String
     }
+    interface FormatLongToDateComponents {
+        fun formatLongToDateComponents(date: Long): Triple<Int,Int,Int>
+    }
 
     interface Getters : GetYear, GetMonth
-    interface All : Getters, FormatDate
+    interface All : Getters, FormatDate, FormatLongToDateComponents
 
 }
 
@@ -43,6 +47,17 @@ class RealProviderBase(
         val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", locale)
         return date.format(formatter)
     }
+
+    override fun formatLongToDateComponents(date: Long): Triple<Int, Int, Int> {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = date
+
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val month = calendar.get(Calendar.MONTH) + 1
+        val year = calendar.get(Calendar.YEAR)
+
+        return Triple(day, month, year)
+    }
 }
 
 @SuppressLint("NewApi")
@@ -61,5 +76,16 @@ class MockProviderBase(
         val date = YearMonth.of(year, month)
         val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", locale)
         return date.format(formatter)
+    }
+
+    override fun formatLongToDateComponents(date: Long): Triple<Int, Int, Int> {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = date
+
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val month = calendar.get(Calendar.MONTH) + 1
+        val year = calendar.get(Calendar.YEAR)
+
+        return Triple(day, month, year)
     }
 }
