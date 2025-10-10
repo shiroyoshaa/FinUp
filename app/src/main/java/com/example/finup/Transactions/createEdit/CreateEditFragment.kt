@@ -1,41 +1,44 @@
 package com.example.finup.Transactions.createEdit
 
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.finup.R
-import com.example.finup.Transactions.model.TransactionInputDetails
-import com.example.finup.arch.ProvideViewModel
+import com.example.finup.core.ProvideViewModel
 import com.example.finup.databinding.CreateEditPageBinding
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.launch
+
 
 class CreateEditFragment : Fragment(R.layout.create_edit_page) {
-    private var yearDate = 0
-    private var monthDate = 0
-    private var dayDate = 0
-    private var selectedCategory = ""
-    private lateinit var materialDatePicker: MaterialDatePicker<Long>
+
     private var _binding: CreateEditPageBinding? = null
     private val binding
         get() = _binding!!
 
+    private lateinit var materialDatePicker: MaterialDatePicker<Long>
+    private lateinit var viewModel: CreateEditTransactionViewModel
+
     private val watcher = object : SimpleTextWatcher() {
-        override fun afterTextChanged(s: Editable?) = updateSaveButtonState()
+        override fun afterTextChanged(s: Editable?) {
+            sumChangeFlow.value = s.toString()
+        }
     }
-    private val datePickerListener = MaterialPickerOnPositiveButtonClickListener<Long> { selection ->
-        val (day, month, year) = formatLongToDateComponents(selection)
-        dayDate = day
-        monthDate = month
-        yearDate = year
-        binding.dateTextView.text = "$day.$month.$year"
-        updateSaveButtonState()
-    }
+
+    private val datePickerListener =
+        MaterialPickerOnPositiveButtonClickListener<Long> { selection ->
+            viewModel.selectDate(selection)
+        }
 
     companion object {
         private const val SCREEN_TYPE_KEY = "ScreenTypeKey"
@@ -55,17 +58,27 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
             }
             return fragment
         }
-
     }
 
+    private val sumChangeFlow = MutableStateFlow("")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d("fatal", "OnViewCreated")
         _binding = CreateEditPageBinding.bind(view)
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            sumChangeFlow
+                .drop(1)
+                .debounce(500L)
+                .collect { sumString ->
+                    val sum = sumString.toIntOrNull() ?: 0
+                    viewModel.updateSum(sum)
+                }
+        }
         val screenType = requireArguments().getString(SCREEN_TYPE_KEY)
         val transactionId = requireArguments().getLong(TRANSACTION_ID_KEY)
         val transactionType = requireArguments().getString(TRANSACTION_TYPE_KEY)!!
 
-        val viewModel = (activity as ProvideViewModel).getViewModel(
+        viewModel = (activity as ProvideViewModel).getViewModel(
             this,
             CreateEditTransactionViewModel::class.java
         )
@@ -99,11 +112,10 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
                 binding.bccButton,
             )
         }
+
         categories.forEach { button ->
             button.setOnClickListener {
-                categories.forEach { if (button != it) it.isChecked = false }
-                selectedCategory = button.text.toString()
-                updateSaveButtonState()
+                viewModel.selectCategory(button.text.toString())
             }
         }
 
@@ -111,71 +123,41 @@ class CreateEditFragment : Fragment(R.layout.create_edit_page) {
             .setTitleText(getString(R.string.dateTitle))
             .build()
         materialDatePicker.addOnPositiveButtonClickListener(datePickerListener)
+
         binding.saveButton.setOnClickListener {
-            val sum = binding.sumInputEditText.text.toString()
-            val intSum = sum.toIntOrNull() ?: 0
+
             if (screenType == "Edit") {
-                viewModel.edit(
-                    transactionId,
-                    TransactionInputDetails(
-                        transactionType,
-                        selectedCategory,
-                        intSum,
-                        dayDate,
-                        monthDate,
-                        yearDate
-                    )
-                )
+                viewModel.edit(transactionId, transactionType)
             } else {
-                viewModel.create(
-                    TransactionInputDetails(
-                        transactionType,
-                        selectedCategory,
-                        intSum,
-                        dayDate,
-                        monthDate,
-                        yearDate
-                    )
-                )
+                viewModel.create(transactionType)
             }
         }
 
         binding.backButton.setOnClickListener {
-            viewModel.comeback(transactionType)
+            viewModel.comeback()
         }
         binding.deleteButton.setOnClickListener {
-            viewModel.delete(transactionId,transactionType)
+            viewModel.delete(transactionId)
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            viewModel.comeback(transactionType)
+            viewModel.comeback()
         }
 
         binding.openDateButton.setOnClickListener {
             materialDatePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER_TAG")
         }
+
         viewModel.uiStateLiveData().observe(viewLifecycleOwner) {
-            it.show(categories, binding.titleTextView,binding.dateTextView ,binding.deleteButton,binding.sumInputEditText)
+            it.show(categories, binding.titleTextView, binding.deleteButton,binding.sumInputEditText)
         }
-    }
 
-    private fun formatLongToDateComponents(selection: Long): Triple<Int, Int, Int> {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = selection
-
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-        val month = calendar.get(Calendar.MONTH) + 1
-        val year = calendar.get(Calendar.YEAR)
-
-        return Triple(day, month, year)
-    }
-
-    private fun updateSaveButtonState() {
-        val sum = binding.sumInputEditText.text.toString().trim()
-        val intSum = sum.toIntOrNull() ?: 0
-        val isSumValid = intSum > 0
-        val isSelectedCategory = selectedCategory != ""
-        val isDateSelected = yearDate != 0
-        binding.saveButton.isEnabled = isSumValid && isSelectedCategory && isDateSelected
+        viewModel.stateLiveData().observe(viewLifecycleOwner) { state ->
+            binding.saveButton.isEnabled = state.checkIsValid()
+            binding.dateTextView.text = "${state.day}.${state.month}.${state.year}"
+            categories.forEach {
+                it.isChecked = it.text == state.selectedCategory
+            }
+        }
     }
 
     override fun onResume() {

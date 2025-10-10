@@ -1,26 +1,22 @@
 package com.example.finup.Transactions.createEdit
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.finup.Transactions.list.TransactionsListScreen
-import com.example.finup.Transactions.model.TransactionInputDetails
 import com.example.finup.core.FakeNavigation
 import com.example.finup.core.FakeNavigation.Companion.NAVIGATION
 import com.example.finup.core.Order
-import com.example.finup.domain.Transaction
-import com.example.finup.domain.TransactionRepository
-import com.example.finup.domain.YearMonth
+import com.example.finup.domain.DateProvider
+import com.example.finup.domain.models.Transaction
+import com.example.finup.domain.models.YearMonth
+import com.example.finup.domain.repositories.TransactionRepository
 import com.example.finup.domain.useCases.GetOrCreatePeriodUseCase
-import com.example.finup.main.FakeMainUiStateLiveDataWrapper
-import com.example.finup.main.FakeMainUiStateLiveDataWrapper.Companion.MAIN_UI_STATE_UPDATE
-import com.example.finup.main.MainUiState
 import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
+
 class CreateEditTransactionViewModelTest {
 
     private lateinit var order: Order
@@ -28,8 +24,9 @@ class CreateEditTransactionViewModelTest {
     private lateinit var uiStateLiveDataWrapper: FakeCreateEditUiStateWrapper
     private lateinit var transactionRepository: FakeTransactionRepository
     private lateinit var getOrCreatePeriodUseCase: FakeGetOrCreatePeriodUseCase
-    private lateinit var mainUiStateLiveDataWrapper: FakeMainUiStateLiveDataWrapper
     private lateinit var navigation: FakeNavigation
+    private lateinit var selectedStateLiveDataWrapper: FakeSelectedStateLiveDataWrapper
+    private lateinit var dateProvider: FakeDateProvider
 
     @Before
     fun setUp() {
@@ -37,21 +34,23 @@ class CreateEditTransactionViewModelTest {
         uiStateLiveDataWrapper = FakeCreateEditUiStateWrapper.Base(order)
         transactionRepository = FakeTransactionRepository.Base(order)
         getOrCreatePeriodUseCase = FakeGetOrCreatePeriodUseCase.Base(order)
-        mainUiStateLiveDataWrapper = FakeMainUiStateLiveDataWrapper.Base(order)
         navigation = FakeNavigation.Base(order)
+        selectedStateLiveDataWrapper = FakeSelectedStateLiveDataWrapper.Base(order)
+        dateProvider = FakeDateProvider.Base(order)
         viewModel = CreateEditTransactionViewModel(
             uiStateLiveDataWrapper = uiStateLiveDataWrapper,
-            mainUiStateLiveDataWrapper = mainUiStateLiveDataWrapper,
             repository = transactionRepository,
             getOrCreatePeriodUseCase = getOrCreatePeriodUseCase,
             navigation = navigation,
+            selectedStateLiveDataWrapper,
+            dateProvider = dateProvider,
             dispatcher = Dispatchers.Unconfined,
             dispatcherMain = Dispatchers.Unconfined,
         )
     }
 
     @Test
-    fun `init for create transaction page`() {
+    fun `init for create transaction page test`() {
         viewModel.createInit(title = "Create Expense")
         uiStateLiveDataWrapper.check(
             CreateEditUiState.ShowCreateTransactionPage("Create Expense")
@@ -59,7 +58,7 @@ class CreateEditTransactionViewModelTest {
     }
 
     @Test
-    fun `init for edit transaction page`() {
+    fun `init for edit transaction page test`() {
         transactionRepository.expectedTransaction(
             Transaction(
                 id = 1L,
@@ -70,75 +69,73 @@ class CreateEditTransactionViewModelTest {
                 dateId = 5L
             )
         )
-        getOrCreatePeriodUseCase.expectedYearMonth(YearMonth(5L,10,2025))
+        getOrCreatePeriodUseCase.expectedYearMonth(YearMonth(5L, 10, 2025))
         viewModel.editInit(title = "Edit Expense", transactionId = 1L, transactionType = "Expense")
-        transactionRepository.checkGetOrDeleteIsCalled(1L, "Expense")
 
+        transactionRepository.checkGetOrDeleteIsCalled(
+            1L,
+            "Expense"
+        )//this is get transaction method
+        getOrCreatePeriodUseCase.checkGetByIdIsCalled(1)
+        selectedStateLiveDataWrapper.checkUpdateIsCalled(
+            SelectedStateUi(
+                selectedCategory = "Other",
+                sum = 5000,
+                day = 15,
+                month = 10,
+                year = 2025,
+            )
+        )
         uiStateLiveDataWrapper.check(
             CreateEditUiState.ShowEditTransactionPage(
                 title = "Edit Expense",
-                date = "15.10.2025",
-                selectedCategory = "Other",
                 sum = "5000",
             )
         )
-        order.check(listOf(GET_TRANSACTION_REPOSITORY, GET_BY_ID,CREATE_EDIT_UI_STATE_UPDATE))
+        order.check(
+            listOf(
+                GET_TRANSACTION_REPOSITORY,
+                GET_BY_ID,
+                UPDATE,
+                CREATE_EDIT_UI_STATE_UPDATE
+            )
+        )
     }
 
     @Test
-    fun `create transaction`() {
+    fun `create transaction test`() {
+        var mockedLiveData = MutableLiveData(SelectedStateUi("Utilities",3000,25,10,2025))
+        selectedStateLiveDataWrapper.mockingLiveData(mockedLiveData)
         getOrCreatePeriodUseCase.expectedYearMonth(YearMonth(1L, 10, 2025))
-        viewModel.create(
-            newInput = TransactionInputDetails(
-                type = "Expense",
-                selectedCategory = "Utilities",
-                sum = 3000,
-                day = 25,
-                month = 10,
-                year = 2025
-            )
-        )
+
+        viewModel.create(transactionType = "Expense")
+
         getOrCreatePeriodUseCase.checkInvokeIsCalled(expectedYear = 2025, expectedMonth = 10)
         transactionRepository.checkOtherMethodsIsCalled(
             Transaction(
                 105L,
                 3000, "Utilities", "Expense", 25, 1L
             )
-        )
-        navigation.check(TransactionsListScreen(type = "Expense"))
-        mainUiStateLiveDataWrapper.check(MainUiState.Show)
+        )//this is create transaction method
+        navigation.check(TransactionsListScreen)
         order.check(
             listOf(
+                LIVE_DATA,
                 GET_OR_CREATE_PERIOD_USE_CASE,
                 CREATE_TRANSACTION_REPOSITORY,
                 NAVIGATION,
-                MAIN_UI_STATE_UPDATE
             )
         )
     }
 
     @Test
-    fun `edit transaction`() {
+    fun `edit transaction test`() {
+        val mockLiveData = MutableLiveData(SelectedStateUi(selectedCategory = "Other",5000,15,12,2025))
+        selectedStateLiveDataWrapper.mockingLiveData(mockLiveData)
         getOrCreatePeriodUseCase.expectedYearMonth(YearMonth(5L, 12, 2025))
-        transactionRepository.expectedTransaction(
-            Transaction(
-                id = 2L,
-                3500,
-                name = "Groceries",
-                type = "Expense",
-                day = 13,
-                dateId = 1L
-            )
-        )
+
         viewModel.edit(
-            2L, TransactionInputDetails(
-                type = "Expense",
-                selectedCategory = "Other",
-                sum = 5000,
-                day = 15,
-                month = 12,
-                year = 2025
-            )
+            2L, transactionType = "Expense"
         )
         getOrCreatePeriodUseCase.checkInvokeIsCalled(expectedYear = 2025, expectedMonth = 12)
         transactionRepository.checkOtherMethodsIsCalled(
@@ -153,14 +150,13 @@ class CreateEditTransactionViewModelTest {
         )
 
 
-        navigation.check(TransactionsListScreen(type = "Expense"))
-        mainUiStateLiveDataWrapper.check(MainUiState.Show)
+        navigation.check(TransactionsListScreen)
         order.check(
             listOf(
+                LIVE_DATA,
                 GET_OR_CREATE_PERIOD_USE_CASE,
                 EDIT_TRANSACTION_REPOSITORY,
                 NAVIGATION,
-                MAIN_UI_STATE_UPDATE,
             )
         )
     }
@@ -177,28 +173,138 @@ class CreateEditTransactionViewModelTest {
                 44L,
             )
         )
-        viewModel.delete(transactionId = 3L, transactionType = "Expense")
+        viewModel.delete(transactionId = 3L)
         transactionRepository.checkGetOrDeleteIsCalled(
             expectedId = 3L,
             "Expense"
         ) //this is delete method
-        navigation.check(TransactionsListScreen(type = "Expense"))
-        mainUiStateLiveDataWrapper.check(MainUiState.Show)
+        navigation.check(TransactionsListScreen)
         order.check(
             listOf(
                 DELETE_TRANSACTION_REPOSITORY,
                 NAVIGATION,
-                MAIN_UI_STATE_UPDATE,
             )
         )
     }
 
     @Test
     fun `arrow back press`() {
-        viewModel.comeback(type = "Expense")
-        navigation.check(TransactionsListScreen("Expense"))
-        mainUiStateLiveDataWrapper.check(MainUiState.Show)
-        order.check(listOf(NAVIGATION, MAIN_UI_STATE_UPDATE))
+        viewModel.comeback()
+        navigation.check(TransactionsListScreen)
+    }
+
+    @Test
+    fun`select category test`() {
+        viewModel.selectCategory(category = "Kaspi Bank")
+        selectedStateLiveDataWrapper.checkUpdateSelectedCategoryIsCalled("Kaspi Bank")
+    }
+
+    @Test
+    fun`select date test`() {
+        dateProvider.mockDate(12,10,2025)
+        viewModel.selectDate(date = 1728662400000)
+        dateProvider.check(1728662400000)
+        selectedStateLiveDataWrapper.checkUpdateSelectedDateIsCalled("12.10.2025")
+    }
+}
+
+private const val FORMAT_LONG_TO_DATE_COMPONENTS = "DateProvider#FormatLongToDateComponents"
+
+private interface FakeDateProvider : DateProvider.FormatLongToDateComponents {
+
+    fun mockDate(day: Int, month: Int, year: Int)
+    fun check(expectedCalledDate: Long)
+
+    class Base(private val order: Order) : FakeDateProvider {
+
+        private var mockedDay = 0
+        private var mockedMonth = 0
+        private var mockedYear = 0
+        private var actualFormatCalledValue = 0L
+
+        override fun formatLongToDateComponents(date: Long): Triple<Int, Int, Int> {
+            actualFormatCalledValue = date
+            order.add(FORMAT_LONG_TO_DATE_COMPONENTS)
+            return Triple(mockedDay, mockedMonth, mockedYear)
+        }
+
+        override fun mockDate(day: Int, month: Int, year: Int) {
+            mockedDay = day
+            mockedMonth = month
+            mockedYear = year
+        }
+
+        override fun check(expectedCalledDate: Long) {
+            assertEquals(expectedCalledDate, actualFormatCalledValue)
+        }
+    }
+}
+
+private const val LIVE_DATA = "SelectedStateWrapper#LiveData"
+private const val UPDATE = "SelectedStateWrapper#Update"
+
+private interface FakeSelectedStateLiveDataWrapper : SelectedStateWrapper.Mutable {
+
+    fun mockingLiveData(expectedLiveData: LiveData<SelectedStateUi>)
+    fun checkUpdateSumIsCalled(expectedSum: Int)
+    fun checkLiveDataIsCalled(expected: Int)
+    fun checkUpdateSelectedDateIsCalled(expectedDate: String)
+    fun checkUpdateSelectedCategoryIsCalled(expectedCategory: String)
+    fun checkUpdateIsCalled(expected: SelectedStateUi)
+    class Base(private val order: Order) : FakeSelectedStateLiveDataWrapper {
+
+        private lateinit var mockedLiveData: LiveData<SelectedStateUi>
+        private lateinit var actual: SelectedStateUi
+        private var actualSum = 0
+        private lateinit var actualSelectedCategory: String
+        private lateinit var actualSelectedDate: String
+        private var liveDataCalledTimes = 0
+        override fun update(value: SelectedStateUi) {
+            order.add(UPDATE)
+            actual = value
+        }
+
+        override fun liveData(): LiveData<SelectedStateUi> {
+            liveDataCalledTimes++
+            order.add(LIVE_DATA)
+            return mockedLiveData
+        }
+
+        override fun updateSum(value: Int) {
+            actualSum = value
+        }
+
+        override fun updateSelectedDate(day: Int, month: Int, year: Int) {
+            actualSelectedDate = "$day.$month.$year"
+        }
+
+        override fun updateSelectedCategory(category: String) {
+            actualSelectedCategory = category
+        }
+
+        override fun mockingLiveData(expectedLiveData: LiveData<SelectedStateUi>) {
+            mockedLiveData = expectedLiveData
+        }
+
+        override fun checkUpdateSumIsCalled(expectedSum: Int) {
+            assertEquals(expectedSum, actualSum)
+        }
+
+        override fun checkLiveDataIsCalled(expected: Int) {
+            assertEquals(expected, liveDataCalledTimes)
+        }
+
+        override fun checkUpdateSelectedDateIsCalled(expectedDate: String) {
+            assertEquals(expectedDate, actualSelectedDate)
+        }
+
+        override fun checkUpdateSelectedCategoryIsCalled(expectedCategory: String) {
+            assertEquals(expectedCategory, actualSelectedCategory)
+        }
+
+        override fun checkUpdateIsCalled(expected: SelectedStateUi) {
+            assertEquals(actual, expected)
+        }
     }
 }
 
@@ -210,6 +316,7 @@ private interface FakeGetOrCreatePeriodUseCase : GetOrCreatePeriodUseCase {
     fun checkInvokeIsCalled(expectedYear: Int, expectedMonth: Int)
     fun checkGetByIdIsCalled(calledTimes: Int)
     fun expectedYearMonth(yearMonth: YearMonth)
+
     class Base(private val order: Order) : FakeGetOrCreatePeriodUseCase {
 
         private lateinit var expectedYearMonth: YearMonth

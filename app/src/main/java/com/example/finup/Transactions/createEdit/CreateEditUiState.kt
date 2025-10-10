@@ -11,9 +11,8 @@ interface CreateEditUiState {
     fun show(
         buttons: List<MaterialButton>,
         titleTextView: TextView,
-        dateTextView: TextView,
         deleteButton: Button,
-        textInputEditText: TextInputEditText
+        inputEditText: TextInputEditText,
     )
 
     data class ShowCreateTransactionPage(
@@ -22,9 +21,8 @@ interface CreateEditUiState {
         override fun show(
             buttons: List<MaterialButton>,
             titleTextView: TextView,
-            dateTextView: TextView,
             deleteButton: Button,
-            textInputEditText: TextInputEditText
+            inputEditText: TextInputEditText,
         ) {
             titleTextView.text = title
             buttons.forEach {
@@ -33,30 +31,23 @@ interface CreateEditUiState {
             deleteButton.visibility = View.GONE
         }
     }
-        data class ShowEditTransactionPage(
-            val title: String,
-            val date: String,
-            val selectedCategory: String,
-            val sum: String,
-        ) : CreateEditUiState {
-            override fun show(
-                buttons: List<MaterialButton>,
-                titleTextView: TextView,
-                dateTextView: TextView,
-                deleteButton: Button,
-                textInputEditText: TextInputEditText
-            ) {
-                textInputEditText.setText(sum)
-                dateTextView.text = date
-                titleTextView.text = title
-                buttons.forEach {
-                    it.isChecked = false
-                    it.visibility = View.VISIBLE
-                    if (it.text == selectedCategory) {
-                        it.isChecked = true
-                    }
-                }
-                deleteButton.visibility = View.VISIBLE
+
+    data class ShowEditTransactionPage(
+        val title: String,
+        val sum: String,
+    ) : CreateEditUiState {
+        override fun show(
+            buttons: List<MaterialButton>,
+            titleTextView: TextView,
+            deleteButton: Button,
+            inputEditText: TextInputEditText,
+        ) {
+            inputEditText.setText(sum)
+            titleTextView.text = title
+            buttons.forEach {
+                it.visibility = View.VISIBLE
             }
+            deleteButton.visibility = View.VISIBLE
         }
+    }
 }
