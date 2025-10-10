@@ -6,7 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.finup.R
-import com.example.finup.Transactions.model.DisplayItemUi
+import com.example.finup.Transactions.list.DisplayItemUi
 import com.example.finup.databinding.HeaderForAdapterBinding
 import com.example.finup.databinding.ItemForHolderBinding
 
@@ -47,7 +47,7 @@ class TransactionsListAdapter(
     }
 
     fun addItems(newList: List<DisplayItemUi>) {
-        val diffUtil = com.example.finup.Transactions.list.DiffUtil(newList,list)
+        val diffUtil = DiffUtil(newList,list)
         val calculating = DiffUtil.calculateDiff(diffUtil)
         list.clear()
         list.addAll(newList)

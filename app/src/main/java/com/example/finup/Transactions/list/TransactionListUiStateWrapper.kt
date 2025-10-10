@@ -1,6 +1,6 @@
 package com.example.finup.Transactions.list
 
-import com.example.finup.arch.LiveDataWrapper
+import com.example.finup.core.LiveDataWrapper
 
 interface TransactionListUiStateWrapper: LiveDataWrapper {
 

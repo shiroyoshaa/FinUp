@@ -3,62 +3,88 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
-    android:layout_margin="25dp"
-    android:id="@+id/RootLayout"
+    android:id="@+id/mainRootLayout"
+    android:fitsSystemWindows="false"
     >
 
-    <ImageView
-        android:background="?attr/selectableItemBackgroundBorderless"
-
-        android:onClick="onImageClicked"
-        android:id="@+id/rightImageViewId"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:src="@drawable/arrow_forward"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <ImageView
-        android:background="?attr/selectableItemBackgroundBorderless"
-
-        android:onClick="onImageClicked"
-        android:id="@+id/leftImageViewId"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:src="@drawable/arrow_back"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:layout_margin="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/RootLayout"
+        >
 
-    <TextView
-        android:textAllCaps="true"
-        android:textSize="25sp"
-        android:id="@+id/titleMonthTextView"
+        <ImageView
+            android:id="@+id/rightImageViewId"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:onClick="onImageClicked"
+            android:src="@drawable/arrow_forward"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/leftImageViewId"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:onClick="onImageClicked"
+            android:src="@drawable/arrow_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/titleMonthTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toStartOf="@+id/rightImageViewId"
+            app:layout_constraintStart_toEndOf="@+id/leftImageViewId"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/titleSumTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/rightImageViewId"
+            app:layout_constraintStart_toEndOf="@+id/leftImageViewId"
+            app:layout_constraintTop_toBottomOf="@+id/titleMonthTextView" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:paddingBottom="170dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleSumTextView" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addFloatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/rightImageViewId"
-        app:layout_constraintStart_toEndOf="@+id/leftImageViewId"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_margin="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:textAllCaps="true"
-        android:textSize="20sp"
-        android:id="@+id/titleSumTextView"
-        android:layout_width="wrap_content"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/rightImageViewId"
-        app:layout_constraintStart_toEndOf="@+id/leftImageViewId"
-        app:layout_constraintTop_toBottomOf="@+id/titleMonthTextView"
-   />
+        app:itemIconSize="45dp"
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:paddingBottom="170dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:id="@+id/recyclerView"
-        android:layout_marginTop="45dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleSumTextView" />
+        app:menu="@menu/bottom_nav_menu" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

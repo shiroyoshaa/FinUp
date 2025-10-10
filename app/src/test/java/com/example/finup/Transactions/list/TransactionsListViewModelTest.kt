@@ -7,23 +7,21 @@ import com.example.finup.Transactions.list.FakeTransactionMapper.Companion.TRANS
 import com.example.finup.Transactions.list.FakeTransactionsListLiveDataWrapper.Companion.TRANSACTION_UPDATE_LIST_LIVEDATA
 import com.example.finup.Transactions.list.FakeUiStateLiveDataWrapper.Companion.UI_STATE_UPDATE_LIVEDATA
 import com.example.finup.Transactions.list.FakeYearMonthStateManager.Companion.GET_YEAR_MONTH_MANAGER
+import com.example.finup.Transactions.list.FakeYearMonthStateManager.Companion.RESTORE_SCREEN_TYPE_MANAGER
+import com.example.finup.Transactions.list.FakeYearMonthStateManager.Companion.SAVE_SCREEN_TYPE_MANAGER
 import com.example.finup.Transactions.list.FakeYearMonthStateManager.Companion.SAVE_YEAR_MONTH_MANAGER
 import com.example.finup.Transactions.mappers.TransactionUiMapper
-import com.example.finup.Transactions.model.DisplayItemUi
 import com.example.finup.core.FakeNavigation
-import com.example.finup.core.FakeNavigation.Companion.NAVIGATION
 import com.example.finup.core.Order
-import com.example.finup.domain.Result
-import com.example.finup.domain.Transaction
-import com.example.finup.domain.YearMonth
-import com.example.finup.domain.YearMonthStateManager
+import com.example.finup.domain.StateManager
+import com.example.finup.domain.models.Result
+import com.example.finup.domain.models.Transaction
+import com.example.finup.domain.models.YearMonth
 import com.example.finup.domain.useCases.GetTransactionsListByPeriodUseCase
 import com.example.finup.domain.useCases.NavigationMonthUseCase
-import com.example.finup.main.FakeMainUiStateLiveDataWrapper
-import com.example.finup.main.FakeMainUiStateLiveDataWrapper.Companion.MAIN_UI_STATE_UPDATE
-import com.example.finup.main.MainUiState
 import junit.framework.TestCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -42,8 +40,9 @@ class TransactionsListViewModelTest {
     private lateinit var getTransactionsListByPeriodUseCase: FakeGetTransactionsListByPeriodUseCase
     private lateinit var navigation: FakeNavigation
     private lateinit var navigationByMonthUseCase: FakeNavigationByMonthUseCase
-    private lateinit var yearMonthStateManager: FakeYearMonthStateManager
-    private lateinit var mainUiStateLiveDataWrapper: FakeMainUiStateLiveDataWrapper
+    private lateinit var stateManagerWrapper: FakeYearMonthStateManager
+
+
     @Before
     fun setUp() {
 
@@ -54,63 +53,62 @@ class TransactionsListViewModelTest {
         getTransactionsListByPeriodUseCase = FakeGetTransactionsListByPeriodUseCase.Base(order)
         navigationByMonthUseCase = FakeNavigationByMonthUseCase.Base(order)
         navigation = FakeNavigation.Base(order)
-        yearMonthStateManager = FakeYearMonthStateManager.Base(order)
-        mainUiStateLiveDataWrapper = FakeMainUiStateLiveDataWrapper.Base(order)
+        stateManagerWrapper = FakeYearMonthStateManager.Base(order)
         viewModel = TransactionsListViewModel(
             transactionsListWrapper = transactionsListWrapper,
             uiStateLiveDataWrapper = uiStateLiveDataWrapper,
             transactionMapper = transactionMapper,
-            mainUiStateLiveDataWrapper = mainUiStateLiveDataWrapper,
             getTransactionsListByPeriodUseCase = getTransactionsListByPeriodUseCase,
             navigationByMonthUseCase = navigationByMonthUseCase,
             navigation = navigation,
-            stateManagerWrapper = yearMonthStateManager,
+            stateManagerWrapper = stateManagerWrapper,
             dispatcher = Dispatchers.Unconfined,
             dispatcherMain = Dispatchers.Unconfined,
         )
+        TransactionsListViewModel.loadDataCalledTimes = 0
     }
 
-    @Test
-    fun init() {
-        yearMonthStateManager.expectedSavedYearMonth(
+    fun mocking(type: String) {
+        stateManagerWrapper.expectedSavedYearMonth(
             expectedYearMonth = YearMonth(
                 id = 1L,
                 month = 9,
                 year = 2025
             )
         )
+        stateManagerWrapper.expectedScreenType(type)
         getTransactionsListByPeriodUseCase.expectedResult(
             Result(
                 listOf(
                     Transaction(
                         id = 3L,
-                        name = "Utilities",
+                        name = "ExampleNameOfCategory",
                         sum = 1000,
-                        type = "Expense",
+                        type = type,
                         day = 10,
                         dateId = 1L
                     ),
                     Transaction(
                         id = 4L,
-                        name = "Other",
+                        name = "ExampleNameOfCategory",
                         sum = 3000,
-                        type = "Expense",
+                        type = type,
                         day = 10,
                         dateId = 1L
                     ),
                     Transaction(
                         id = 5L,
-                        name = "Groceries",
+                        name = "ExampleNameOfCategory",
                         sum = 2000,
-                        type = "Expense",
+                        type = type,
                         day = 25,
                         dateId = 1L
                     ),
                     Transaction(
                         id = 6L,
-                        name = "Transfers",
+                        name = "ExampleNameOfCategory",
                         sum = 4000,
-                        type = "Expense",
+                        type = type,
                         day = 25,
                         dateId = 1L
                     ),
@@ -125,44 +123,46 @@ class TransactionsListViewModelTest {
                 DisplayItemUi.TransactionDetails(
                     id = 3L,
                     sum = 1000,
-                    name = "Utilities",
-                    type = "Expense",
+                    name = "ExampleNameOfCategory",
+                    type = type,
                     dateId = 1L
                 ),
                 DisplayItemUi.TransactionDetails(
                     id = 4L,
                     sum = 3000,
-                    name = "Other",
-                    type = "Expense",
+                    name = "ExampleNameOfCategory",
+                    type = type,
                     dateId = 1L
                 ),
                 DisplayItemUi.TransactionDate(day = "25 September", "6000"),
                 DisplayItemUi.TransactionDetails(
                     id = 5L,
                     sum = 2000,
-                    name = "Groceries",
-                    type = "Expense",
+                    name = "ExampleNameOfCategory",
+                    type = type,
                     dateId = 1L
                 ),
                 DisplayItemUi.TransactionDetails(
                     id = 6L,
                     sum = 4000,
-                    name = "Transfers",
-                    type = "Expense",
+                    name = "ExampleNameOfCategory",
+                    type = type,
                     dateId = 1L
                 ),
             )
         )
+    }
 
-        viewModel.init(type = "Expense")
-        yearMonthStateManager.checkGetCalledTimes(1)
+
+    fun checkLoadDataCorrectlyCalled(type: String) {
+        stateManagerWrapper.checkRestoresCalledTimes(2) //first is GetYearMonth and second is getCurrentScreenType
 
         getTransactionsListByPeriodUseCase.checkCalledTimes(
             YearMonth(
                 id = 1L,
                 month = 9,
                 year = 2025
-            ), "Expense"
+            ), type
         )
         transactionMapper.checkCalledTime(1)
 
@@ -172,30 +172,30 @@ class TransactionsListViewModelTest {
                 DisplayItemUi.TransactionDetails(
                     id = 3L,
                     sum = 1000,
-                    name = "Utilities",
-                    type = "Expense",
+                    name = "ExampleNameOfCategory",
+                    type = type,
                     dateId = 1L
                 ),
                 DisplayItemUi.TransactionDetails(
                     id = 4L,
                     sum = 3000,
-                    name = "Other",
-                    type = "Expense",
+                    name = "ExampleNameOfCategory",
+                    type = type,
                     dateId = 1L
                 ),
                 DisplayItemUi.TransactionDate(day = "25 September", "6000"),
                 DisplayItemUi.TransactionDetails(
                     id = 5L,
                     sum = 2000,
-                    name = "Groceries",
-                    type = "Expense",
+                    name = "ExampleNameOfCategory",
+                    type = type,
                     dateId = 1L
                 ),
                 DisplayItemUi.TransactionDetails(
                     id = 6L,
                     sum = 4000,
-                    name = "Transfers",
-                    type = "Expense",
+                    name = "ExampleNameOfCategory",
+                    type = type,
                     dateId = 1L
                 ),
             )
@@ -203,6 +203,93 @@ class TransactionsListViewModelTest {
 
         uiStateLiveDataWrapper.check(
             ShowDateTitle(
+                screenType = type,
+                title = "September 2025",
+                total = "10000"
+            )
+        )
+    }
+
+    @Test
+    fun `method viewmodel init must trigger suspend fun loadData`() {
+        mocking("Expense")
+        viewModel.init()
+        assertEquals(TransactionsListViewModel.loadDataCalledTimes, 1)
+        checkLoadDataCorrectlyCalled("Expense")
+        order.check(
+            listOf(
+                GET_YEAR_MONTH_MANAGER,
+                RESTORE_SCREEN_TYPE_MANAGER,
+                GET_TRANSACTIONS_LIST_USE_CASE,
+                TRANSACTIONS_MAPPER,
+                TRANSACTION_UPDATE_LIST_LIVEDATA,
+                UI_STATE_UPDATE_LIVEDATA,
+            )
+        )
+    }
+
+
+    @Test
+    fun `month navigation for toolBar`() {
+
+        mocking("Income")
+        navigationByMonthUseCase.expectedYearMonth(YearMonth(2L, 10, 2025))
+
+        viewModel.navigateMonth(forward = true)
+
+        stateManagerWrapper.checkRestoresCalledTimes(2) //first is restoreYearMonth and second is restoreCurrentScreenType
+
+        navigationByMonthUseCase.check(true, expectedCurrentYearMonth = YearMonth(1L, 9, 2025))
+
+        stateManagerWrapper.checkSaveYearMonthIsCalled(2L)
+
+        getTransactionsListByPeriodUseCase.checkCalledTimes(
+            YearMonth(
+                id = 2L,
+                month = 10,
+                year = 2025
+            ), "Income"
+        )
+        transactionMapper.checkCalledTime(1)
+
+        transactionsListWrapper.check(
+            listOf(
+                DisplayItemUi.TransactionDate(day = "10 September", "4000"),
+                DisplayItemUi.TransactionDetails(
+                    id = 3L,
+                    sum = 1000,
+                    name = "ExampleNameOfCategory",
+                    type = "Income",
+                    dateId = 1L
+                ),
+                DisplayItemUi.TransactionDetails(
+                    id = 4L,
+                    sum = 3000,
+                    name = "ExampleNameOfCategory",
+                    type = "Income",
+                    dateId = 1L
+                ),
+                DisplayItemUi.TransactionDate(day = "25 September", "6000"),
+                DisplayItemUi.TransactionDetails(
+                    id = 5L,
+                    sum = 2000,
+                    name = "ExampleNameOfCategory",
+                    type = "Income",
+                    dateId = 1L
+                ),
+                DisplayItemUi.TransactionDetails(
+                    id = 6L,
+                    sum = 4000,
+                    name = "ExampleNameOfCategory",
+                    type = "Income",
+                    dateId = 1L
+                ),
+            )
+
+        )
+        uiStateLiveDataWrapper.check(
+            ShowDateTitle(
+                screenType = "Income",
                 title = "September 2025",
                 total = "10000"
             )
@@ -210,129 +297,7 @@ class TransactionsListViewModelTest {
         order.check(
             listOf(
                 GET_YEAR_MONTH_MANAGER,
-                GET_TRANSACTIONS_LIST_USE_CASE,
-                TRANSACTIONS_MAPPER,
-                TRANSACTION_UPDATE_LIST_LIVEDATA,
-                UI_STATE_UPDATE_LIVEDATA
-            )
-        )
-    }
-
-    @Test
-    fun `month navigation for toolBar`() {
-
-        yearMonthStateManager.expectedSavedYearMonth(YearMonth(1L, 9, 2025))
-        navigationByMonthUseCase.expectedYearMonth(YearMonth(2L, 10, 2025))
-
-        getTransactionsListByPeriodUseCase.expectedResult(
-            Result(
-                listOf(
-                    Transaction(
-                        id = 6L,
-                        name = "Kaspi Bank",
-                        sum = 1000,
-                        type = "Income",
-                        day = 23,
-                        dateId = 2L
-                    ),
-                    Transaction(
-                        id = 7L,
-                        name = "BCC Bank",
-                        sum = 3000,
-                        type = "Income",
-                        day = 1,
-                        dateId = 2L
-                    ),
-                    Transaction(
-                        id = 8L,
-                        name = "Kaspi Bank",
-                        sum = 2000,
-                        type = "Income",
-                        day = 5,
-                        dateId = 2L
-                    ),
-                ),
-                formattedDateYearMonth = "October 2025",
-                totalSumByMonth = "6000",
-            )
-        )
-        transactionMapper.expectedUiLayer(
-            listOf(
-                DisplayItemUi.TransactionDate(day = "1 October", "3000"),
-                DisplayItemUi.TransactionDetails(
-                    id = 7L,
-                    sum = 3000,
-                    name = "BCC Bank",
-                    type = "Income",
-                    dateId = 2L
-                ),
-                DisplayItemUi.TransactionDate(day = "5 October", "2000"),
-                DisplayItemUi.TransactionDetails(
-                    id = 5L,
-                    sum = 2000,
-                    name = "Kaspi Bank",
-                    type = "Income",
-                    dateId = 1L
-                ),
-                DisplayItemUi.TransactionDate(day = "23 October", "1000"),
-                DisplayItemUi.TransactionDetails(
-                    id = 5L,
-                    sum = 1000,
-                    name = "Kaspi Bank",
-                    type = "Income",
-                    dateId = 1L
-                ),
-            )
-        )
-        viewModel.navigateMonth(forward = true, type = "Income")
-
-        yearMonthStateManager.checkGetCalledTimes(expectedGetCalledTimes = 1)
-        navigationByMonthUseCase.check(true, expectedCurrentYearMonth = YearMonth(1L, 9, 2025))
-        yearMonthStateManager.checkSaveIsCalled(
-            2L
-        )
-
-        getTransactionsListByPeriodUseCase.checkCalledTimes(YearMonth(2L, 10, 2025), "Income")
-        transactionMapper.checkCalledTime(1)
-
-        transactionsListWrapper.check(
-            listOf(
-                DisplayItemUi.TransactionDate(day = "1 October", "3000"),
-                DisplayItemUi.TransactionDetails(
-                    id = 7L,
-                    sum = 3000,
-                    name = "BCC Bank",
-                    type = "Income",
-                    dateId = 2L
-                ),
-                DisplayItemUi.TransactionDate(day = "5 October", "2000"),
-                DisplayItemUi.TransactionDetails(
-                    id = 5L,
-                    sum = 2000,
-                    name = "Kaspi Bank",
-                    type = "Income",
-                    dateId = 1L
-                ),
-                DisplayItemUi.TransactionDate(day = "23 October", "1000"),
-                DisplayItemUi.TransactionDetails(
-                    id = 5L,
-                    sum = 1000,
-                    name = "Kaspi Bank",
-                    type = "Income",
-                    dateId = 1L
-                ),
-            )
-        )
-
-        uiStateLiveDataWrapper.check(
-            ShowDateTitle(
-                title = "October 2025",
-                total = "6000"
-            )
-        )
-        order.check(
-            listOf(
-                GET_YEAR_MONTH_MANAGER,
+                RESTORE_SCREEN_TYPE_MANAGER,
                 NAVIGATE_BY_MONTH_USE_CASE,
                 SAVE_YEAR_MONTH_MANAGER,
                 GET_TRANSACTIONS_LIST_USE_CASE,
@@ -342,12 +307,61 @@ class TransactionsListViewModelTest {
             )
         )
     }
+
     @Test
-    fun `navigating to edit transaction page`(){
-        viewModel.editTransaction(transactionUi = DisplayItemUi.TransactionDetails(id = 2L,sum = 2000,type = "Income", name = "Other", dateId = 10L))
+    fun `loadData test`() = runBlocking {
+
+        mocking("Income")
+
+        viewModel.loadData()
+
+        checkLoadDataCorrectlyCalled("Income")
+
+        order.check(
+            listOf(
+                GET_YEAR_MONTH_MANAGER,
+                RESTORE_SCREEN_TYPE_MANAGER,
+                GET_TRANSACTIONS_LIST_USE_CASE,
+                TRANSACTIONS_MAPPER,
+                TRANSACTION_UPDATE_LIST_LIVEDATA,
+                UI_STATE_UPDATE_LIVEDATA,
+            )
+        )
+    }
+
+    @Test
+    fun `method navigateToExpenses must trigger suspend fun loadData`() {
+
+        mocking("Expense")
+        viewModel.navigateToExpenses()
+        stateManagerWrapper.checkSaveScreenTypeIsCalled("Expense")
+        checkLoadDataCorrectlyCalled("Expense")
+        order.check(
+            listOf(
+                SAVE_SCREEN_TYPE_MANAGER,
+                GET_YEAR_MONTH_MANAGER,
+                RESTORE_SCREEN_TYPE_MANAGER,
+                GET_TRANSACTIONS_LIST_USE_CASE,
+                TRANSACTIONS_MAPPER,
+                TRANSACTION_UPDATE_LIST_LIVEDATA,
+                UI_STATE_UPDATE_LIVEDATA,
+            )
+        )
+        assertEquals(1, TransactionsListViewModel.loadDataCalledTimes)
+    }
+
+    @Test
+    fun `navigating to edit transaction page`() {
+        viewModel.editTransaction(
+            transactionUi = DisplayItemUi.TransactionDetails(
+                id = 2L,
+                sum = 2000,
+                type = "Income",
+                name = "Other",
+                dateId = 10L
+            )
+        )
         navigation.check(CreateEditTransactionScreen(screenType = "Edit", 2L, "Income"))
-        mainUiStateLiveDataWrapper.check(MainUiState.Hide)
-        order.check(listOf(NAVIGATION, MAIN_UI_STATE_UPDATE))
     }
 }
 
@@ -377,6 +391,7 @@ private interface FakeUiStateLiveDataWrapper : TransactionListUiStateWrapper.Mut
         }
     }
 }
+
 
 private const val GET_TRANSACTIONS_LIST_USE_CASE = "GetTransactionsListByPeriodUseCase#invoke"
 
@@ -509,30 +524,39 @@ private interface FakeNavigationByMonthUseCase : NavigationMonthUseCase {
     }
 }
 
-private interface FakeYearMonthStateManager : YearMonthStateManager.All {
+private interface FakeYearMonthStateManager : StateManager.All {
 
-    fun checkGetCalledTimes(expectedGetCalledTimes: Int)
+    fun checkRestoresCalledTimes(expectedGetCalledTimes: Int)
 
-    fun checkSaveIsCalled(expectedYearMonthId: Long)
+    fun checkSaveYearMonthIsCalled(expectedYearMonthId: Long)
 
     fun expectedSavedYearMonth(expectedYearMonth: YearMonth)
+
+    fun expectedScreenType(expectedScreenType: String)
+
+    fun checkSaveScreenTypeIsCalled(expectedScreenType: String)
 
     companion object {
         const val GET_YEAR_MONTH_MANAGER = "YearMonthStateManager#getInitialYearMonth"
         const val SAVE_YEAR_MONTH_MANAGER = "YearMonthStateManager#saveYearMonthState"
+        const val RESTORE_SCREEN_TYPE_MANAGER = "YearMonthStateManager#restoreCurrentScreenType"
+        const val SAVE_SCREEN_TYPE_MANAGER = "FakeYearMonthStateManager#saveCurrentScreenType"
     }
 
     class Base(private val order: Order) : FakeYearMonthStateManager {
 
         private var actualGetCalledTimes: Int = 0
 
-        private lateinit var mock: YearMonth
-        private var savedYearMonthId = 0L
+        private lateinit var mockYearMonth: YearMonth
+        private lateinit var mockScreenType: String
 
-        override suspend fun getInitialYearMonth(): YearMonth {
+        private var savedYearMonthId = 0L
+        private lateinit var savedScreenType: String
+
+        override suspend fun restoreYearMonth(): YearMonth {
             order.add(GET_YEAR_MONTH_MANAGER)
             actualGetCalledTimes++
-            return mock
+            return mockYearMonth
         }
 
         override suspend fun saveYearMonthState(id: Long) {
@@ -541,14 +565,34 @@ private interface FakeYearMonthStateManager : YearMonthStateManager.All {
         }
 
         override fun expectedSavedYearMonth(yearMonth: YearMonth) {
-            mock = yearMonth
+            mockYearMonth = yearMonth
         }
 
-        override fun checkGetCalledTimes(expectedGetCalledTimes: Int) {
+        override fun expectedScreenType(expectedScreenType: String) {
+            mockScreenType = expectedScreenType
+        }
+
+        override fun checkSaveScreenTypeIsCalled(expectedScreenType: String) {
+            assertEquals(expectedScreenType, savedScreenType)
+        }
+
+
+        override suspend fun restoreCurrentScreenType(): String {
+            actualGetCalledTimes++
+            order.add(RESTORE_SCREEN_TYPE_MANAGER)
+            return mockScreenType
+        }
+
+        override suspend fun saveCurrentScreenType(screenType: String) {
+            order.add(SAVE_SCREEN_TYPE_MANAGER)
+            savedScreenType = screenType
+        }
+
+        override fun checkRestoresCalledTimes(expectedGetCalledTimes: Int) {
             assertEquals(expectedGetCalledTimes, actualGetCalledTimes)
         }
 
-        override fun checkSaveIsCalled(expectedYearMonthId: Long) {
+        override fun checkSaveYearMonthIsCalled(expectedYearMonthId: Long) {
             assertEquals(expectedYearMonthId, savedYearMonthId)
         }
     }

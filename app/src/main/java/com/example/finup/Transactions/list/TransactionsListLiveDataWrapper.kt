@@ -1,7 +1,7 @@
 package com.example.finup.Transactions.list
 
-import com.example.finup.Transactions.model.DisplayItemUi
-import com.example.finup.arch.LiveDataWrapper
+import com.example.finup.Transactions.list.DisplayItemUi
+import com.example.finup.core.LiveDataWrapper
 
 interface TransactionsListLiveDataWrapper: LiveDataWrapper{
 
