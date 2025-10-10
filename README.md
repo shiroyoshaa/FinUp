@@ -43,6 +43,8 @@ You need to open the ProvideViewModel.Base class and manually change the time pr
 A short clip demonstrating an Espresso UI Test running rapidly - 
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/6ebe4af2-704a-4f8c-adfc-01cfddf52889" width="50%">
+  <img src="https://github.com/user-attachments/assets/0f7f5d6c-1a1b-421a-974b-5644dad1ab5a" width="50%">
 </p>
+
+
 
