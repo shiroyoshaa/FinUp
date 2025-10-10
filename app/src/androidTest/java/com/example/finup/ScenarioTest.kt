@@ -61,6 +61,13 @@ class ScenarioTest {
         expenseListPage.checkDateTitleVisible("13 september", 0, "7000")
         expenseListPage.checkItemVisible("Utilities", "5000", 1)
         expenseListPage.checkItemVisible("Groceries", "2000", 2)
+
+        activityScenarioRule.scenario.recreate()
+
+        expenseListPage.checkVisibleNow("7000")
+        expenseListPage.checkDateTitleVisible("13 september", 0, "7000")
+        expenseListPage.checkItemVisible("Utilities", "5000", 1)
+        expenseListPage.checkItemVisible("Groceries", "2000", 2)
     }
 
     @Test
@@ -109,6 +116,15 @@ class ScenarioTest {
 
         createExpensePage.clickSaveButton()
         createExpensePage.checkNotVisibleNow()
+
+        expenseListPage.checkVisibleNow("22000")
+        expenseListPage.checkDateTitleVisible("2 september", 0, "15000")
+        expenseListPage.checkItemVisible("Other", "15000", 1)
+        expenseListPage.checkDateTitleVisible("13 september", 2, "7000")
+        expenseListPage.checkItemVisible("Utilities", "5000", 3)
+        expenseListPage.checkItemVisible("Groceries", "2000", 4)
+
+        activityScenarioRule.scenario.recreate()
 
         expenseListPage.checkVisibleNow("22000")
         expenseListPage.checkDateTitleVisible("2 september", 0, "15000")

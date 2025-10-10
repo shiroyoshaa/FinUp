@@ -1,7 +1,7 @@
 package com.example.finup.main
 
 data class MainPageIds(
-    val startRootId: Int,
+    val mainRootLayout: Int,
     val rootId: Int,
     val floatingButtonId: Int,
     val recyclerViewId: Int,

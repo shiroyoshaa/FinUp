@@ -45,7 +45,7 @@ class ExpenseAndIncomePage(
             withId(bottomNav.bottomNavId),
             withParent(isAssignableFrom(ConstraintLayout::class.java)),
             withParent(
-                withId(pagesIds.startRootId),
+                withId(pagesIds.mainRootLayout),
             )
         ))
 
@@ -162,7 +162,7 @@ class ExpenseAndIncomePage(
                     isAssignableFrom(FloatingActionButton::class.java),
                     withId(pagesIds.floatingButtonId),
                     withParent(isAssignableFrom(ConstraintLayout::class.java)),
-                    withParent(withId(pagesIds.startRootId)),
+                    withParent(withId(pagesIds.mainRootLayout)),
                 )
             ).perform(click())
         }
@@ -214,7 +214,7 @@ private val item = Item(
     itemNameTextView = R.id.itemNameTextView,
 )
 private val pagesIds = MainPageIds(
-    startRootId = R.id.startRootLayout,
+    mainRootLayout = R.id.mainRootLayout,
     rootId = R.id.RootLayout,
     floatingButtonId = R.id.addFloatingButton,
     recyclerViewId = R.id.recyclerView,
