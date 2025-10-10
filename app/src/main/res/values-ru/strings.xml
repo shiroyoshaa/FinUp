@@ -16,4 +16,5 @@
     <string name="delete">Удалить</string>
     <string name="dateTitle">Выберите дату</string>
     <string name="sum_by_day">сумма за день:</string>
+    <string name="pick_date">Выбрать дату</string>
 </resources>

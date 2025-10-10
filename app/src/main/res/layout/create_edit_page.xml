@@ -12,14 +12,15 @@
         android:layout_width="54dp"
         android:layout_height="54dp"
         android:src="@drawable/arrow_back"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:textAllCaps="true"
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="35dp"
+        android:textAllCaps="true"
 
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,13 +28,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:textAllCaps="true"
         android:id="@+id/amountLabelTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
         android:layout_marginTop="100dp"
         android:text="@string/total"
+        android:textAllCaps="true"
         android:textSize="35sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
@@ -49,6 +50,8 @@
         app:layout_constraintTop_toBottomOf="@+id/amountLabelTextView" />
 
     <TextView
+        android:textAllCaps="true"
+        android:textStyle="bold"
         android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,18 +62,34 @@
         app:layout_constraintTop_toBottomOf="@+id/sumInputEditText"
         tools:text="somer date here" />
 
-    <com.google.android.material.button.MaterialButton
-       app:icon="@drawable/outline_calendar_month_24"
-        android:id="@+id/openDateButton"
-        app:iconSize="35dp"
+    <LinearLayout
+        android:id="@+id/dateLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="88dp"
-
-        android:layout_marginTop="35dp"
         app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="25dp"
         app:layout_constraintStart_toEndOf="@+id/dateTextView"
-        app:layout_constraintTop_toBottomOf="@+id/sumInputEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/sumInputEditText">
+
+        <ImageView
+            android:id="@+id/openDateButton"
+            android:layout_width="55sp"
+            android:layout_height="55sp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:onClick="onImageClicked"
+            android:src="@drawable/calendar_icon"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:layout_margin="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_date"/>
+    </LinearLayout>
 
     <GridLayout
         android:id="@+id/gridExpensesLayout"
@@ -82,7 +101,7 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/openDateButton">
+        app:layout_constraintTop_toBottomOf="@+id/dateLinearLayout">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/utilitiesButton"
@@ -102,12 +121,11 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/groceriesButton"
+            style="@style/categoryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/groceries"
-            app:icon="@drawable/groceries_icon"
-            style="@style/categoryButton"
-            />
+            app:icon="@drawable/groceries_icon" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/otherButton"
@@ -120,12 +138,12 @@
 
     <GridLayout
         android:id="@+id/gridIncomeLayout"
-        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:columnCount="3"
         android:rowCount="1"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -149,18 +167,21 @@
     </GridLayout>
 
     <Button
+
         android:id="@+id/saveButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/save"
         android:enabled="false"
+        android:text="@string/save"
+        style="@style/deleteAndSaveButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gridExpensesLayout" />
 
     <Button
-
+        style="@style/deleteAndSaveButton"
+        android:backgroundTint="@color/Red"
         android:id="@+id/deleteButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

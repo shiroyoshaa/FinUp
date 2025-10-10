@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainRootLayout"
-    android:fitsSystemWindows="false"
-    >
+    android:fitsSystemWindows="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -37,6 +37,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:textStyle="bold"
+            tools:text = "exxample 35"
             android:id="@+id/titleMonthTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,11 +49,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:fontFamily="sans-serif-condensed"
             android:id="@+id/titleSumTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAllCaps="true"
-            android:textSize="20sp"
+            android:textSize="25sp"
+            tools:text = "3500"
             app:layout_constraintEnd_toStartOf="@+id/rightImageViewId"
             app:layout_constraintStart_toEndOf="@+id/leftImageViewId"
             app:layout_constraintTop_toBottomOf="@+id/titleMonthTextView" />
