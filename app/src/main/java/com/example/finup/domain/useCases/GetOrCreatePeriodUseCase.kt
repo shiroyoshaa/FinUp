@@ -1,7 +1,7 @@
 package com.example.finup.domain.useCases
 
-import com.example.finup.domain.YearMonth
-import com.example.finup.domain.YearMonthRepository
+import com.example.finup.domain.models.YearMonth
+import com.example.finup.domain.repositories.YearMonthRepository
 
 interface GetOrCreatePeriodUseCase {
     suspend operator fun invoke(year: Int, month: Int): YearMonth

@@ -1,8 +1,8 @@
-package com.example.finup.arch
+package com.example.finup.core
 
 import android.content.Context
 import androidx.room.Room
-import com.example.finup.data.AppDataBase
+import com.example.finup.data.db.AppDataBase
 
 class Core(context: Context) {
 

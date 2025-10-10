@@ -1,11 +1,12 @@
-package com.example.finup.data
+package com.example.finup.data.repositories
 
+import com.example.finup.data.db.dao.TransactionDao
+import com.example.finup.data.db.entities.TransactionCache
 import com.example.finup.data.mappers.transactionDataToDomain
 import com.example.finup.data.mappers.transactionListDataToDomain
-import com.example.finup.domain.Now
-import com.example.finup.domain.Transaction
-import com.example.finup.domain.TransactionRepository.EditAndCreate
-import com.example.finup.domain.TransactionRepository.GetTransactions
+import com.example.finup.domain.models.Transaction
+import com.example.finup.domain.repositories.TransactionRepository.EditAndCreate
+import com.example.finup.domain.repositories.TransactionRepository.GetTransactions
 
 class TransactionRepositoryImpl(
     private val transactionDao: TransactionDao,

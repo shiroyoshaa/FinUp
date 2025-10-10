@@ -1,5 +1,7 @@
 package com.example.finup.domain
 
+import com.example.finup.domain.models.YearMonth
+import com.example.finup.domain.repositories.YearMonthRepository
 import com.example.finup.domain.useCases.NavigationMonthUseCase
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
@@ -14,16 +16,19 @@ class NavigationMonthUseCaseTest {
     fun test() = runBlocking {
         yearMonthRepository = FakeGetYearMonthRepository.Base()
         navigationMonthUseCase = NavigationMonthUseCase.Base(yearMonthRepository)
-        yearMonthRepository.expectedListYearMonth(listOf(YearMonth(1L, 11, 2025), YearMonth(2L,12,2025)))
+        yearMonthRepository.expectedListYearMonth(listOf(
+            YearMonth(1L, 11, 2025),
+            YearMonth(2L, 12, 2025)
+        ))
         val actualYearMonth = navigationMonthUseCase(YearMonth(2L, 12, 2025), false)
-        val expectedYearMonth = YearMonth(1L,11,2025)
+        val expectedYearMonth = YearMonth(1L, 11, 2025)
         yearMonthRepository.checkCalledTimes(1)
         assertEquals(expectedYearMonth,actualYearMonth)
 
 
-        val actual = navigationMonthUseCase(YearMonth(1L,11,2025),false)
+        val actual = navigationMonthUseCase(YearMonth(1L, 11, 2025),false)
         yearMonthRepository.checkCalledTimes(2)
-        val expected = YearMonth(1L,11,2025)
+        val expected = YearMonth(1L, 11, 2025)
         assertEquals(actual,expected)
     }
 }

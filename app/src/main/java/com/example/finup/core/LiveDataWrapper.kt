@@ -1,4 +1,4 @@
-package com.example.finup.arch
+package com.example.finup.core
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +14,7 @@ interface LiveDataWrapper {
 
     interface Mutable<T: Any>: Update<T>, Read<T>
 
-    abstract class Abstract <T: Any>(protected val liveData: MutableLiveData<T> = SingleLiveEvent()): Mutable<T> {
+    abstract class Abstract <T: Any>(protected var liveData: MutableLiveData<T> = SingleLiveEvent()): Mutable<T> {
 
         override fun update(value: T) {
             liveData.value = value

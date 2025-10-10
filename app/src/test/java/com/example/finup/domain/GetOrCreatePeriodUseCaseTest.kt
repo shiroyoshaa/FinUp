@@ -1,5 +1,7 @@
 package com.example.finup.domain
 
+import com.example.finup.domain.models.YearMonth
+import com.example.finup.domain.repositories.YearMonthRepository
 import com.example.finup.domain.useCases.GetOrCreatePeriodUseCase
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals

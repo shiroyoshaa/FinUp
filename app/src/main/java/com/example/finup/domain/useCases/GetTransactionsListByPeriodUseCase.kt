@@ -2,9 +2,9 @@ package com.example.finup.domain.useCases
 
 
 import com.example.finup.domain.DateProvider
-import com.example.finup.domain.Result
-import com.example.finup.domain.TransactionRepository
-import com.example.finup.domain.YearMonth
+import com.example.finup.domain.models.Result
+import com.example.finup.domain.repositories.TransactionRepository
+import com.example.finup.domain.models.YearMonth
 
 interface GetTransactionsListByPeriodUseCase {
 

@@ -1,4 +1,4 @@
-package com.example.finup.Transactions.model
+package com.example.finup.Transactions.list
 
 interface DisplayItemUi {
     fun getItemType(): Int

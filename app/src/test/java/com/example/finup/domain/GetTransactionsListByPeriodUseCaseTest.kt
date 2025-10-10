@@ -1,5 +1,9 @@
 package com.example.finup.domain
 
+import com.example.finup.domain.models.Result
+import com.example.finup.domain.models.Transaction
+import com.example.finup.domain.models.YearMonth
+import com.example.finup.domain.repositories.TransactionRepository
 import com.example.finup.domain.useCases.GetTransactionsListByPeriodUseCase
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -43,23 +47,24 @@ class GetTransactionsListByPeriodUseCaseTest {
             )
         )
         val actualResult = getTransactionsListByPeriodUseCase(YearMonth(3L, 12, 2026), "Expense")
-        val expectedResult = Result(listOf(
-            Transaction(
-                2L,
-                3000,
-                "Utilities",
-                "Expense",
-                25,
-                3L
-            ), Transaction(
-                3L,
-                4500,
-                "Other",
-                "Expense",
-                13,
-                3L
-            )
-        ),"December 2026",
+        val expectedResult = Result(
+            listOf(
+                Transaction(
+                    2L,
+                    3000,
+                    "Utilities",
+                    "Expense",
+                    25,
+                    3L
+                ), Transaction(
+                    3L,
+                    4500,
+                    "Other",
+                    "Expense",
+                    13,
+                    3L
+                )
+            ), "December 2026",
             "7500"
         )
         transactionRepository.checkGetIsCalled(3L, "Expense")
@@ -71,7 +76,7 @@ class GetTransactionsListByPeriodUseCaseTest {
     fun`test without expected transactions list`() = runBlocking{
         transactionRepository.expectedTransactions(listOf())
         val actualResult =  getTransactionsListByPeriodUseCase(YearMonth(3L, 12, 2026), "Expense")
-        val expectedResult = Result(listOf(),"December 2026","0")
+        val expectedResult = Result(listOf(), "December 2026", "0")
         assertEquals(actualResult,expectedResult)
     }
 }
