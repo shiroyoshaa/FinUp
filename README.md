@@ -40,7 +40,7 @@ Important Step:
 
 You need to open the ProvideViewModel.Base class and manually change the time provider being used: instead of RealProviderBase, you should use mockDateProviderForUiTests to inject static (mocked) time into the components.
 
-A short clip demonstrating an Espresso UI Test running rapidly - 
+Espresso UI Test: navigation to previous month test.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/0f7f5d6c-1a1b-421a-974b-5644dad1ab5a" width="50%">
